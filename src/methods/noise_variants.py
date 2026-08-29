@@ -65,7 +65,7 @@ VARIANTS = {"A_median": v_median, "B_highpass": v_highpass,
             "C_ratio": v_ratio, "D_ratio_colour": v_ratio_colour}
 
 
-def v_ela(img, quality=90, w=16):
+def v_ela(img, quality=90, w=32):
     """E: Error Level Analysis. Re-compress at fixed quality and measure the
     error. A region with a different compression history responds differently
     from its host -- targets compression, not sensor noise."""

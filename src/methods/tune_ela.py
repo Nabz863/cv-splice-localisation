@@ -13,6 +13,7 @@ from compare_variants import pixel_auc
 
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 rows = list(csv.DictReader(open(os.path.join(ROOT, "splice_manifest.csv"))))
+rows = [r for r in rows if int(r["fold"]) != 0]
 rows = list(np.random.default_rng(0).permutation(rows))[:300]
 GRID = [(q, w) for q in (70, 80, 90, 95, 98) for w in (8, 16, 32)]
 
