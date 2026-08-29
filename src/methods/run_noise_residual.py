@@ -5,11 +5,11 @@ from PIL import Image
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from utils.seed import set_seed
 from eval.metrics import f1_iou
-from noise_residual import score_map
+from noise_variants import v_ela as score_map
 
 set_seed(0)
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
-TAUS = np.round(np.arange(0.5, 10.01, 0.25), 2)
+TAUS = np.round(np.concatenate([np.arange(0.0, 1.0, 0.05), np.arange(1.0, 10.01, 0.25)]), 3)
 N_FOLDS = 5
 
 rows = list(csv.DictReader(open(os.path.join(ROOT, "splice_manifest.csv"))))
