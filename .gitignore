@@ -1,4 +1,4 @@
-data/
+/data/
 venv/
 results/*.png
 results/*.npy
