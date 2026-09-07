@@ -13,8 +13,8 @@ from mrf import solve_icm, solve_graphcut, energy
 set_seed(0)
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 CACHE = os.path.join(ROOT, "ela_cache")
-TAUS = [0.25, 0.4, 0.5, 0.6, 0.75, 1.0]
-BETAS = [0.0, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
+TAUS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1.0]
+BETAS = [0.0, 0.5, 2.0, 4.0, 8.0, 16.0]
 GRID = [(t, b) for t in TAUS for b in BETAS]
 SOLVERS = {"graphcut": solve_graphcut}   # ICM result recorded in results/rung2_mrf.csv
 
@@ -55,6 +55,12 @@ if __name__ == "__main__":
             if (i + 1) % 200 == 0:
                 print(f"  {i+1}/{len(rows)}  ({time.time()-t0:.0f}s)")
 
+    os.makedirs("results", exist_ok=True)
+    np.savez_compressed("results/rung2_grid.npz", counts=counts,
+                        energies=energies, grid=np.array(GRID),
+                        solvers=list(SOLVERS))
+    print("saved results/rung2_grid.npz")
+
     folds = np.array([int(r["fold"]) for r in rows])
 
     def f1_of(idx, si, gi):
@@ -87,9 +93,10 @@ if __name__ == "__main__":
             continue
         me = energies[:, :, gi].mean(0)
         print(f"{tau:>6}{beta:>7}" + "".join(f"{v:>12.1f}" for v in me))
-    gi_pos = [g for g, (t, b) in enumerate(GRID) if b > 0]
-    gaps = energies[:, 1, gi_pos] - energies[:, 0, gi_pos]   # graphcut - icm
-    print(f"\ngraphcut energy <= icm energy in {(gaps <= 1e-6).mean():.1%} of cases")
+    if len(SOLVERS) > 1:
+        gi_pos = [g for g, (t, b) in enumerate(GRID) if b > 0]
+        gaps = energies[:, 1, gi_pos] - energies[:, 0, gi_pos]
+        print(f"\ngraphcut energy <= icm energy in {(gaps <= 1e-6).mean():.1%} of cases")
 
     os.makedirs("results", exist_ok=True)
     with open("results/rung2_mrf.csv", "w", newline="") as f:
