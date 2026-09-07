@@ -12,7 +12,9 @@ from unet import UNet, dice_bce
 from patch_data import SpliceCrops, load_rows
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
-EPOCHS, BATCH, N_FOLDS = int(os.environ.get("EPOCHS", 12)), 8, 5
+EPOCHS = int(os.environ.get("EPOCHS", 12))
+BATCH = int(os.environ.get("BATCH", 8))
+N_FOLDS = int(os.environ.get("N_FOLDS", 5))
 N_TRAIN = int(os.environ.get("N_TRAIN", 0))      # 0 = all; else data-size curve
 
 
