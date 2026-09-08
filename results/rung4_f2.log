@@ -1,0 +1,44 @@
+device cuda · 1822 pairs · epochs 12 · n_train all
+  fold 2 ep 1/12  loss 1.1989  (89s)
+  fold 2 ep 2/12  loss 1.1149  (86s)
+  fold 2 ep 3/12  loss 1.0534  (86s)
+  fold 2 ep 4/12  loss 1.0028  (86s)
+  fold 2 ep 5/12  loss 0.9657  (86s)
+  fold 2 ep 6/12  loss 0.9211  (86s)
+  fold 2 ep 7/12  loss 0.8586  (86s)
+  fold 2 ep 8/12  loss 0.8156  (86s)
+  fold 2 ep 9/12  loss 0.7760  (86s)
+  fold 2 ep 10/12  loss 0.7607  (86s)
+  fold 2 ep 11/12  loss 0.7492  (85s)
+  fold 2 ep 12/12  loss 0.7386  (97s)
+fold 2: thr 0.50  F1 0.6432  IoU 0.4741
+
+  fold 3 ep 1/12  loss 1.1608  (86s)
+  fold 3 ep 2/12  loss 1.0605  (86s)
+  fold 3 ep 3/12  loss 0.9881  (86s)
+  fold 3 ep 4/12  loss 0.9483  (86s)
+  fold 3 ep 5/12  loss 0.8818  (86s)
+  fold 3 ep 6/12  loss 0.8308  (86s)
+  fold 3 ep 7/12  loss 0.7632  (86s)
+  fold 3 ep 8/12  loss 0.7288  (131s)
+  fold 3 ep 9/12  loss 0.6910  (138s)
+  fold 3 ep 10/12  loss 0.6441  (86s)
+  fold 3 ep 11/12  loss 0.6231  (86s)
+  fold 3 ep 12/12  loss 0.6148  (86s)
+fold 3: thr 0.60  F1 0.6454  IoU 0.4765
+
+  fold 4 ep 1/12  loss 1.2143  (86s)
+  fold 4 ep 2/12  loss 1.1293  (86s)
+  fold 4 ep 3/12  loss 1.0655  (86s)
+  fold 4 ep 4/12  loss 1.0087  (86s)
+  fold 4 ep 5/12  loss 0.9711  (86s)
+  fold 4 ep 6/12  loss 0.9536  (86s)
+  fold 4 ep 7/12  loss 0.9122  (86s)
+  fold 4 ep 8/12  loss 0.8769  (86s)
+  fold 4 ep 9/12  loss 0.8463  (87s)
+  fold 4 ep 10/12  loss 0.8263  (86s)
+  fold 4 ep 11/12  loss 0.8001  (86s)
+  fold 4 ep 12/12  loss 0.7928  (86s)
+fold 4: thr 0.75  F1 0.6229  IoU 0.4523
+
+mean F1 0.6372 +/- 0.0102

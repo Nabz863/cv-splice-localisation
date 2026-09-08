@@ -30,3 +30,5 @@ fold 1: thr 0.50  F1 0.6797  IoU 0.5148
   fold 2 ep 1/12  loss 1.2147  (95s)
   fold 2 ep 2/12  loss 1.1315  (96s)
   fold 2 ep 3/12  loss 1.0721  (95s)
+/usr/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 20 leaked semaphore objects to clean up at shutdown: {'/mp-pcpcafuv', '/mp-pc9vtm9n', '/mp-7q61gnna', '/mp-1p99z0y3', '/mp-k2rf_nx3', '/mp-_q3io4te', '/mp-bb0o47au', '/mp-6dpj1dn_', '/mp-glxfjq_b', '/mp-4q806y_y', '/mp-q6e__qra', '/mp-wvrrmyjq', '/mp-5t_gs3_x', '/mp-gelx_3rz', '/mp-_mbui3bc', '/mp-y__25abe', '/mp-gr4q0sb_', '/mp-ld_oq2z5', '/mp-e6vhscmm', '/mp-m_ni3mw5'}
+  warnings.warn(

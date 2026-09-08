@@ -9,12 +9,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 from utils.seed import set_seed
 from unet import UNet, dice_bce
+import wandb
 from patch_data import SpliceCrops, load_rows
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
+if DEV == "cpu" and not os.environ.get("ALLOW_CPU"):
+    raise SystemExit("GPU unavailable — refusing to fall back to CPU. "
+                     "Set ALLOW_CPU=1 to override.")
 EPOCHS = int(os.environ.get("EPOCHS", 12))
 BATCH = int(os.environ.get("BATCH", 8))
-N_FOLDS = int(os.environ.get("N_FOLDS", 5))
+N_FOLDS = int(os.environ.get('N_FOLDS', 5))
 N_TRAIN = int(os.environ.get("N_TRAIN", 0))      # 0 = all; else data-size curve
 
 
@@ -32,13 +36,18 @@ def predict_full(model, path):
 
 def run_fold(k, rows):
     set_seed(k)
+    wandb.init(project="cv-splice-localisation", name=f"unet-fold{k}",
+               group="rung4", reinit=True,
+               config={"fold": k, "epochs": EPOCHS, "batch": BATCH,
+                       "patience": PATIENCE, "n_train": N_TRAIN,
+                       "constrained": True, "lr": 1e-3, "seed": k})
     tr = [r for r in rows if int(r["fold"]) != k]
     te = [r for r in rows if int(r["fold"]) == k]
     if N_TRAIN:
         tr = list(np.random.default_rng(0).permutation(tr))[:N_TRAIN]
 
     dl = DataLoader(SpliceCrops(tr, train=True, seed=k), batch_size=BATCH,
-                    shuffle=True, num_workers=4, drop_last=True)
+                    shuffle=True, num_workers=int(os.environ.get('WORKERS', 2)), drop_last=True)
     model = UNet().to(DEV)
     opt = torch.optim.Adam(model.parameters(), lr=1e-3)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, EPOCHS)
@@ -80,17 +89,23 @@ def run_fold(k, rows):
         p = predict_full(model, r["image"]) >= thr
         t = np.array(Image.open(r["mask"]).convert("L")) > 127
         tp += (p & t).sum(); fp += (p & ~t).sum(); fn += (~p & t).sum()
-    return thr, 2*tp/(2*tp+fp+fn), tp/(tp+fp+fn)
+    f1, iou = 2*tp/(2*tp+fp+fn), tp/(tp+fp+fn)
+    wandb.log({"test/f1": f1, "test/iou": iou, "test/threshold": thr})
+    wandb.finish()
+    return thr, f1, iou
 
 
 if __name__ == "__main__":
     rows = load_rows()
     print(f"device {DEV} · {len(rows)} pairs · epochs {EPOCHS} · n_train {N_TRAIN or 'all'}")
     out = []
-    for k in range(N_FOLDS):
+    for k in range(int(os.environ.get('FOLD_START', 0)), N_FOLDS):
         thr, f1, iou = run_fold(k, rows)
         print(f"fold {k}: thr {thr:.2f}  F1 {f1:.4f}  IoU {iou:.4f}\n")
         out.append((k, thr, f1, iou))
+        os.makedirs("results", exist_ok=True)
+        with open(f"results/rung4_fold{k}.csv", "w", newline="") as fh:
+            csv.writer(fh).writerow([k, thr, f1, iou])
 
     f1s = [o[2] for o in out]
     print(f"mean F1 {np.mean(f1s):.4f} +/- {np.std(f1s):.4f}")
