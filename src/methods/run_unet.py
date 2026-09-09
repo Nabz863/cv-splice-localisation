@@ -1,4 +1,11 @@
-"""Rung 4: train per fold, evaluate at full resolution with the shared harness."""
+"""Rung 4: U-Net with a constrained first layer, 5-fold CV with early stopping.
+
+Split protocol (matches rungs 1-2 via reselect_mrf.py):
+  test fold      = k
+  validation     = (k+1) % 5   -- early stopping and threshold calibration
+  training       = the other three folds
+The test fold is never consulted before the final evaluation.
+"""
 import csv, os, sys, time
 import numpy as np
 import torch
@@ -9,51 +16,79 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 from utils.seed import set_seed
 from unet import UNet, dice_bce
-import wandb
 from patch_data import SpliceCrops, load_rows
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
 if DEV == "cpu" and not os.environ.get("ALLOW_CPU"):
-    raise SystemExit("GPU unavailable — refusing to fall back to CPU. "
-                     "Set ALLOW_CPU=1 to override.")
-EPOCHS = int(os.environ.get("EPOCHS", 12))
+    raise SystemExit("GPU unavailable - refusing CPU fallback. Set ALLOW_CPU=1 to override.")
+
+EPOCHS = int(os.environ.get("EPOCHS", 40))        # ceiling; early stopping decides
+PATIENCE = int(os.environ.get("PATIENCE", 6))
 BATCH = int(os.environ.get("BATCH", 8))
-N_FOLDS = int(os.environ.get('N_FOLDS', 5))
-N_TRAIN = int(os.environ.get("N_TRAIN", 0))      # 0 = all; else data-size curve
+N_FOLDS = int(os.environ.get("N_FOLDS", 5))
+FOLD_START = int(os.environ.get("FOLD_START", 0))
+N_TRAIN = int(os.environ.get("N_TRAIN", 0))       # 0 = all; else data-size curve
+WORKERS = int(os.environ.get("WORKERS", 2))
+USE_WANDB = bool(int(os.environ.get("WANDB", 1)))
+
+if USE_WANDB:
+    import wandb
 
 
 @torch.no_grad()
 def predict_full(model, path):
-    """Full-resolution inference. Pad to a multiple of 8 so the three pools and
+    """Full-resolution inference. Pad to a multiple of 8 so three pools and
     three upsamples land back on the original size exactly."""
     img = np.array(Image.open(path).convert("RGB"), np.float32) / 255.0
     h, w = img.shape[:2]
     ph, pw = (-h) % 8, (-w) % 8
     img = np.pad(img, ((0, ph), (0, pw), (0, 0)), mode="reflect")
     x = torch.from_numpy(img.transpose(2, 0, 1))[None].to(DEV)
-    return torch.sigmoid(model(x))[0, 0].cpu().numpy()[:h, :w]
+    return torch.sigmoid(model(x))[0, 0].float().cpu().numpy()[:h, :w]
+
+
+def counts_at(model, subset, thresholds):
+    c = np.zeros((len(thresholds), 3), np.int64)
+    for r in subset:
+        p = predict_full(model, r["image"])
+        t = np.array(Image.open(r["mask"]).convert("L")) > 127
+        for j, th in enumerate(thresholds):
+            m = p >= th
+            c[j] += ((m & t).sum(), (m & ~t).sum(), (~m & t).sum())
+    return c
 
 
 def run_fold(k, rows):
     set_seed(k)
-    wandb.init(project="cv-splice-localisation", name=f"unet-fold{k}",
-               group="rung4", reinit=True,
-               config={"fold": k, "epochs": EPOCHS, "batch": BATCH,
-                       "patience": PATIENCE, "n_train": N_TRAIN,
-                       "constrained": True, "lr": 1e-3, "seed": k})
-    tr = [r for r in rows if int(r["fold"]) != k]
+    val_fold = (k + 1) % N_FOLDS
+    tr = [r for r in rows if int(r["fold"]) not in (k, val_fold)]
+    va = [r for r in rows if int(r["fold"]) == val_fold]
     te = [r for r in rows if int(r["fold"]) == k]
     if N_TRAIN:
         tr = list(np.random.default_rng(0).permutation(tr))[:N_TRAIN]
 
+    if USE_WANDB:
+        wandb.init(project="cv-splice-localisation", name=f"unet-fold{k}",
+                   group=f"rung4{'-n' + str(N_TRAIN) if N_TRAIN else ''}",
+                   reinit=True,
+                   config={"fold": k, "val_fold": val_fold, "epochs_max": EPOCHS,
+                           "patience": PATIENCE, "batch": BATCH, "lr": 1e-3,
+                           "n_train": N_TRAIN or len(tr), "constrained": True,
+                           "patch": 256, "crops_per_image": 8, "seed": k})
+
     dl = DataLoader(SpliceCrops(tr, train=True, seed=k), batch_size=BATCH,
-                    shuffle=True, num_workers=int(os.environ.get('WORKERS', 2)), drop_last=True)
+                    shuffle=True, num_workers=WORKERS, drop_last=True)
+    vdl = DataLoader(SpliceCrops(va, train=False), batch_size=BATCH,
+                     shuffle=False, num_workers=WORKERS)
+
     model = UNet().to(DEV)
     opt = torch.optim.Adam(model.parameters(), lr=1e-3)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, EPOCHS)
     scaler = torch.amp.GradScaler(DEV, enabled=(DEV == "cuda"))
 
+    best, best_state, bad, stopped_at = float("inf"), None, 0, EPOCHS
     model.constrain()
+
     for ep in range(EPOCHS):
         model.train()
         tot, n, t0 = 0.0, 0, time.time()
@@ -65,51 +100,81 @@ def run_fold(k, rows):
             scaler.scale(loss).backward()
             scaler.step(opt)
             scaler.update()
-            model.constrain()          # re-impose after every step
+            model.constrain()          # re-impose the constraint after every step
             tot += loss.item() * x.size(0); n += x.size(0)
         sched.step()
-        print(f"  fold {k} ep {ep+1}/{EPOCHS}  loss {tot/n:.4f}  ({time.time()-t0:.0f}s)")
 
-    # threshold chosen on training folds, applied to the held-out fold
+        model.eval()
+        vl, vn = 0.0, 0
+        with torch.no_grad():
+            for xv, yv in vdl:
+                xv, yv = xv.to(DEV), yv.to(DEV)
+                vl += dice_bce(model(xv), yv).item() * xv.size(0); vn += xv.size(0)
+        vl /= vn
+
+        print(f"  fold {k} ep {ep+1}/{EPOCHS}  train {tot/n:.4f}  val {vl:.4f}  "
+              f"({time.time()-t0:.0f}s)", flush=True)
+        if USE_WANDB:
+            wandb.log({"epoch": ep + 1, "train/loss": tot / n, "val/loss": vl})
+
+        if vl < best - 1e-4:
+            best, bad = vl, 0
+            best_state = {kk: v.detach().clone() for kk, v in model.state_dict().items()}
+        else:
+            bad += 1
+            if bad >= PATIENCE:
+                stopped_at = ep + 1
+                print(f"  early stop at epoch {stopped_at} (best val {best:.4f})", flush=True)
+                break
+
+    if best_state is not None:
+        model.load_state_dict(best_state)      # the best epoch, not the last
     model.eval()
-    THR = np.arange(0.05, 0.96, 0.05)
-    cal = list(np.random.default_rng(1).permutation(tr))[:150]
-    c = np.zeros((len(THR), 3), np.int64)
-    for r in cal:
-        p = predict_full(model, r["image"])
-        t = np.array(Image.open(r["mask"]).convert("L")) > 127
-        for j, th in enumerate(THR):
-            m = p >= th
-            c[j] += ((m & t).sum(), (m & ~t).sum(), (~m & t).sum())
-    f1s = [2*a / (2*a + b + d) if (a+b+d) else 0 for a, b, d in c]
-    thr = THR[int(np.argmax(f1s))]
 
-    tp = fp = fn = 0
-    for r in te:
-        p = predict_full(model, r["image"]) >= thr
-        t = np.array(Image.open(r["mask"]).convert("L")) > 127
-        tp += (p & t).sum(); fp += (p & ~t).sum(); fn += (~p & t).sum()
+    # Threshold chosen on the validation fold, then applied unchanged to test.
+    THR = np.round(np.arange(0.05, 0.96, 0.05), 2)
+    cal = list(np.random.default_rng(1).permutation(va))[:150]
+    cc = counts_at(model, cal, THR)
+    f1s = [2*a/(2*a+b+d) if (a+b+d) else 0.0 for a, b, d in cc]
+    thr = float(THR[int(np.argmax(f1s))])
+
+    ct = counts_at(model, te, [thr])
+    tp, fp, fn = ct[0]
     f1, iou = 2*tp/(2*tp+fp+fn), tp/(tp+fp+fn)
-    wandb.log({"test/f1": f1, "test/iou": iou, "test/threshold": thr})
-    wandb.finish()
-    return thr, f1, iou
+
+    if USE_WANDB:
+        wandb.log({"test/f1": f1, "test/iou": iou, "test/threshold": thr,
+                   "stopped_at_epoch": stopped_at, "best_val_loss": best})
+        wandb.finish()
+
+    os.makedirs("results", exist_ok=True)
+    tag = f"_n{N_TRAIN}" if N_TRAIN else ""
+    with open(f"results/rung4_fold{k}{tag}.csv", "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["fold", "thr", "f1", "iou", "stopped_at", "best_val"])
+        w.writerow([k, thr, f"{f1:.6f}", f"{iou:.6f}", stopped_at, f"{best:.6f}"])
+    return thr, f1, iou, stopped_at
 
 
 if __name__ == "__main__":
     rows = load_rows()
-    print(f"device {DEV} · {len(rows)} pairs · epochs {EPOCHS} · n_train {N_TRAIN or 'all'}")
-    out = []
-    for k in range(int(os.environ.get('FOLD_START', 0)), N_FOLDS):
-        thr, f1, iou = run_fold(k, rows)
-        print(f"fold {k}: thr {thr:.2f}  F1 {f1:.4f}  IoU {iou:.4f}\n")
-        out.append((k, thr, f1, iou))
-        os.makedirs("results", exist_ok=True)
-        with open(f"results/rung4_fold{k}.csv", "w", newline="") as fh:
-            csv.writer(fh).writerow([k, thr, f1, iou])
+    print(f"device {DEV} | {len(rows)} pairs | epochs<={EPOCHS} patience={PATIENCE} "
+          f"| n_train {N_TRAIN or 'all'}", flush=True)
 
-    f1s = [o[2] for o in out]
-    print(f"mean F1 {np.mean(f1s):.4f} +/- {np.std(f1s):.4f}")
-    os.makedirs("results", exist_ok=True)
+    out = []
+    for k in range(FOLD_START, N_FOLDS):
+        thr, f1, iou, ep = run_fold(k, rows)
+        print(f"fold {k}: thr {thr:.2f}  F1 {f1:.4f}  IoU {iou:.4f}  "
+              f"(stopped ep {ep})\n", flush=True)
+        out.append((k, thr, f1, iou, ep))
+
+    f1s = [o[2] for o in out]; ious = [o[3] for o in out]
+    print(f"mean F1  {np.mean(f1s):.4f} +/- {np.std(f1s):.4f}")
+    print(f"mean IoU {np.mean(ious):.4f} +/- {np.std(ious):.4f}")
+
     tag = f"_n{N_TRAIN}" if N_TRAIN else ""
     with open(f"results/rung4_unet{tag}.csv", "w", newline="") as f:
-        w = csv.writer(f); w.writerow(["fold", "thr", "f1", "iou"]); w.writerows(out)
+        w = csv.writer(f)
+        w.writerow(["fold", "thr", "f1", "iou", "stopped_at"])
+        w.writerows(out)
+    print(f"wrote results/rung4_unet{tag}.csv")
