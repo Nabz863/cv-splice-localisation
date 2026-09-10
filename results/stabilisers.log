@@ -1,0 +1,212 @@
+device cuda | 400 train, 120 val | 90 epochs (400 steps/epoch, 36,000 total) | 4 candidates
+
+=== baseline (norm=sum, wd=0.0, clip=0.0) ===
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/dell/.netrc.
+wandb: Currently logged in as: 2671907 (2671907-university-of-the-witwatersrand) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run tg4ifizd
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260909_222214-tg4ifizd
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run stab-baseline
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/tg4ifizd
+  baseline   ep   5/90  train 1.1010  val 1.1629  min|s| 0.97
+  baseline   ep  10/90  train 1.0227  val 1.2097  min|s| 0.978
+  baseline   ep  15/90  train 0.9506  val 1.0766  min|s| 0.955
+  baseline   ep  20/90  train 0.8769  val 1.2799  min|s| 0.972
+  baseline   ep  25/90  train 0.7956  val 0.9704  min|s| 0.978
+  baseline   ep  30/90  train 0.7088  val 1.0062  min|s| 0.984
+  baseline   ep  35/90  train 0.6792  val 1.1206  min|s| 0.963
+  baseline   ep  40/90  train 0.5836  val 0.9515  min|s| 0.99
+  baseline   ep  45/90  train 0.5362  val 0.9046  min|s| 0.958
+  baseline   ep  50/90  train 0.5077  val 1.0140  min|s| 0.969
+  baseline   ep  55/90  train 0.6093  val 0.9411  min|s| 0.974
+  baseline   ep  60/90  train 0.5272  val 1.0944  min|s| 0.981
+  baseline   ep  65/90  train 0.4997  val 0.9392  min|s| 0.988
+  baseline   ep  70/90  train 0.4982  val 0.9637  min|s| 0.983
+  baseline   ep  75/90  train 0.4257  val 1.1859  min|s| 0.987
+  baseline   ep  77/90  train 0.4177  val inf  min|s| 0.977  [8 non-finite]
+  baseline   ep  78/90  train 0.3902  val inf  min|s| 0.988  [98 non-finite]
+  baseline   ep  79/90  train 0.3948  val inf  min|s| 0.985  [135 non-finite]
+  baseline   ep  80/90  train 0.3828  val inf  min|s| 0.982  [81 non-finite]
+  baseline   ep  81/90  train 0.3779  val inf  min|s| 0.99  [250 non-finite]
+  baseline   ep  82/90  train 0.3901  val inf  min|s| 0.984  [380 non-finite]
+  baseline   ep  83/90  train 0.4180  val inf  min|s| 0.994  [390 non-finite]
+  baseline   ep  84/90  train 0.3505  val inf  min|s| 0.992  [390 non-finite]
+  baseline   ep  85/90  train 0.4042  val inf  min|s| 0.994  [387 non-finite]
+  baseline   ep  86/90  train 0.3981  val inf  min|s| 0.992  [391 non-finite]
+  baseline   ep  87/90  train 0.4245  val inf  min|s| 0.994  [391 non-finite]
+  baseline   ep  88/90  train 0.3725  val inf  min|s| 0.998  [395 non-finite]
+  baseline   ep  89/90  train 0.3896  val inf  min|s| 0.994  [392 non-finite]
+  baseline   ep  90/90  train 0.3695  val inf  min|s| 0.992  [392 non-finite]
+wandb: updating run metadata
+wandb: uploading wandb-summary.json; uploading config.yaml; uploading output.log
+wandb: uploading history steps 89-90, summary, console lines 28-28
+wandb: 
+wandb: Run history:
+wandb:    diag/min_pre_norm_sum ▅▄▅▆▅▆▆▅▄▁▅▇▇▆▆▇▅▇▆▆▆▅▅▃▅▆▇▇▇▇▇▆▆▅▇▇███▇
+wandb:         diag/weight_norm ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▃▃▅▄▆▇█████
+wandb:                    epoch ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇██
+wandb:       non_finite_batches ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▅█████
+wandb:         summary/best_val ▁
+wandb:        summary/first_nan ▁
+wandb: summary/min_pre_norm_sum ▁
+wandb:         summary/survived ▁
+wandb: summary/total_non_finite ▁
+wandb:               train/loss ██▇▇▇▆▆▆▅▅▅▄▄▄▄▄▃▃▃▃▃▃▃▃▄▃▃▃▂▂▂▂▂▁▁▁▂▁▁▁
+wandb:                       +1 ...
+wandb: 
+wandb: Run summary:
+wandb:    diag/min_pre_norm_sum 0.99219
+wandb:         diag/weight_norm 67484.5537
+wandb:                    epoch 90
+wandb:       non_finite_batches 392
+wandb:         summary/best_val 0.88517
+wandb:        summary/first_nan 77
+wandb: summary/min_pre_norm_sum 0.93153
+wandb:         summary/survived 90
+wandb: summary/total_non_finite 4080
+wandb:               train/loss 0.36945
+wandb:                       +1 ...
+wandb: 
+wandb: 🚀 View run stab-baseline at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/tg4ifizd
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260909_222214-tg4ifizd/logs
+  -> survived 90/90, first non-finite 77, best val 0.8852, min|s| 0.932, 4080 bad batches [2077s]
+
+=== clip (norm=sum, wd=0.0, clip=1.0) ===
+wandb: setting up run cbctuqlh
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260909_225650-cbctuqlh
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run stab-clip
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/cbctuqlh
+  clip       ep   5/90  train 1.0944  val 1.2168  min|s| 0.965
+  clip       ep  10/90  train 0.9660  val 1.0659  min|s| 0.989
+  clip       ep  15/90  train 0.9014  val 1.0488  min|s| 0.978
+  clip       ep  20/90  train 0.8494  val 1.4914  min|s| 0.956
+  clip       ep  25/90  train 0.7256  val 0.8966  min|s| 0.982
+  clip       ep  30/90  train 0.6500  val 0.8658  min|s| 0.972
+  clip       ep  35/90  train 0.5795  val 0.8429  min|s| 0.985
+  clip       ep  40/90  train 0.5627  val 0.9650  min|s| 0.981
+  clip       ep  45/90  train 0.5723  val 0.9749  min|s| 0.977
+  clip       ep  50/90  train 0.5838  val 0.8522  min|s| 0.985
+  clip       ep  55/90  train 0.6035  val 0.9752  min|s| 0.956
+  clip       ep  60/90  train 0.5090  val 0.8464  min|s| 0.98
+  clip       ep  65/90  train 0.5241  val 0.9331  min|s| 0.974
+  clip       ep  70/90  train 0.4622  val 0.8589  min|s| 0.982
+  clip       ep  75/90  train 0.5271  val 0.9979  min|s| 0.978
+  clip       ep  80/90  train 0.7477  val 1.1035  min|s| 0.954
+  clip       ep  85/90  train 0.5937  val 1.0090  min|s| 0.968
+  clip       ep  90/90  train 0.5650  val 1.0519  min|s| 0.978
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading config.yaml
+wandb: uploading history steps 89-90, summary, console lines 17-17
+wandb: 
+wandb: Run history:
+wandb:    diag/min_pre_norm_sum ▆▇███▇▇▆▇▇▇▇▇▆▅█▇▇▇▇▇▇█▇▇█▇▇▆▄█▆▇▆▇▁▄▆▇▇
+wandb:         diag/weight_norm ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▃▄▅▆▆▇▇▇█▁▂▁
+wandb:                    epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇▇███
+wandb:       non_finite_batches ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         summary/best_val ▁
+wandb:        summary/first_nan ▁
+wandb: summary/min_pre_norm_sum ▁
+wandb:         summary/survived ▁
+wandb: summary/total_non_finite ▁
+wandb:               train/loss ██▇▆▆▅▅▅▅▅▃▃▃▃▃▂▂▂▂▂▂▂▃▂▁▂▂▁▁▁▁▁▃▄▃▃▂▃▂▂
+wandb:                       +1 ...
+wandb: 
+wandb: Run summary:
+wandb:    diag/min_pre_norm_sum 0.97767
+wandb:         diag/weight_norm 5028.70465
+wandb:                    epoch 90
+wandb:       non_finite_batches 0
+wandb:         summary/best_val 0.83114
+wandb:        summary/first_nan -1
+wandb: summary/min_pre_norm_sum 0.92688
+wandb:         summary/survived 90
+wandb: summary/total_non_finite 0
+wandb:               train/loss 0.56499
+wandb:                       +1 ...
+wandb: 
+wandb: 🚀 View run stab-clip at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/cbctuqlh
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260909_225650-cbctuqlh/logs
+  -> survived 90/90, first non-finite none, best val 0.8311, min|s| 0.927, 0 bad batches [2236s]
+
+=== wd1e-3 (norm=sum, wd=0.001, clip=0.0) ===
+wandb: setting up run pglyu5d6
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260909_233407-pglyu5d6
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run stab-wd1e-3
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/pglyu5d6
+  wd1e-3     ep   5/90  train 1.0979  val 1.2110  min|s| 0.984
+  wd1e-3     ep  10/90  train 0.9885  val 1.1806  min|s| 0.972
+  wd1e-3     ep  15/90  train 0.8943  val 1.0402  min|s| 0.98
+  wd1e-3     ep  20/90  train 0.8747  val 1.1309  min|s| 0.966
+  wd1e-3     ep  25/90  train 0.7649  val 0.9356  min|s| 0.974
+  wd1e-3     ep  30/90  train 0.6753  val 0.9029  min|s| 0.986
+  wd1e-3     ep  35/90  train 0.6140  val 0.8756  min|s| 0.976
+  wd1e-3     ep  40/90  train 0.5552  val 0.8344  min|s| 0.99
+  wd1e-3     ep  45/90  train 0.5618  val 0.9061  min|s| 0.962
+  wd1e-3     ep  50/90  train 0.5446  val 1.0120  min|s| 0.982
+  wd1e-3     ep  55/90  train 0.4865  val 0.9006  min|s| 0.986
+  wd1e-3     ep  60/90  train 0.4545  val 0.9408  min|s| 0.986
+  wd1e-3     ep  65/90  train 0.4434  val 0.9625  min|s| 0.988
+  wd1e-3     ep  70/90  train 0.4055  val 0.9641  min|s| 0.964
+  wd1e-3     ep  75/90  train 0.3840  val 0.9058  min|s| 0.981
+  wd1e-3     ep  80/90  train 0.3635  val 0.9287  min|s| 0.973
+  wd1e-3     ep  85/90  train 0.3501  val 0.9991  min|s| 0.975
+  wd1e-3     ep  89/90  train 0.3331  val inf  min|s| 0.977  [1 non-finite]
+  wd1e-3     ep  90/90  train 0.3260  val inf  min|s| 0.977  [10 non-finite]
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading history steps 89-90, summary, console lines 18-18
+wandb: 
+wandb: Run history:
+wandb:    diag/min_pre_norm_sum ▄▂▄▅▇▆▄▃▂▃▄▄▆▇▇█▇▁█▇▂▄▅▇▁▆▇▆▅▂▅▇▄▅▅▅▅▅▇▅
+wandb:         diag/weight_norm ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▂▃▂▃▄▄▂▂▃▂▂▅▅▄▅█
+wandb:                    epoch ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇▇▇█████
+wandb:       non_finite_batches ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█
+wandb:         summary/best_val ▁
+wandb:        summary/first_nan ▁
+wandb: summary/min_pre_norm_sum ▁
+wandb:         summary/survived ▁
+wandb: summary/total_non_finite ▁
+wandb:               train/loss ██▇▇▇▆▆▆▅▅▅▅▄▄▄▄▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁
+wandb:                       +1 ...
+wandb: 
+wandb: Run summary:
+wandb:    diag/min_pre_norm_sum 0.97656
+wandb:         diag/weight_norm 41276.13273
+wandb:                    epoch 90
+wandb:       non_finite_batches 10
+wandb:         summary/best_val 0.81853
+wandb:        summary/first_nan 89
+wandb: summary/min_pre_norm_sum 0.93974
+wandb:         summary/survived 90
+wandb: summary/total_non_finite 11
+wandb:               train/loss 0.32604
+wandb:                       +1 ...
+wandb: 
+wandb: 🚀 View run stab-wd1e-3 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/pglyu5d6
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260909_233407-pglyu5d6/logs
+  -> survived 90/90, first non-finite 89, best val 0.8185, min|s| 0.94, 11 bad batches [2219s]
+
+=== l1norm (norm=l1, wd=0.0, clip=0.0) ===
+wandb: setting up run 8oudfafv
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260910_001105-8oudfafv
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run stab-l1norm
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/8oudfafv
+  l1norm     ep   5/90  train 1.1466  val 1.2610  min|s| 0.000193

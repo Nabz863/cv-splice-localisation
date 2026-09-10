@@ -1,10 +1,13 @@
 """Rung 4: U-Net with a constrained first layer, 5-fold CV with early stopping.
 
 Split protocol (matched to rungs 1-2 via reselect_mrf.py):
-  test fold      = k
-  validation     = (k+1) % 5   -- early stopping and threshold calibration
-  training       = the other three folds
+  test fold  = k
+  validation = (k+1) % 5   -- early stopping and threshold calibration
+  training   = the other three folds
 The test fold is never consulted before the final evaluation.
+
+Stabilisation (NORM, WD, CLIP) is selected by compare_stabilisers.py, not assumed.
+Defaults reflect that comparison; override via environment variables.
 """
 import csv, os, sys, time
 import numpy as np
@@ -29,7 +32,9 @@ N_FOLDS = int(os.environ.get("N_FOLDS", 5))
 FOLD_START = int(os.environ.get("FOLD_START", 0))
 N_TRAIN = int(os.environ.get("N_TRAIN", 0))       # 0 = all; else data-size curve
 WORKERS = int(os.environ.get("WORKERS", 2))
-CLIP = float(os.environ.get("CLIP", 1.0))         # gradient-norm clip; 0 disables
+NORM = os.environ.get("NORM", "l1")               # "l1" (bounded) or "sum" (paper)
+WD = float(os.environ.get("WD", 1e-4))            # AdamW weight decay; 0 = Adam
+CLIP = float(os.environ.get("CLIP", 0.0))         # gradient-norm clip; 0 disables
 USE_WANDB = bool(int(os.environ.get("WANDB", 1)))
 
 if USE_WANDB:
@@ -73,6 +78,7 @@ def run_fold(k, rows):
                    group=f"rung4{'-n' + str(N_TRAIN) if N_TRAIN else ''}",
                    config={"fold": k, "val_fold": val_fold, "epochs_max": EPOCHS,
                            "patience": PATIENCE, "batch": BATCH, "lr": 1e-3,
+                           "constraint_norm": NORM, "weight_decay": WD,
                            "grad_clip": CLIP, "n_train": N_TRAIN or len(tr),
                            "constrained": True, "patch": 256,
                            "crops_per_image": 8, "seed": k})
@@ -82,8 +88,9 @@ def run_fold(k, rows):
     vdl = DataLoader(SpliceCrops(va, train=False), batch_size=BATCH,
                      shuffle=False, num_workers=WORKERS)
 
-    model = UNet().to(DEV)
-    opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+    model = UNet(norm=NORM).to(DEV)
+    opt = (torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=WD) if WD
+           else torch.optim.Adam(model.parameters(), lr=1e-3))
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, EPOCHS)
     scaler = torch.amp.GradScaler(DEV, enabled=(DEV == "cuda"))
 
@@ -98,25 +105,21 @@ def run_fold(k, rows):
             opt.zero_grad()
             with torch.amp.autocast(DEV, enabled=(DEV == "cuda")):
                 loss = dice_bce(model(x), y)
-
-            # Skip a non-finite batch rather than letting it poison the weights.
             if not torch.isfinite(loss):
                 skipped += 1
                 continue
-
             scaler.scale(loss).backward()
             if CLIP > 0:
                 scaler.unscale_(opt)
                 torch.nn.utils.clip_grad_norm_(model.parameters(), CLIP)
-            scaler.step(opt)
-            scaler.update()
-            model.constrain()          # re-impose the constraint after every step
+            scaler.step(opt); scaler.update()
+            model.constrain()
             tot += loss.item() * x.size(0); n += x.size(0)
         sched.step()
 
         if n == 0:
             print(f"  fold {k} ep {ep+1}: every batch non-finite - aborting", flush=True)
-            nan_epoch = ep + 1
+            nan_epoch = nan_epoch or ep + 1
             break
 
         model.eval()
@@ -129,17 +132,18 @@ def run_fold(k, rows):
                     vl += l.item() * xv.size(0); vn += xv.size(0)
         vl = vl / vn if vn else float("inf")
 
+        diag = model.diagnostics()
         msg = (f"  fold {k} ep {ep+1}/{EPOCHS}  train {tot/n:.4f}  val {vl:.4f}  "
                f"({time.time()-t0:.0f}s)")
         if skipped:
-            msg += f"  [skipped {skipped} non-finite batches]"
-            if nan_epoch is None:
-                nan_epoch = ep + 1
+            msg += f"  [skipped {skipped} non-finite]"
+            nan_epoch = nan_epoch or ep + 1
         print(msg, flush=True)
 
         if USE_WANDB:
             wandb.log({"epoch": ep + 1, "train/loss": tot / n, "val/loss": vl,
-                       "skipped_batches": skipped})
+                       "skipped_batches": skipped, **{f"diag/{a}": b
+                                                      for a, b in diag.items()}})
 
         if vl < best - 1e-4:
             best, bad = vl, 0
@@ -155,15 +159,14 @@ def run_fold(k, rows):
         model.load_state_dict(best_state)      # the best epoch, not the last
     model.eval()
 
-    # Threshold chosen on the validation fold, then applied unchanged to test.
+    # Threshold chosen on the validation fold, applied unchanged to test.
     THR = np.round(np.arange(0.05, 0.96, 0.05), 2)
     cal = list(np.random.default_rng(1).permutation(va))[:150]
     cc = counts_at(model, cal, THR)
     f1s = [2*a/(2*a+b+d) if (a+b+d) else 0.0 for a, b, d in cc]
     thr = float(THR[int(np.argmax(f1s))])
 
-    ct = counts_at(model, te, [thr])
-    tp, fp, fn = ct[0]
+    tp, fp, fn = counts_at(model, te, [thr])[0]
     f1, iou = 2*tp/(2*tp+fp+fn), tp/(tp+fp+fn)
 
     if USE_WANDB:
@@ -176,21 +179,22 @@ def run_fold(k, rows):
     tag = f"_n{N_TRAIN}" if N_TRAIN else ""
     with open(f"results/rung4_fold{k}{tag}.csv", "w", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["fold", "thr", "f1", "iou", "stopped_at", "best_val", "first_nan_epoch"])
-        w.writerow([k, thr, f"{f1:.6f}", f"{iou:.6f}", stopped_at,
-                    f"{best:.6f}", nan_epoch or ""])
+        w.writerow(["fold", "thr", "f1", "iou", "stopped_at", "best_val",
+                    "first_nan_epoch", "norm", "weight_decay", "clip"])
+        w.writerow([k, thr, f"{f1:.6f}", f"{iou:.6f}", stopped_at, f"{best:.6f}",
+                    nan_epoch or "", NORM, WD, CLIP])
     return thr, f1, iou, stopped_at, nan_epoch
 
 
 if __name__ == "__main__":
     rows = load_rows()
     print(f"device {DEV} | {len(rows)} pairs | epochs<={EPOCHS} patience={PATIENCE} "
-          f"clip={CLIP} | n_train {N_TRAIN or 'all'}", flush=True)
+          f"| norm={NORM} wd={WD} clip={CLIP} | n_train {N_TRAIN or 'all'}", flush=True)
 
     out = []
     for k in range(FOLD_START, N_FOLDS):
         thr, f1, iou, ep, nan_ep = run_fold(k, rows)
-        note = f"  [first non-finite batch at ep {nan_ep}]" if nan_ep else ""
+        note = f"  [first non-finite at ep {nan_ep}]" if nan_ep else ""
         print(f"fold {k}: thr {thr:.2f}  F1 {f1:.4f}  IoU {iou:.4f}  "
               f"(stopped ep {ep}){note}\n", flush=True)
         out.append((k, thr, f1, iou, ep, nan_ep or ""))
@@ -198,8 +202,7 @@ if __name__ == "__main__":
     f1s = [o[2] for o in out]; ious = [o[3] for o in out]
     print(f"mean F1  {np.mean(f1s):.4f} +/- {np.std(f1s):.4f}")
     print(f"mean IoU {np.mean(ious):.4f} +/- {np.std(ious):.4f}")
-    n_nan = sum(1 for o in out if o[5])
-    print(f"folds with any non-finite batch: {n_nan}/{len(out)}")
+    print(f"folds with any non-finite batch: {sum(1 for o in out if o[5])}/{len(out)}")
 
     tag = f"_n{N_TRAIN}" if N_TRAIN else ""
     with open(f"results/rung4_unet{tag}.csv", "w", newline="") as f:

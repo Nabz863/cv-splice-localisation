@@ -1,0 +1,19 @@
+  wd1e-3     ep   5/90  train 1.0979  val 1.2110  min|s| 0.984
+  wd1e-3     ep  10/90  train 0.9885  val 1.1806  min|s| 0.972
+  wd1e-3     ep  15/90  train 0.8943  val 1.0402  min|s| 0.98
+  wd1e-3     ep  20/90  train 0.8747  val 1.1309  min|s| 0.966
+  wd1e-3     ep  25/90  train 0.7649  val 0.9356  min|s| 0.974
+  wd1e-3     ep  30/90  train 0.6753  val 0.9029  min|s| 0.986
+  wd1e-3     ep  35/90  train 0.6140  val 0.8756  min|s| 0.976
+  wd1e-3     ep  40/90  train 0.5552  val 0.8344  min|s| 0.99
+  wd1e-3     ep  45/90  train 0.5618  val 0.9061  min|s| 0.962
+  wd1e-3     ep  50/90  train 0.5446  val 1.0120  min|s| 0.982
+  wd1e-3     ep  55/90  train 0.4865  val 0.9006  min|s| 0.986
+  wd1e-3     ep  60/90  train 0.4545  val 0.9408  min|s| 0.986
+  wd1e-3     ep  65/90  train 0.4434  val 0.9625  min|s| 0.988
+  wd1e-3     ep  70/90  train 0.4055  val 0.9641  min|s| 0.964
+  wd1e-3     ep  75/90  train 0.3840  val 0.9058  min|s| 0.981
+  wd1e-3     ep  80/90  train 0.3635  val 0.9287  min|s| 0.973
+  wd1e-3     ep  85/90  train 0.3501  val 0.9991  min|s| 0.975
+  wd1e-3     ep  89/90  train 0.3331  val inf  min|s| 0.977  [1 non-finite]
+  wd1e-3     ep  90/90  train 0.3260  val inf  min|s| 0.977  [10 non-finite]
