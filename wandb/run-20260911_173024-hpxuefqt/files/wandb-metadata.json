@@ -1,0 +1,39 @@
+{
+  "os":  "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "python":  "CPython 3.14.4",
+  "startedAt":  "2026-09-11T15:30:24.004716Z",
+  "program":  "/home/dell/cv-project/src/methods/run_unet.py",
+  "codePath":  "src/methods/run_unet.py",
+  "codePathLocal":  "src/methods/run_unet.py",
+  "git":  {
+    "remote":  "git@github.com:Nabz863/cv-splice-localisation.git",
+    "commit":  "d2ffe1fc1e59095675614dbb2905ebcdc16d115b"
+  },
+  "email":  "2671907@students.wits.ac.za",
+  "root":  "/home/dell/cv-project",
+  "host":  "DESKTOP-5VNQJOA",
+  "executable":  "/home/dell/cv-project/venv/bin/python3",
+  "cpu_count":  2,
+  "cpu_count_logical":  4,
+  "gpu":  "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "1081101176832",
+      "used":  "84165738496"
+    }
+  },
+  "memory":  {
+    "total":  "8328429568"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "memoryTotal":  "8585740288",
+      "architecture":  "Ada",
+      "uuid":  "GPU-a0c4fb69-648a-1666-b37e-a3bc354c7819"
+    }
+  ],
+  "cudaVersion":  "13.4",
+  "writerId":  "0cpj1a6mohtnginfasji91lzpzpbtt5j"
+}

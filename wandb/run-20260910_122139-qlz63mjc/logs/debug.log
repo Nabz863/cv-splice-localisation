@@ -1,0 +1,21 @@
+2026-09-10 12:21:39,112 INFO    MainThread:672 [wandb_init.py:setup_run_log_directory():739] Logging user logs to /home/dell/cv-project/wandb/run-20260910_122139-qlz63mjc/logs/debug.log
+2026-09-10 12:21:39,112 INFO    MainThread:672 [wandb_init.py:setup_run_log_directory():740] Logging internal logs to /home/dell/cv-project/wandb/run-20260910_122139-qlz63mjc/logs/debug-internal.log
+2026-09-10 12:21:39,112 INFO    MainThread:672 [wandb_init.py:init():783] calling init triggers
+2026-09-10 12:21:39,112 INFO    MainThread:672 [wandb_init.py:init():788] wandb.init called with sweep_config: {}
+config: {'fold': 1, 'val_fold': 2, 'epochs_max': 60, 'patience': 8, 'batch': 8, 'lr': 0.001, 'constraint_norm': 'sum', 'weight_decay': 0.0, 'grad_clip': 1.0, 'n_train': 1094, 'constrained': True, 'patch': 256, 'crops_per_image': 8, 'seed': 1, '_wandb': {}}
+2026-09-10 12:21:39,112 INFO    MainThread:672 [wandb_init.py:init():831] starting backend
+2026-09-10 12:21:39,112 INFO    MainThread:672 [wandb_init.py:init():846] sending inform_init request
+2026-09-10 12:21:40,113 INFO    MainThread:672 [wandb_init.py:init():851] backend started and connected
+2026-09-10 12:21:40,114 INFO    MainThread:672 [wandb_init.py:init():921] updated telemetry
+2026-09-10 12:21:40,117 INFO    MainThread:672 [wandb_init.py:init():944] communicating run to backend with 90.0 second timeout
+2026-09-10 12:21:41,094 INFO    MainThread:672 [wandb_init.py:init():981] starting run threads in backend
+2026-09-10 12:21:41,123 INFO    MainThread:672 [wandb_run.py:_console_start():2545] atexit reg
+2026-09-10 12:21:41,123 INFO    MainThread:672 [wandb_run.py:_redirect():2395] redirect: wrap_raw
+2026-09-10 12:21:41,123 INFO    MainThread:672 [wandb_run.py:_redirect():2464] Wrapping output streams.
+2026-09-10 12:21:41,124 INFO    MainThread:672 [wandb_run.py:_redirect():2487] Redirects installed.
+2026-09-10 12:21:41,124 INFO    MainThread:672 [wandb_init.py:init():1019] run started, returning control to user process
+2026-09-10 12:47:45,957 INFO    MainThread:672 [wandb_run.py:_finish():2316] finishing run 2671907-university-of-the-witwatersrand/cv-splice-localisation/qlz63mjc
+2026-09-10 12:47:45,958 INFO    MainThread:672 [wandb_run.py:_atexit_cleanup():2512] got exitcode: 0
+2026-09-10 12:47:45,958 INFO    MainThread:672 [wandb_run.py:_restore():2494] restore
+2026-09-10 12:47:45,958 INFO    MainThread:672 [wandb_run.py:_restore():2500] restore done
+2026-09-10 12:47:48,029 INFO    MainThread:672 [wandb_run.py:_footer_sync_info():3917] logging synced files

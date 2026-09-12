@@ -1,0 +1,17 @@
+{
+  "os":  "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "python":  "CPython 3.14.4",
+  "startedAt":  "2026-09-10T18:41:55.246371Z",
+  "program":  "/home/dell/cv-project/src/methods/run_unet.py",
+  "codePath":  "src/methods/run_unet.py",
+  "codePathLocal":  "src/methods/run_unet.py",
+  "git":  {
+    "remote":  "git@github.com:Nabz863/cv-splice-localisation.git",
+    "commit":  "d2ffe1fc1e59095675614dbb2905ebcdc16d115b"
+  },
+  "email":  "2671907@students.wits.ac.za",
+  "root":  "/home/dell/cv-project",
+  "host":  "DESKTOP-5VNQJOA",
+  "executable":  "/home/dell/cv-project/venv/bin/python3",
+  "writerId":  "rcdmdsxpx9mangkayboexr77ecpbei4w"
+}

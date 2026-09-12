@@ -1,3 +1,185 @@
-/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/cuda/__init__.py:228: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 1: invalid argument (Triggered internally at /__w/pytorch/pytorch/c10/cuda/CUDAFunctions.cpp:119.)
-  return torch._C._cuda_getDeviceCount() > 0
-GPU unavailable - refusing CPU fallback. Set ALLOW_CPU=1 to override.
+device cuda | 1822 pairs | epochs<=60 patience=8 | norm=sum wd=0.0 clip=1.0 | n_train all
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/dell/.netrc.
+wandb: Currently logged in as: 2671907 (2671907-university-of-the-witwatersrand) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run xklxtt41
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260910_112434-xklxtt41
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run unet-fold0
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/xklxtt41
+  fold 0 ep 1/60  train 1.2045  val 1.1704  (69s)
+  fold 0 ep 2/60  train 1.1209  val 1.0814  (67s)
+  fold 0 ep 3/60  train 1.0664  val 1.6142  (67s)
+  fold 0 ep 4/60  train 1.0173  val 1.0368  (67s)
+  fold 0 ep 5/60  train 0.9664  val 0.9225  (67s)
+  fold 0 ep 6/60  train 0.9935  val 0.9835  (67s)
+  fold 0 ep 7/60  train 0.9721  val 0.9705  (67s)
+  fold 0 ep 8/60  train 0.9381  val 0.9596  (67s)
+  fold 0 ep 9/60  train 0.9236  val 0.9951  (67s)
+  fold 0 ep 10/60  train 0.8831  val 0.8384  (67s)
+  fold 0 ep 11/60  train 0.8386  val 0.8947  (67s)
+  fold 0 ep 12/60  train 0.8314  val 0.8700  (67s)
+  fold 0 ep 13/60  train 0.7828  val 0.7843  (67s)
+  fold 0 ep 14/60  train 0.7441  val 0.8152  (67s)
+  fold 0 ep 15/60  train 0.7202  val 0.7411  (67s)
+  fold 0 ep 16/60  train 0.6911  val 0.7190  (67s)
+  fold 0 ep 17/60  train 0.6701  val 0.7156  (67s)
+  fold 0 ep 18/60  train 0.6714  val 0.7560  (67s)
+  fold 0 ep 19/60  train 0.6492  val 0.7360  (67s)
+  fold 0 ep 20/60  train 0.6309  val 0.6649  (67s)
+  fold 0 ep 21/60  train 0.6304  val 0.6812  (67s)
+  fold 0 ep 22/60  train 0.6241  val 0.7353  (67s)
+  fold 0 ep 23/60  train 0.6138  val 0.6609  (67s)
+  fold 0 ep 24/60  train 0.5956  val 0.6919  (67s)
+  fold 0 ep 25/60  train 0.5869  val 0.8072  (67s)
+  fold 0 ep 26/60  train 0.5974  val 0.6747  (67s)
+  fold 0 ep 27/60  train 0.5880  val 0.7673  (67s)
+  fold 0 ep 28/60  train 0.5540  val 0.6565  (67s)
+  fold 0 ep 29/60  train 0.5372  val 0.6495  (67s)
+  fold 0 ep 30/60  train 0.5228  val 0.6217  (67s)
+  fold 0 ep 31/60  train 0.5140  val 0.6109  (67s)
+  fold 0 ep 32/60  train 0.4960  val 0.5797  (67s)
+  fold 0 ep 33/60  train 0.4988  val 0.5929  (67s)
+  fold 0 ep 34/60  train 0.4839  val 0.6214  (67s)
+  fold 0 ep 35/60  train 0.4822  val 0.6128  (67s)
+  fold 0 ep 36/60  train 0.4600  val 0.6011  (67s)
+  fold 0 ep 37/60  train 0.4534  val 0.5937  (67s)
+  fold 0 ep 38/60  train 0.4456  val 0.5931  (67s)
+  fold 0 ep 39/60  train 0.4308  val 0.5928  (67s)
+  fold 0 ep 40/60  train 0.4204  val 0.5700  (67s)
+  fold 0 ep 41/60  train 0.4248  val 0.5762  (67s)
+  fold 0 ep 42/60  train 0.4153  val 0.6037  (67s)
+  fold 0 ep 43/60  train 0.4050  val 0.5624  (67s)
+  fold 0 ep 44/60  train 0.3994  val 0.5645  (67s)
+  fold 0 ep 45/60  train 0.3909  val 0.5982  (67s)
+  fold 0 ep 46/60  train 0.3945  val 0.5767  (67s)
+  fold 0 ep 47/60  train 0.3918  val 0.5879  (67s)
+  fold 0 ep 48/60  train 0.3953  val 0.6007  (67s)
+  fold 0 ep 49/60  train 0.3999  val 0.6081  (67s)
+  fold 0 ep 50/60  train 0.3986  val 0.5900  (68s)
+  fold 0 ep 51/60  train 0.3933  val 0.5968  (68s)
+  early stop at epoch 51 (best val 0.5624)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading wandb-summary.json
+wandb: uploading history steps 50-51, summary, console lines 50-51
+wandb: 
+wandb: Run history:
+wandb:     best_val_loss ▁
+wandb: diag/pre_norm_sum █▇███████▆▇███▇████▇▇█▇▇██▇▅▆█▄▃▂▅▆▆▃▇█▁
+wandb:  diag/weight_norm ▁▁▂▂▂▂▂▁▂▂▁▁▂▂▂▄▄▄▅▄▃▃▃▃▄▅▅▅▆▆▅▆▆▇▇▇▇█▇█
+wandb:             epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:   first_nan_epoch ▁
+wandb:   skipped_batches ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:  stopped_at_epoch ▁
+wandb:           test/f1 ▁
+wandb:          test/iou ▁
+wandb:    test/threshold ▁
+wandb:                +2 ...
+wandb: 
+wandb: Run summary:
+wandb:     best_val_loss 0.56243
+wandb: diag/pre_norm_sum 0.99957
+wandb:  diag/weight_norm 5797.4859
+wandb:             epoch 51
+wandb:   first_nan_epoch -1
+wandb:   skipped_batches 0
+wandb:  stopped_at_epoch 51
+wandb:           test/f1 0.73239
+wandb:          test/iou 0.57777
+wandb:    test/threshold 0.45
+wandb:                +2 ...
+wandb: 
+wandb: 🚀 View run unet-fold0 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/xklxtt41
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260910_112434-xklxtt41/logs
+fold 0: thr 0.45  F1 0.7324  IoU 0.5778  (stopped ep 51)
+
+wandb: setting up run qlz63mjc
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260910_122139-qlz63mjc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run unet-fold1
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/qlz63mjc
+  fold 1 ep 1/60  train 1.2145  val 1.1625  (67s)
+  fold 1 ep 2/60  train 1.1275  val 1.0967  (67s)
+  fold 1 ep 3/60  train 1.0611  val 1.0799  (67s)
+  fold 1 ep 4/60  train 1.0065  val 1.0024  (67s)
+  fold 1 ep 5/60  train 0.9567  val 0.9755  (67s)
+  fold 1 ep 6/60  train 0.9206  val 0.8998  (67s)
+  fold 1 ep 7/60  train 0.8827  val 0.8781  (68s)
+  fold 1 ep 8/60  train 0.8484  val 0.8420  (67s)
+  fold 1 ep 9/60  train 0.8370  val 0.8794  (67s)
+  fold 1 ep 10/60  train 0.8118  val 0.8634  (67s)
+  fold 1 ep 11/60  train 0.8006  val 0.7996  (67s)
+  fold 1 ep 12/60  train 0.7731  val 0.9852  (68s)
+  fold 1 ep 13/60  train 0.7476  val 1.0496  (68s)
+  fold 1 ep 14/60  train 0.7391  val 0.8128  (68s)
+  fold 1 ep 15/60  train 0.7290  val 0.7638  (67s)
+  fold 1 ep 16/60  train 0.7181  val 0.8257  (67s)
+  fold 1 ep 17/60  train 0.7060  val 0.7611  (67s)
+  fold 1 ep 18/60  train 0.6977  val 0.7414  (67s)
+  fold 1 ep 19/60  train 0.6801  val 0.7485  (67s)
+  fold 1 ep 20/60  train 0.6568  val inf  (67s)  [skipped 1 non-finite]
+  fold 1 ep 21/60  train 0.6473  val inf  (64s)  [skipped 68 non-finite]
+  fold 1 ep 22/60  train 0.6234  val inf  (49s)  [skipped 486 non-finite]
+  fold 1 ep 23/60  train 0.6369  val inf  (26s)  [skipped 1069 non-finite]
+  fold 1 ep 24/60  train 0.6820  val inf  (26s)  [skipped 1056 non-finite]
+  fold 1 ep 25/60  train 0.6287  val inf  (26s)  [skipped 1063 non-finite]
+  fold 1 ep 26/60  train 0.6010  val inf  (27s)  [skipped 1049 non-finite]
+  early stop at epoch 26 (best val 0.7414)
+wandb: updating run metadata
+wandb: uploading config.yaml; uploading output.log; uploading wandb-summary.json; uploading history steps 25-26, summary, console lines 25-26
+wandb: uploading config.yaml; uploading wandb-summary.json
+wandb: uploading data
+wandb: 
+wandb: Run history:
+wandb:     best_val_loss ▁
+wandb: diag/pre_norm_sum █████████████▇███████▆▁███
+wandb:  diag/weight_norm ▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▃▃▄▅▆█████
+wandb:             epoch ▁▁▂▂▂▂▃▃▃▄▄▄▄▅▅▅▅▆▆▆▇▇▇▇██
+wandb:   first_nan_epoch ▁
+wandb:   skipped_batches ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▄████
+wandb:  stopped_at_epoch ▁
+wandb:           test/f1 ▁
+wandb:          test/iou ▁
+wandb:    test/threshold ▁
+wandb:                +2 ...
+wandb: 
+wandb: Run summary:
+wandb:     best_val_loss 0.74143
+wandb: diag/pre_norm_sum 0.99994
+wandb:  diag/weight_norm 81329.25048
+wandb:             epoch 26
+wandb:   first_nan_epoch 20
+wandb:   skipped_batches 1049
+wandb:  stopped_at_epoch 26
+wandb:           test/f1 0.68441
+wandb:          test/iou 0.52023
+wandb:    test/threshold 0.35
+wandb:                +2 ...
+wandb: 
+wandb: 🚀 View run unet-fold1 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/qlz63mjc
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260910_122139-qlz63mjc/logs
+fold 1: thr 0.35  F1 0.6844  IoU 0.5202  (stopped ep 26)  [first non-finite at ep 20]
+
+wandb: setting up run v8z8f4iv
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260910_124750-v8z8f4iv
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run unet-fold2
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/v8z8f4iv
+  fold 2 ep 1/60  train 1.2144  val 1.1816  (68s)
+  fold 2 ep 2/60  train 1.1456  val 1.1503  (67s)
+  fold 2 ep 3/60  train 1.0849  val 1.0969  (67s)
+  fold 2 ep 4/60  train 1.0325  val 1.0413  (67s)
+  fold 2 ep 5/60  train 0.9756  val 1.2136  (67s)
+  fold 2 ep 6/60  train 0.9404  val 0.9885  (67s)
+/usr/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 14 leaked semaphore objects to clean up at shutdown: {'/mp-1jpt_ipn', '/mp-edvpyglj', '/mp-v7zl2siv', '/mp-mczkvhmi', '/mp-r156wlqp', '/mp-9q4egvr8', '/mp-bys4liu8', '/mp-2b_qr1x6', '/mp-pfqlvsmw', '/mp-jpk5uldp', '/mp-xfpzbi28', '/mp-3ftxl0nj', '/mp-uzmtzqtj', '/mp-7vcm3n_o'}
+  warnings.warn(

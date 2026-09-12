@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/dell/cv-project/src/methods/run_unet.py", line 196, in <module>
+    thr, f1, iou, ep, nan_ep = run_fold(k, rows)
+                               ~~~~~~~~^^^^^^^^^
+  File "/home/dell/cv-project/src/methods/run_unet.py", line 135, in run_fold
+    diag = model.diagnostics()
+           ^^^^^^^^^^^^^^^^^
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1972, in __getattr__
+    raise AttributeError(
+        f"'{type(self).__name__}' object has no attribute '{name}'"
+    )
+AttributeError: 'UNet' object has no attribute 'diagnostics'

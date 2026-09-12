@@ -1,0 +1,27 @@
+  fold 1 ep 1/60  train 1.2145  val 1.1625  (67s)
+  fold 1 ep 2/60  train 1.1275  val 1.0967  (67s)
+  fold 1 ep 3/60  train 1.0611  val 1.0799  (67s)
+  fold 1 ep 4/60  train 1.0065  val 1.0024  (67s)
+  fold 1 ep 5/60  train 0.9567  val 0.9755  (67s)
+  fold 1 ep 6/60  train 0.9206  val 0.8998  (67s)
+  fold 1 ep 7/60  train 0.8827  val 0.8781  (68s)
+  fold 1 ep 8/60  train 0.8484  val 0.8420  (67s)
+  fold 1 ep 9/60  train 0.8370  val 0.8794  (67s)
+  fold 1 ep 10/60  train 0.8118  val 0.8634  (67s)
+  fold 1 ep 11/60  train 0.8006  val 0.7996  (67s)
+  fold 1 ep 12/60  train 0.7731  val 0.9852  (68s)
+  fold 1 ep 13/60  train 0.7476  val 1.0496  (68s)
+  fold 1 ep 14/60  train 0.7391  val 0.8128  (68s)
+  fold 1 ep 15/60  train 0.7290  val 0.7638  (67s)
+  fold 1 ep 16/60  train 0.7181  val 0.8257  (67s)
+  fold 1 ep 17/60  train 0.7060  val 0.7611  (67s)
+  fold 1 ep 18/60  train 0.6977  val 0.7414  (67s)
+  fold 1 ep 19/60  train 0.6801  val 0.7485  (67s)
+  fold 1 ep 20/60  train 0.6568  val inf  (67s)  [skipped 1 non-finite]
+  fold 1 ep 21/60  train 0.6473  val inf  (64s)  [skipped 68 non-finite]
+  fold 1 ep 22/60  train 0.6234  val inf  (49s)  [skipped 486 non-finite]
+  fold 1 ep 23/60  train 0.6369  val inf  (26s)  [skipped 1069 non-finite]
+  fold 1 ep 24/60  train 0.6820  val inf  (26s)  [skipped 1056 non-finite]
+  fold 1 ep 25/60  train 0.6287  val inf  (26s)  [skipped 1063 non-finite]
+  fold 1 ep 26/60  train 0.6010  val inf  (27s)  [skipped 1049 non-finite]
+  early stop at epoch 26 (best val 0.7414)

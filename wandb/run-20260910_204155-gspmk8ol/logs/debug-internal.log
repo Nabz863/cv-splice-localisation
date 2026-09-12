@@ -1,0 +1,16 @@
+{"time":"2026-09-10T20:41:55.947162971+02:00","level":"INFO","msg":"wandb-core"}
+{"time":"2026-09-10T20:41:55.947397371+02:00","level":"INFO","msg":"stream: starting","core version":"0.29.0"}
+{"time":"2026-09-10T20:41:56.09322509+02:00","level":"INFO","msg":"stream: created new stream","id":"gspmk8ol"}
+{"time":"2026-09-10T20:41:56.093291568+02:00","level":"INFO","msg":"handler: started"}
+{"time":"2026-09-10T20:41:56.09334099+02:00","level":"INFO","msg":"stream: started"}
+{"time":"2026-09-10T20:41:56.093355644+02:00","level":"INFO","msg":"writer: started","stream_id":"gspmk8ol"}
+{"time":"2026-09-10T20:41:56.093365846+02:00","level":"INFO","msg":"sender: started"}
+{"time":"2026-09-10T20:41:57.40189197+02:00","level":"INFO","msg":"filestream: sending request","total_files":1,"console_offset":0,"console_lines":1}
+{"time":"2026-09-10T20:41:58.606742395+02:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-10T20:41:59.779840388+02:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2026-09-10T20:41:59.780094534+02:00","level":"INFO","msg":"filestream: sending request","total_files":2,"console_offset":1,"console_lines":30,"uploaded_len":5,"complete":true,"exit_code":1}
+{"time":"2026-09-10T20:42:00.110562716+02:00","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-10T20:42:00.110705301+02:00","level":"INFO","msg":"stream: finishing up"}
+{"time":"2026-09-10T20:42:00.110712556+02:00","level":"INFO","msg":"handler: closed"}
+{"time":"2026-09-10T20:42:00.110740092+02:00","level":"INFO","msg":"sender: closed"}
+{"time":"2026-09-10T20:42:00.110742441+02:00","level":"INFO","msg":"stream: all finished"}

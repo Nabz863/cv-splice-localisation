@@ -1,0 +1,29 @@
+Traceback (most recent call last):
+  File "/home/dell/cv-project/src/methods/run_unet.py", line 226, in <module>
+    thr, f1, iou, ep, nan_ep = run_pair(k, v, rows)
+                               ~~~~~~~~^^^^^^^^^^^^
+  File "/home/dell/cv-project/src/methods/run_unet.py", line 106, in run_pair
+    model = UNet(norm=NORM).to(DEV)
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1388, in to
+    return self._apply(convert)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+    ~~~~~~~~~~~~~^^^^
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 966, in _apply
+    param_applied = fn(param)
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1374, in convert
+    return t.to(
+           ~~~~^
+        device,
+        ^^^^^^^
+        dtype if t.is_floating_point() or t.is_complex() else None,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        non_blocking,
+        ^^^^^^^^^^^^^
+    )
+    ^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+The CUDA driver logged these messages, which may provide useful details:
+Returning 2 (CUDA_ERROR_OUT_OF_MEMORY) from cuDevicePrimaryCtxRetain

@@ -1,0 +1,6 @@
+  fold 2 ep 1/60  train 1.2144  val 1.1816  (68s)
+  fold 2 ep 2/60  train 1.1456  val 1.1503  (67s)
+  fold 2 ep 3/60  train 1.0849  val 1.0969  (67s)
+  fold 2 ep 4/60  train 1.0325  val 1.0413  (67s)
+  fold 2 ep 5/60  train 0.9756  val 1.2136  (67s)
+  fold 2 ep 6/60  train 0.9404  val 0.9885  (67s)

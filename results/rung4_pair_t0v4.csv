@@ -1,0 +1,2 @@
+test_fold,val_fold,thr,f1,iou,stopped_at,best_val,first_nan_epoch,norm,weight_decay,clip
+0,4,0.45,0.680791,0.516060,39,0.709377,,sum,0.0001,1.0
