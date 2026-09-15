@@ -194,6 +194,12 @@ def run_pair(test_fold, val_fold, rows):
     if best_state is not None:
         model.load_state_dict(best_state)      # the best epoch, not the last
     model.eval()
+
+    # Persist the trained weights. Downstream experiments (MRF refinement,
+    # qualitative figures) need the model, not just its score -- an earlier
+    # version discarded these and cost a full retrain.
+    os.makedirs("results/models", exist_ok=True)
+    torch.save(model.state_dict(), f"results/models/unet_{tag}.pt")
     if os.path.exists(ck):
         os.remove(ck)                          # pair done; checkpoint no longer needed
 

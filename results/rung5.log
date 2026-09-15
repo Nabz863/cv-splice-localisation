@@ -1,0 +1,1757 @@
+device cuda | 1822 pairs | 49 (tau, beta) points | amp=bf16 wd=0.0001 clip=1.0
+20 (test, val) pairs | 0 done | 20 to run
+
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/dell/.netrc.
+wandb: Currently logged in as: 2671907 (2671907-university-of-the-witwatersrand) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 286wm2o8
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_005448-286wm2o8
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t0v1
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/286wm2o8
+  t0v1 ep 1/90  train 1.2091  val 1.2376 (76s)
+  t0v1 ep 2/90  train 1.1369  val 1.0773 (73s)
+  t0v1 ep 3/90  train 1.0892  val 1.0666 (73s)
+  t0v1 ep 4/90  train 1.0356  val 0.9783 (73s)
+  t0v1 ep 5/90  train 0.9991  val 0.9822 (73s)
+  t0v1 ep 6/90  train 0.9707  val 0.9114 (73s)
+  t0v1 ep 7/90  train 0.9372  val 0.9749 (73s)
+  t0v1 ep 8/90  train 0.9068  val 0.9020 (73s)
+  t0v1 ep 9/90  train 0.8966  val 0.8739 (73s)
+  t0v1 ep 10/90  train 0.9295  val 0.8591 (73s)
+  t0v1 ep 11/90  train 0.8596  val 0.8462 (73s)
+  t0v1 ep 12/90  train 0.8212  val 0.8292 (73s)
+  t0v1 ep 13/90  train 0.7856  val 0.8001 (73s)
+  t0v1 ep 14/90  train 0.7761  val 0.9518 (73s)
+  t0v1 ep 15/90  train 0.7744  val 0.8253 (73s)
+  t0v1 ep 16/90  train 0.7529  val 0.8186 (73s)
+  t0v1 ep 17/90  train 0.7365  val 0.8240 (73s)
+  t0v1 ep 18/90  train 0.7402  val 0.7511 (73s)
+  t0v1 ep 19/90  train 0.7210  val 0.7404 (73s)
+  t0v1 ep 20/90  train 0.7100  val 0.7767 (73s)
+  t0v1 ep 21/90  train 0.6877  val 0.7322 (73s)
+  t0v1 ep 22/90  train 0.6745  val 0.7881 (73s)
+  t0v1 ep 23/90  train 0.6567  val 0.8183 (73s)
+  t0v1 ep 24/90  train 0.6430  val 0.6812 (73s)
+  t0v1 ep 25/90  train 0.6263  val 0.9117 (73s)
+  t0v1 ep 26/90  train 0.6109  val 0.6721 (73s)
+  t0v1 ep 27/90  train 0.5905  val 0.6920 (73s)
+  t0v1 ep 28/90  train 0.5871  val 0.6844 (74s)
+  t0v1 ep 29/90  train 0.5760  val 0.7273 (73s)
+  t0v1 ep 30/90  train 0.5581  val 0.6653 (73s)
+  t0v1 ep 31/90  train 0.5444  val 0.7442 (73s)
+  t0v1 ep 32/90  train 0.5405  val 0.6956 (74s)
+  t0v1 ep 33/90  train 0.5346  val 0.7931 (73s)
+  t0v1 ep 34/90  train 0.5154  val 0.6511 (73s)
+  t0v1 ep 35/90  train 0.5250  val 0.6337 (74s)
+  t0v1 ep 36/90  train 0.5217  val 0.6849 (73s)
+  t0v1 ep 37/90  train 0.5028  val 0.7048 (73s)
+  t0v1 ep 38/90  train 0.5020  val 0.6666 (73s)
+  t0v1 ep 39/90  train 0.4843  val 0.6521 (74s)
+  t0v1 ep 40/90  train 0.4789  val 0.6365 (73s)
+  t0v1 ep 41/90  train 0.4710  val 0.6385 (73s)
+  t0v1 ep 42/90  train 0.4665  val 0.6934 (73s)
+  t0v1 ep 43/90  train 0.4492  val 0.6334 (73s)
+  t0v1 ep 44/90  train 0.4435  val 0.6751 (73s)
+  t0v1 ep 45/90  train 0.4426  val 0.6430 (73s)
+  t0v1 ep 46/90  train 0.4404  val 0.6780 (73s)
+  t0v1 ep 47/90  train 0.4280  val 0.6683 (73s)
+  t0v1 ep 48/90  train 0.4234  val 0.6877 (73s)
+  t0v1 ep 49/90  train 0.4277  val 0.6479 (73s)
+  t0v1 ep 50/90  train 0.4197  val 0.6375 (73s)
+  t0v1 ep 51/90  train 0.4194  val 0.7933 (73s)
+  t0v1 ep 52/90  train 0.4117  val 0.6058 (73s)
+  t0v1 ep 53/90  train 0.3936  val 0.6715 (73s)
+  t0v1 ep 54/90  train 0.3932  val 0.6286 (73s)
+  t0v1 ep 55/90  train 0.3968  val 0.6214 (74s)
+  t0v1 ep 56/90  train 0.3841  val 0.6579 (73s)
+  t0v1 ep 57/90  train 0.3824  val 0.6331 (73s)
+  t0v1 ep 58/90  train 0.3765  val 0.6141 (73s)
+  t0v1 ep 59/90  train 0.3735  val 0.6379 (73s)
+  t0v1 ep 60/90  train 0.3698  val 0.6301 (73s)
+  t0v1 ep 61/90  train 0.3541  val 0.5929 (73s)
+  t0v1 ep 62/90  train 0.3545  val 0.6148 (73s)
+  t0v1 ep 63/90  train 0.3591  val 0.6074 (73s)
+  t0v1 ep 64/90  train 0.3447  val 0.6185 (73s)
+  t0v1 ep 65/90  train 0.3519  val 0.6084 (73s)
+  t0v1 ep 66/90  train 0.3455  val 0.6346 (73s)
+  t0v1 ep 67/90  train 0.3379  val 0.6364 (73s)
+  t0v1 ep 68/90  train 0.3398  val 0.6563 (73s)
+  t0v1 ep 69/90  train 0.3384  val 0.6319 (73s)
+  t0v1 ep 70/90  train 0.3390  val 0.6043 (73s)
+  t0v1 ep 71/90  train 0.3355  val 0.6242 (73s)
+  early stop at epoch 71 (best val 0.5929)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 71-71, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▂▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇▇████
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss ██▇▇▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+wandb:        val/loss ██▇▆▅▅▄▄▆▄▄▃▃▄▃▄▂▆▂▂▂▂▂▁▁▁▂▂▂▄▁▁▁▁▁▁▁▂▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 71
+wandb:       test/beta 16
+wandb:         test/f1 0.74919
+wandb:   test/f1_beta0 0.7269
+wandb:        test/iou 0.59896
+wandb: test/prior_gain 0.02229
+wandb:        test/tau 0
+wandb:  test/tau_beta0 -0.5
+wandb:      train/loss 0.33554
+wandb:        val/loss 0.62417
+wandb: 
+wandb: 🚀 View run refine-t0v1 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/286wm2o8
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_005448-286wm2o8/logs
+t0v1: tau 0.0 beta 16.0  F1 0.7492 (beta=0: 0.7269, gain +0.0223)  IoU 0.5990  [5824s]
+
+wandb: setting up run z9n7p3tx
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_023153-z9n7p3tx
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t0v2
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/z9n7p3tx
+  t0v2 ep 1/90  train 1.2206  val 1.2038 (73s)
+  t0v2 ep 2/90  train 1.1560  val 1.0996 (73s)
+  t0v2 ep 3/90  train 1.0988  val 1.0386 (73s)
+  t0v2 ep 4/90  train 1.0546  val 1.0293 (73s)
+  t0v2 ep 5/90  train 0.9963  val 1.1373 (73s)
+  t0v2 ep 6/90  train 0.9546  val 0.9212 (73s)
+  t0v2 ep 7/90  train 0.9201  val 0.9469 (73s)
+  t0v2 ep 8/90  train 0.8839  val 0.8729 (73s)
+  t0v2 ep 9/90  train 0.8402  val 0.8856 (73s)
+  t0v2 ep 10/90  train 0.8025  val 0.9691 (73s)
+  t0v2 ep 11/90  train 0.7946  val 0.8334 (73s)
+  t0v2 ep 12/90  train 0.7723  val 0.8068 (73s)
+  t0v2 ep 13/90  train 0.7671  val 0.8480 (73s)
+  t0v2 ep 14/90  train 0.7858  val 0.8744 (73s)
+  t0v2 ep 15/90  train 0.8196  val 0.8151 (73s)
+  t0v2 ep 16/90  train 0.7636  val 0.8389 (73s)
+  t0v2 ep 17/90  train 0.7403  val 0.7513 (73s)
+  t0v2 ep 18/90  train 0.6820  val 0.7902 (73s)
+  t0v2 ep 19/90  train 0.6604  val 0.8028 (73s)
+  t0v2 ep 20/90  train 0.6405  val 0.7044 (73s)
+  t0v2 ep 21/90  train 0.7090  val 0.9223 (73s)
+  t0v2 ep 22/90  train 0.7041  val 0.7378 (73s)
+  t0v2 ep 23/90  train 0.6269  val 0.7917 (73s)
+  t0v2 ep 24/90  train 0.7428  val 0.8612 (73s)
+  t0v2 ep 25/90  train 0.7573  val 0.7667 (73s)
+  t0v2 ep 26/90  train 0.6644  val 0.7480 (73s)
+  t0v2 ep 27/90  train 0.6133  val 0.8030 (73s)
+  t0v2 ep 28/90  train 0.5757  val 0.7647 (73s)
+  t0v2 ep 29/90  train 0.5588  val 0.7254 (73s)
+  t0v2 ep 30/90  train 0.5534  val 0.7272 (73s)
+  early stop at epoch 30 (best val 0.7044)
+wandb: updating run metadata
+wandb: uploading wandb-summary.json; uploading config.yaml; uploading output.log
+wandb: uploading history steps 30-30, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▆▅▅▄▄▄▄▃▃▃▄▃▃▂▂▂▃▃▂▃▃▂▂▁▁▁
+wandb:        val/loss █▇▆▆▇▄▄▃▄▅▃▂▃▃▃▃▂▂▂▁▄▁▂▃▂▂▂▂▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 30
+wandb:       test/beta 16
+wandb:         test/f1 0.67151
+wandb:   test/f1_beta0 0.63576
+wandb:        test/iou 0.50547
+wandb: test/prior_gain 0.03575
+wandb:        test/tau -2
+wandb:  test/tau_beta0 -2
+wandb:      train/loss 0.55342
+wandb:        val/loss 0.72722
+wandb: 
+wandb: 🚀 View run refine-t0v2 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/z9n7p3tx
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_023153-z9n7p3tx/logs
+t0v2: tau -2.0 beta 16.0  F1 0.6715 (beta=0: 0.6358, gain +0.0357)  IoU 0.5055  [2892s]
+
+wandb: setting up run z9wdk9gt
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_032006-z9wdk9gt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t0v3
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/z9wdk9gt
+  t0v3 ep 1/90  train 1.2055  val 2.1057 (73s)
+  t0v3 ep 2/90  train 1.1497  val 1.1395 (73s)
+  t0v3 ep 3/90  train 1.0967  val 1.1099 (73s)
+  t0v3 ep 4/90  train 1.0290  val 1.1188 (73s)
+  t0v3 ep 5/90  train 0.9645  val 0.9907 (73s)
+  t0v3 ep 6/90  train 0.9175  val 1.1281 (73s)
+  t0v3 ep 7/90  train 0.8896  val 1.1809 (73s)
+  t0v3 ep 8/90  train 0.8381  val 0.8944 (73s)
+  t0v3 ep 9/90  train 0.8095  val 1.4804 (73s)
+  t0v3 ep 10/90  train 0.7584  val 0.8703 (73s)
+  t0v3 ep 11/90  train 0.7360  val 0.8223 (73s)
+  t0v3 ep 12/90  train 0.7180  val 0.8027 (73s)
+  t0v3 ep 13/90  train 0.7143  val 0.7764 (73s)
+  t0v3 ep 14/90  train 0.6876  val 0.7686 (73s)
+  t0v3 ep 15/90  train 0.6912  val 1.0836 (73s)
+  t0v3 ep 16/90  train 0.7863  val 0.9941 (73s)
+  t0v3 ep 17/90  train 0.8171  val 1.1934 (73s)
+  t0v3 ep 18/90  train 0.8102  val 0.8467 (73s)
+  t0v3 ep 19/90  train 0.7499  val 1.0716 (73s)
+  t0v3 ep 20/90  train 0.6885  val 0.8455 (73s)
+  t0v3 ep 21/90  train 0.6740  val 0.7877 (73s)
+  t0v3 ep 22/90  train 0.6530  val 0.8290 (73s)
+  t0v3 ep 23/90  train 0.6480  val 0.7908 (73s)
+  t0v3 ep 24/90  train 0.6168  val 0.8457 (73s)
+  early stop at epoch 24 (best val 0.7686)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading config.yaml
+wandb: uploading history steps 24-24, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▂▂▂▃▃▃▃▄▄▄▅▅▅▆▆▆▆▇▇▇██
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▅▅▄▄▃▃▂▂▂▂▂▃▃▃▃▂▂▁▁▁
+wandb:        val/loss █▃▃▃▂▃▃▂▅▂▁▁▁▁▃▂▃▁▃▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 24
+wandb:       test/beta 16
+wandb:         test/f1 0.62891
+wandb:   test/f1_beta0 0.60276
+wandb:        test/iou 0.45869
+wandb: test/prior_gain 0.02615
+wandb:        test/tau -1
+wandb:  test/tau_beta0 -1
+wandb:      train/loss 0.61675
+wandb:        val/loss 0.84572
+wandb: 
+wandb: 🚀 View run refine-t0v3 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/z9wdk9gt
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_032006-z9wdk9gt/logs
+t0v3: tau -1.0 beta 16.0  F1 0.6289 (beta=0: 0.6028, gain +0.0261)  IoU 0.4587  [2487s]
+
+wandb: setting up run 7jhug1r9
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_040131-7jhug1r9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t0v4
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/7jhug1r9
+  t0v4 ep 1/90  train 1.2175  val 1.2530 (73s)
+  t0v4 ep 2/90  train 1.1490  val 1.1955 (73s)
+  t0v4 ep 3/90  train 1.1071  val 1.2235 (73s)
+  t0v4 ep 4/90  train 1.0577  val 1.1735 (73s)
+  t0v4 ep 5/90  train 1.0022  val 0.9989 (73s)
+  t0v4 ep 6/90  train 0.9373  val 0.9628 (73s)
+  t0v4 ep 7/90  train 0.8898  val 0.9275 (73s)
+  t0v4 ep 8/90  train 0.8609  val 1.0173 (73s)
+  t0v4 ep 9/90  train 0.9420  val 0.9367 (73s)
+  t0v4 ep 10/90  train 0.8747  val 0.8736 (73s)
+  t0v4 ep 11/90  train 0.8311  val 0.8639 (73s)
+  t0v4 ep 12/90  train 0.8165  val 0.8696 (73s)
+  t0v4 ep 13/90  train 0.7794  val 0.8242 (73s)
+  t0v4 ep 14/90  train 0.7324  val 0.8256 (73s)
+  t0v4 ep 15/90  train 0.7168  val 0.7696 (73s)
+  t0v4 ep 16/90  train 0.6863  val 0.7686 (73s)
+  t0v4 ep 17/90  train 0.6863  val 0.8167 (73s)
+  t0v4 ep 18/90  train 0.6672  val 0.9257 (73s)
+  t0v4 ep 19/90  train 0.6484  val 0.7596 (73s)
+  t0v4 ep 20/90  train 0.6217  val 0.7335 (73s)
+  t0v4 ep 21/90  train 0.6170  val 1.0041 (73s)
+  t0v4 ep 22/90  train 0.6020  val 0.8529 (73s)
+  t0v4 ep 23/90  train 0.5991  val 0.7382 (73s)
+  t0v4 ep 24/90  train 0.6064  val 0.8763 (73s)
+  t0v4 ep 25/90  train 0.6193  val 0.8369 (73s)
+  t0v4 ep 26/90  train 0.5951  val 0.9221 (73s)
+  t0v4 ep 27/90  train 0.6930  val 0.7754 (73s)
+  t0v4 ep 28/90  train 0.6832  val 0.7866 (73s)
+  t0v4 ep 29/90  train 0.6828  val 0.7094 (73s)
+  t0v4 ep 30/90  train 0.6338  val 0.7882 (73s)
+  t0v4 ep 31/90  train 0.6632  val 0.7756 (73s)
+  t0v4 ep 32/90  train 0.6509  val 0.7579 (73s)
+  t0v4 ep 33/90  train 0.6433  val 0.8321 (73s)
+  t0v4 ep 34/90  train 0.6260  val 0.7684 (73s)
+  t0v4 ep 35/90  train 0.6282  val 0.7801 (73s)
+  t0v4 ep 36/90  train 0.6039  val 0.7182 (73s)
+  t0v4 ep 37/90  train 0.5684  val 0.7176 (73s)
+  t0v4 ep 38/90  train 0.5649  val 0.7187 (73s)
+  t0v4 ep 39/90  train 0.5511  val 0.7506 (73s)
+  early stop at epoch 39 (best val 0.7094)
+wandb: updating run metadata
+wandb: updating run metadata; uploading history steps 39-39, summary
+wandb: uploading wandb-summary.json; uploading config.yaml; uploading output.log
+wandb: uploading wandb-summary.json; uploading output.log
+wandb: uploading data
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▆▅▅▄▅▄▄▄▃▃▃▂▂▂▂▂▂▂▂▂▂▁▂▂▂▂▂▂▂▂▂▂▁▁▁
+wandb:        val/loss █▇█▇▅▄▄▅▄▃▃▃▂▂▂▂▂▄▂▁▅▃▁▃▃▄▂▂▁▂▂▂▃▂▂▁▁▁▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 39
+wandb:       test/beta 16
+wandb:         test/f1 0.72422
+wandb:   test/f1_beta0 0.68424
+wandb:        test/iou 0.56766
+wandb: test/prior_gain 0.03997
+wandb:        test/tau 0
+wandb:  test/tau_beta0 0
+wandb:      train/loss 0.55113
+wandb:        val/loss 0.75065
+wandb: 
+wandb: 🚀 View run refine-t0v4 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/7jhug1r9
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_040131-7jhug1r9/logs
+t0v4: tau 0.0 beta 16.0  F1 0.7242 (beta=0: 0.6842, gain +0.0400)  IoU 0.5677  [3538s]
+
+wandb: setting up run tubvuawe
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_050029-tubvuawe
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t1v0
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/tubvuawe
+  t1v0 ep 1/90  train 1.2069  val 1.1386 (73s)
+  t1v0 ep 2/90  train 1.1164  val 1.0471 (73s)
+  t1v0 ep 3/90  train 1.0713  val 1.1222 (73s)
+  t1v0 ep 4/90  train 1.0193  val 1.0122 (73s)
+  t1v0 ep 5/90  train 0.9876  val 0.9993 (73s)
+  t1v0 ep 6/90  train 0.9746  val 1.2087 (73s)
+  t1v0 ep 7/90  train 0.8997  val 0.9217 (73s)
+  t1v0 ep 8/90  train 0.8669  val 0.8813 (73s)
+  t1v0 ep 9/90  train 0.8458  val 0.8513 (73s)
+  t1v0 ep 10/90  train 0.7915  val 0.9973 (73s)
+  t1v0 ep 11/90  train 0.7569  val 0.8945 (73s)
+  t1v0 ep 12/90  train 0.7299  val 0.8690 (73s)
+  t1v0 ep 13/90  train 0.7096  val 0.8251 (73s)
+  t1v0 ep 14/90  train 0.6957  val 0.8050 (73s)
+  t1v0 ep 15/90  train 0.6887  val 0.8602 (73s)
+  t1v0 ep 16/90  train 0.6507  val 0.7730 (73s)
+  t1v0 ep 17/90  train 0.6198  val 0.7467 (73s)
+  t1v0 ep 18/90  train 0.6121  val 0.8726 (73s)
+  t1v0 ep 19/90  train 0.5901  val 0.7173 (73s)
+  t1v0 ep 20/90  train 0.5873  val 0.8610 (73s)
+  t1v0 ep 21/90  train 0.6046  val 0.7678 (73s)
+  t1v0 ep 22/90  train 0.5749  val 0.6895 (73s)
+  t1v0 ep 23/90  train 0.5763  val 0.7063 (73s)
+  t1v0 ep 24/90  train 0.5452  val 0.6678 (73s)
+  t1v0 ep 25/90  train 0.5348  val 0.6769 (73s)
+  t1v0 ep 26/90  train 0.5314  val 0.6820 (73s)
+  t1v0 ep 27/90  train 0.5220  val 0.7543 (73s)
+  t1v0 ep 28/90  train 0.5418  val 0.8176 (73s)
+  t1v0 ep 29/90  train 0.5472  val 0.7420 (73s)
+  t1v0 ep 30/90  train 0.5596  val 0.7090 (73s)
+  t1v0 ep 31/90  train 0.5522  val 0.7179 (73s)
+  t1v0 ep 32/90  train 0.5639  val 0.8421 (73s)
+  t1v0 ep 33/90  train 0.5816  val 0.7536 (73s)
+  t1v0 ep 34/90  train 0.5733  val 0.7044 (73s)
+  early stop at epoch 34 (best val 0.6678)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 34-34, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▂▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▆▆▅▅▄▄▃▃▃▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▂▂
+wandb:        val/loss ▇▆▇▅▅█▄▄▃▅▄▄▃▃▃▂▂▄▂▄▂▁▁▁▁▁▂▃▂▂▂▃▂▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 34
+wandb:       test/beta 16
+wandb:         test/f1 0.7434
+wandb:   test/f1_beta0 0.71356
+wandb:        test/iou 0.5916
+wandb: test/prior_gain 0.02985
+wandb:        test/tau -2
+wandb:  test/tau_beta0 -2
+wandb:      train/loss 0.57334
+wandb:        val/loss 0.70437
+wandb: 
+wandb: 🚀 View run refine-t1v0 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/tubvuawe
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_050029-tubvuawe/logs
+t1v0: tau -2.0 beta 16.0  F1 0.7434 (beta=0: 0.7136, gain +0.0298)  IoU 0.5916  [3117s]
+
+wandb: setting up run cyymdd0c
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_055227-cyymdd0c
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t1v2
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/cyymdd0c
+  t1v2 ep 1/90  train 1.2192  val 1.1875 (73s)
+  t1v2 ep 2/90  train 1.1672  val 1.1502 (73s)
+  t1v2 ep 3/90  train 1.1170  val 1.1029 (73s)
+  t1v2 ep 4/90  train 1.0748  val 1.0448 (73s)
+  t1v2 ep 5/90  train 1.0329  val 0.9704 (73s)
+  t1v2 ep 6/90  train 0.9585  val 1.0187 (73s)
+  t1v2 ep 7/90  train 0.9171  val 0.9340 (73s)
+  t1v2 ep 8/90  train 0.8734  val 0.8954 (73s)
+  t1v2 ep 9/90  train 0.8554  val 0.8883 (73s)
+  t1v2 ep 10/90  train 0.8247  val 0.8654 (73s)
+  t1v2 ep 11/90  train 0.7909  val 0.8279 (73s)
+  t1v2 ep 12/90  train 0.7788  val 0.8344 (73s)
+  t1v2 ep 13/90  train 0.7501  val 0.8152 (73s)
+  t1v2 ep 14/90  train 0.7410  val 0.8565 (73s)
+  t1v2 ep 15/90  train 0.7398  val 0.8246 (73s)
+  t1v2 ep 16/90  train 0.7258  val 0.7409 (73s)
+  t1v2 ep 17/90  train 0.7110  val 0.9531 (73s)
+  t1v2 ep 18/90  train 0.7275  val 0.8388 (73s)
+  t1v2 ep 19/90  train 0.7257  val 0.7931 (73s)
+  t1v2 ep 20/90  train 0.7316  val 0.7632 (73s)
+  t1v2 ep 21/90  train 0.6630  val 0.7583 (73s)
+  t1v2 ep 22/90  train 0.7166  val 0.9111 (73s)
+  t1v2 ep 23/90  train 0.7922  val 0.8674 (73s)
+  t1v2 ep 24/90  train 0.7469  val 0.8008 (73s)
+  t1v2 ep 25/90  train 0.7093  val 0.8566 (73s)
+  t1v2 ep 26/90  train 0.6726  val 0.7372 (73s)
+  t1v2 ep 27/90  train 0.6366  val 0.7222 (73s)
+  t1v2 ep 28/90  train 0.6222  val 0.7054 (73s)
+  t1v2 ep 29/90  train 0.5961  val 0.7189 (73s)
+  t1v2 ep 30/90  train 0.5809  val 0.7913 (73s)
+  t1v2 ep 31/90  train 0.5923  val 0.7555 (73s)
+  t1v2 ep 32/90  train 0.5886  val 0.7268 (73s)
+  t1v2 ep 33/90  train 0.5784  val 0.7656 (73s)
+  t1v2 ep 34/90  train 0.5590  val 0.6936 (73s)
+  t1v2 ep 35/90  train 0.5379  val 0.6799 (73s)
+  t1v2 ep 36/90  train 0.5281  val 0.6717 (73s)
+  t1v2 ep 37/90  train 0.5112  val 0.6858 (73s)
+  t1v2 ep 38/90  train 0.5029  val 0.6539 (73s)
+  t1v2 ep 39/90  train 0.4897  val 0.6561 (73s)
+  t1v2 ep 40/90  train 0.4795  val 0.6906 (73s)
+  t1v2 ep 41/90  train 0.4822  val 0.7054 (73s)
+  t1v2 ep 42/90  train 0.4689  val 0.6596 (73s)
+  t1v2 ep 43/90  train 0.4629  val 0.6684 (73s)
+  t1v2 ep 44/90  train 0.4553  val 0.6318 (73s)
+  t1v2 ep 45/90  train 0.4442  val 0.6173 (73s)
+  t1v2 ep 46/90  train 0.4299  val 0.6592 (73s)
+  t1v2 ep 47/90  train 0.4262  val 0.6235 (73s)
+  t1v2 ep 48/90  train 0.4178  val 0.6136 (73s)
+  t1v2 ep 49/90  train 0.4096  val 0.6826 (74s)
+  t1v2 ep 50/90  train 0.4008  val 0.6338 (74s)
+  t1v2 ep 51/90  train 0.4004  val 0.5889 (74s)
+  t1v2 ep 52/90  train 0.3848  val 0.6257 (74s)
+  t1v2 ep 53/90  train 0.3827  val 0.5908 (73s)
+  t1v2 ep 54/90  train 0.3792  val 0.6382 (73s)
+  t1v2 ep 55/90  train 0.3712  val 0.6106 (74s)
+  t1v2 ep 56/90  train 0.3644  val 0.6101 (74s)
+  t1v2 ep 57/90  train 0.3644  val 0.6362 (74s)
+  t1v2 ep 58/90  train 0.3496  val 0.6203 (73s)
+  t1v2 ep 59/90  train 0.3519  val 0.6650 (73s)
+  t1v2 ep 60/90  train 0.3533  val 0.6372 (74s)
+  t1v2 ep 61/90  train 0.3389  val 0.5964 (74s)
+  early stop at epoch 61 (best val 0.5889)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading wandb-summary.json; uploading config.yaml
+wandb: uploading history steps 61-61, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss ██▇▇▇▅▅▅▅▄▄▄▄▄▄▄▄▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▁▁▁▁▁
+wandb:        val/loss ██▇▆▅▅▄▄▄▄▃▅▄▃▃▄▃▃▂▃▃▃▂▂▂▂▂▂▂▁▁▁▂▂▁▁▂▁▂▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 61
+wandb:       test/beta 16
+wandb:         test/f1 0.79907
+wandb:   test/f1_beta0 0.76918
+wandb:        test/iou 0.66537
+wandb: test/prior_gain 0.02989
+wandb:        test/tau 0
+wandb:  test/tau_beta0 0
+wandb:      train/loss 0.33887
+wandb:        val/loss 0.5964
+wandb: 
+wandb: 🚀 View run refine-t1v2 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/cyymdd0c
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_055227-cyymdd0c/logs
+t1v2: tau 0.0 beta 16.0  F1 0.7991 (beta=0: 0.7692, gain +0.0299)  IoU 0.6654  [5116s]
+
+wandb: setting up run 7470gmpw
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_071742-7470gmpw
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t1v3
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/7470gmpw
+  t1v3 ep 1/90  train 1.1960  val 1.2108 (74s)
+  t1v3 ep 2/90  train 1.1090  val 1.1016 (73s)
+  t1v3 ep 3/90  train 1.0443  val 1.3582 (73s)
+  t1v3 ep 4/90  train 0.9873  val 1.0792 (73s)
+  t1v3 ep 5/90  train 0.9154  val 0.9872 (73s)
+  t1v3 ep 6/90  train 0.8935  val 0.9776 (73s)
+  t1v3 ep 7/90  train 0.8602  val 0.9105 (73s)
+  t1v3 ep 8/90  train 0.8148  val 0.8962 (74s)
+  t1v3 ep 9/90  train 0.7847  val 0.8117 (74s)
+  t1v3 ep 10/90  train 0.7852  val 0.8803 (74s)
+  t1v3 ep 11/90  train 0.7619  val 0.8765 (74s)
+  t1v3 ep 12/90  train 0.7310  val 0.8028 (74s)
+  t1v3 ep 13/90  train 0.7590  val 0.8345 (73s)
+  t1v3 ep 14/90  train 0.7613  val 0.8427 (73s)
+  t1v3 ep 15/90  train 0.7163  val 0.8378 (73s)
+  t1v3 ep 16/90  train 0.6999  val 0.8237 (74s)
+  t1v3 ep 17/90  train 0.6863  val 0.7928 (73s)
+  t1v3 ep 18/90  train 0.6486  val 0.8001 (73s)
+  t1v3 ep 19/90  train 0.6248  val 0.7725 (73s)
+  t1v3 ep 20/90  train 0.6184  val 0.8961 (73s)
+  t1v3 ep 21/90  train 0.6441  val 0.7966 (73s)
+  t1v3 ep 22/90  train 0.6102  val 0.7722 (73s)
+  t1v3 ep 23/90  train 0.5991  val 0.7410 (73s)
+  t1v3 ep 24/90  train 0.5888  val 0.7733 (73s)
+  t1v3 ep 25/90  train 0.5556  val 0.7295 (73s)
+  t1v3 ep 26/90  train 0.5571  val 0.7003 (73s)
+  t1v3 ep 27/90  train 0.5650  val 0.7346 (73s)
+  t1v3 ep 28/90  train 0.5375  val 0.6862 (73s)
+  t1v3 ep 29/90  train 0.5351  val 0.7579 (73s)
+  t1v3 ep 30/90  train 0.5391  val 0.8548 (73s)
+  t1v3 ep 31/90  train 0.5767  val 0.7502 (73s)
+  t1v3 ep 32/90  train 0.5232  val 0.7244 (73s)
+  t1v3 ep 33/90  train 0.5191  val 0.7618 (73s)
+  t1v3 ep 34/90  train 0.5466  val 0.7364 (73s)
+  t1v3 ep 35/90  train 0.5604  val 0.7670 (73s)
+  t1v3 ep 36/90  train 0.5918  val 0.7649 (73s)
+  t1v3 ep 37/90  train 0.5642  val 0.8256 (73s)
+  t1v3 ep 38/90  train 0.5295  val 0.8126 (73s)
+  early stop at epoch 38 (best val 0.6862)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▆▆▅▅▅▄▄▄▄▃▃▄▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▂▁▁▁▁▂▁▁
+wandb:        val/loss ▆▅█▅▄▄▃▃▂▃▃▂▃▃▃▂▂▂▂▃▂▂▂▂▁▁▂▁▂▃▂▁▂▂▂▂▂▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 38
+wandb:       test/beta 16
+wandb:         test/f1 0.75924
+wandb:   test/f1_beta0 0.73527
+wandb:        test/iou 0.61192
+wandb: test/prior_gain 0.02397
+wandb:        test/tau -1
+wandb:  test/tau_beta0 -1
+wandb:      train/loss 0.52948
+wandb:        val/loss 0.81264
+wandb: 
+wandb: 🚀 View run refine-t1v3 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/7470gmpw
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_071742-7470gmpw/logs
+t1v3: tau -1.0 beta 16.0  F1 0.7592 (beta=0: 0.7353, gain +0.0240)  IoU 0.6119  [3439s]
+
+wandb: setting up run ktelc6nw
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_081501-ktelc6nw
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t1v4
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/ktelc6nw
+  t1v4 ep 1/90  train 1.2069  val 1.1832 (73s)
+  t1v4 ep 2/90  train 1.1046  val 1.1094 (73s)
+  t1v4 ep 3/90  train 1.0228  val 1.2801 (73s)
+  t1v4 ep 4/90  train 0.9551  val 1.0127 (73s)
+  t1v4 ep 5/90  train 0.9155  val 0.9208 (73s)
+  t1v4 ep 6/90  train 0.8807  val 0.9568 (73s)
+  t1v4 ep 7/90  train 0.8482  val 0.9186 (73s)
+  t1v4 ep 8/90  train 0.8171  val 0.8543 (73s)
+  t1v4 ep 9/90  train 0.7811  val 1.1742 (73s)
+  t1v4 ep 10/90  train 0.7592  val 1.3508 (73s)
+  t1v4 ep 11/90  train 0.7351  val 0.8559 (73s)
+  t1v4 ep 12/90  train 0.7299  val 0.8460 (73s)
+  t1v4 ep 13/90  train 0.7322  val 0.8174 (73s)
+  t1v4 ep 14/90  train 0.7802  val 0.8508 (73s)
+  t1v4 ep 15/90  train 0.8371  val 0.8685 (73s)
+  t1v4 ep 16/90  train 0.7387  val 0.8972 (73s)
+  t1v4 ep 17/90  train 0.6781  val 0.7419 (73s)
+  t1v4 ep 18/90  train 0.6509  val 0.7493 (73s)
+  t1v4 ep 19/90  train 0.6199  val 1.1393 (73s)
+  t1v4 ep 20/90  train 0.6100  val 0.7316 (73s)
+  t1v4 ep 21/90  train 0.5898  val 0.7011 (73s)
+  t1v4 ep 22/90  train 0.5719  val 0.6754 (73s)
+  t1v4 ep 23/90  train 0.5662  val 0.6715 (73s)
+  t1v4 ep 24/90  train 0.5477  val 0.7133 (73s)
+  t1v4 ep 25/90  train 0.5424  val 0.6896 (73s)
+  t1v4 ep 26/90  train 0.5298  val 0.6661 (73s)
+  t1v4 ep 27/90  train 0.5271  val 0.6868 (73s)
+  t1v4 ep 28/90  train 0.5223  val 0.7316 (73s)
+  t1v4 ep 29/90  train 0.5083  val 0.6618 (73s)
+  t1v4 ep 30/90  train 0.4938  val 0.6466 (73s)
+  t1v4 ep 31/90  train 0.4912  val 0.6681 (73s)
+  t1v4 ep 32/90  train 0.4861  val 0.6422 (73s)
+  t1v4 ep 33/90  train 0.4662  val 0.7012 (73s)
+  t1v4 ep 34/90  train 0.4652  val 0.6182 (73s)
+  t1v4 ep 35/90  train 0.4610  val 0.6299 (73s)
+  t1v4 ep 36/90  train 0.4450  val 0.7738 (73s)
+  t1v4 ep 37/90  train 0.4376  val 0.6201 (73s)
+  t1v4 ep 38/90  train 0.4272  val 0.6215 (73s)
+  t1v4 ep 39/90  train 0.4227  val 0.6460 (73s)
+  t1v4 ep 40/90  train 0.4156  val 0.6117 (73s)
+  t1v4 ep 41/90  train 0.4101  val 0.6326 (73s)
+  t1v4 ep 42/90  train 0.4242  val 0.7015 (73s)
+  t1v4 ep 43/90  train 0.4236  val 0.6553 (73s)
+  t1v4 ep 44/90  train 0.4086  val 0.6316 (73s)
+  t1v4 ep 45/90  train 0.3956  val 0.6247 (73s)
+  t1v4 ep 46/90  train 0.3887  val 0.6815 (73s)
+  t1v4 ep 47/90  train 0.3853  val 0.6296 (73s)
+  t1v4 ep 48/90  train 0.3794  val 0.6138 (74s)
+  t1v4 ep 49/90  train 0.3627  val 0.6070 (73s)
+  t1v4 ep 50/90  train 0.3586  val 0.5839 (74s)
+  t1v4 ep 51/90  train 0.3506  val 0.5955 (74s)
+  t1v4 ep 52/90  train 0.3407  val 0.6054 (73s)
+  t1v4 ep 53/90  train 0.3410  val 0.6340 (73s)
+  t1v4 ep 54/90  train 0.3427  val 0.6284 (73s)
+  t1v4 ep 55/90  train 0.3343  val 0.5938 (73s)
+  t1v4 ep 56/90  train 0.3226  val 0.5977 (73s)
+  t1v4 ep 57/90  train 0.3232  val 0.6184 (73s)
+  t1v4 ep 58/90  train 0.3198  val 0.6282 (73s)
+  t1v4 ep 59/90  train 0.3153  val 0.6041 (73s)
+  t1v4 ep 60/90  train 0.3160  val 0.6129 (73s)
+  early stop at epoch 60 (best val 0.5839)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading history steps 60-60, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▃▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▆▅▅▅▅▅▆▅▄▄▄▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁
+wandb:        val/loss ▆▆▇▅▄▆█▃▃▃▂▃▆▂▂▂▂▂▂▂▂▂▂▁▁▂▁▁▂▂▁▂▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 60
+wandb:       test/beta 16
+wandb:         test/f1 0.7895
+wandb:   test/f1_beta0 0.76726
+wandb:        test/iou 0.6522
+wandb: test/prior_gain 0.02223
+wandb:        test/tau -2
+wandb:  test/tau_beta0 -2
+wandb:      train/loss 0.31601
+wandb:        val/loss 0.61286
+wandb: 
+wandb: 🚀 View run refine-t1v4 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/ktelc6nw
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_081501-ktelc6nw/logs
+t1v4: tau -2.0 beta 16.0  F1 0.7895 (beta=0: 0.7673, gain +0.0222)  IoU 0.6522  [4964s]
+
+wandb: setting up run kbuug5ng
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_093745-kbuug5ng
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t2v0
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/kbuug5ng
+  t2v0 ep 1/90  train 1.2094  val 1.2116 (73s)
+  t2v0 ep 2/90  train 1.1172  val 1.1043 (73s)
+  t2v0 ep 3/90  train 1.0448  val 1.0604 (73s)
+  t2v0 ep 4/90  train 0.9875  val 0.9773 (73s)
+  t2v0 ep 5/90  train 0.9249  val 1.2502 (73s)
+  t2v0 ep 6/90  train 0.8955  val 0.9318 (73s)
+  t2v0 ep 7/90  train 0.8499  val 1.0967 (73s)
+  t2v0 ep 8/90  train 0.7961  val 0.8610 (73s)
+  t2v0 ep 9/90  train 0.7673  val 0.8626 (73s)
+  t2v0 ep 10/90  train 0.7425  val 0.8943 (73s)
+  t2v0 ep 11/90  train 0.7366  val 0.8227 (73s)
+  t2v0 ep 12/90  train 0.7023  val 0.7960 (73s)
+  t2v0 ep 13/90  train 0.6664  val 0.8179 (73s)
+  t2v0 ep 14/90  train 0.6520  val 0.8022 (73s)
+  t2v0 ep 15/90  train 0.6460  val 0.8621 (73s)
+  t2v0 ep 16/90  train 0.6495  val 1.0274 (73s)
+  t2v0 ep 17/90  train 0.6534  val 0.7946 (73s)
+  t2v0 ep 18/90  train 0.6542  val 0.8481 (73s)
+  t2v0 ep 19/90  train 0.7572  val 1.1295 (73s)
+  t2v0 ep 20/90  train 0.8130  val 1.0068 (73s)
+  t2v0 ep 21/90  train 0.6881  val 0.8847 (73s)
+  t2v0 ep 22/90  train 0.6738  val 0.8560 (73s)
+  t2v0 ep 23/90  train 0.6393  val 0.8311 (73s)
+  t2v0 ep 24/90  train 0.6514  val 0.8130 (73s)
+  t2v0 ep 25/90  train 0.6050  val 0.8156 (73s)
+  t2v0 ep 26/90  train 0.5841  val 0.7433 (73s)
+  t2v0 ep 27/90  train 0.5854  val 0.7390 (73s)
+  t2v0 ep 28/90  train 0.5674  val 0.7500 (73s)
+  t2v0 ep 29/90  train 0.5549  val 0.7086 (73s)
+  t2v0 ep 30/90  train 0.5363  val 0.7374 (73s)
+  t2v0 ep 31/90  train 0.5136  val 0.7556 (73s)
+  t2v0 ep 32/90  train 0.5008  val 0.7260 (73s)
+  t2v0 ep 33/90  train 0.4904  val 0.6932 (73s)
+  t2v0 ep 34/90  train 0.4887  val 0.7240 (73s)
+  t2v0 ep 35/90  train 0.4704  val 0.6827 (73s)
+  t2v0 ep 36/90  train 0.4588  val 0.7592 (73s)
+  t2v0 ep 37/90  train 0.4534  val 0.7089 (73s)
+  t2v0 ep 38/90  train 0.4373  val 0.6926 (73s)
+  t2v0 ep 39/90  train 0.4368  val 0.6856 (73s)
+  t2v0 ep 40/90  train 0.4261  val 0.7149 (73s)
+  t2v0 ep 41/90  train 0.4206  val 0.6866 (73s)
+  t2v0 ep 42/90  train 0.4193  val 0.8918 (73s)
+  t2v0 ep 43/90  train 0.4037  val 0.7733 (73s)
+  t2v0 ep 44/90  train 0.4147  val 0.7698 (74s)
+  t2v0 ep 45/90  train 0.4162  val 0.6829 (73s)
+  early stop at epoch 45 (best val 0.6827)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 45-45, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▆▅▅▄▄▄▄▃▃▃▃▃▄▅▃▃▃▃▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁
+wandb:        val/loss █▆▆▅█▄▆▃▄▃▂▃▂▃▅▂▇▅▃▃▃▃▃▂▂▁▂▂▂▁▂▁▁▁▁▁▁▄▂▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 45
+wandb:       test/beta 16
+wandb:         test/f1 0.73233
+wandb:   test/f1_beta0 0.71678
+wandb:        test/iou 0.57769
+wandb: test/prior_gain 0.01555
+wandb:        test/tau 0
+wandb:  test/tau_beta0 0
+wandb:      train/loss 0.41622
+wandb:        val/loss 0.68285
+wandb: 
+wandb: 🚀 View run refine-t2v0 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/kbuug5ng
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_093745-kbuug5ng/logs
+t2v0: tau 0.0 beta 16.0  F1 0.7323 (beta=0: 0.7168, gain +0.0155)  IoU 0.5777  [3904s]
+
+wandb: setting up run qefewroe
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_104250-qefewroe
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t2v1
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/qefewroe
+  t2v1 ep 1/90  train 1.2345  val 1.1801 (73s)
+  t2v1 ep 2/90  train 1.1651  val 1.1638 (73s)
+  t2v1 ep 3/90  train 1.1251  val 1.1130 (73s)
+  t2v1 ep 4/90  train 1.0926  val 1.0528 (73s)
+  t2v1 ep 5/90  train 1.0695  val 1.0197 (73s)
+  t2v1 ep 6/90  train 1.0327  val 1.0271 (73s)
+  t2v1 ep 7/90  train 1.0226  val 1.1335 (73s)
+  t2v1 ep 8/90  train 0.9551  val 1.0267 (73s)
+  t2v1 ep 9/90  train 0.9167  val 0.9391 (73s)
+  t2v1 ep 10/90  train 0.8582  val 0.8302 (73s)
+  t2v1 ep 11/90  train 0.8297  val 0.8117 (73s)
+  t2v1 ep 12/90  train 0.8044  val 0.7453 (73s)
+  t2v1 ep 13/90  train 0.7898  val 0.7718 (73s)
+  t2v1 ep 14/90  train 0.7691  val 0.8219 (73s)
+  t2v1 ep 15/90  train 0.7480  val 0.7585 (73s)
+  t2v1 ep 16/90  train 0.7562  val 0.9220 (73s)
+  t2v1 ep 17/90  train 0.7445  val 0.7403 (73s)
+  t2v1 ep 18/90  train 0.7131  val 0.7453 (73s)
+  t2v1 ep 19/90  train 0.7123  val 0.7660 (73s)
+  t2v1 ep 20/90  train 0.7195  val 0.7484 (73s)
+  t2v1 ep 21/90  train 0.7052  val 0.7287 (73s)
+  t2v1 ep 22/90  train 0.6899  val 0.7533 (73s)
+  t2v1 ep 23/90  train 0.6801  val 0.7015 (73s)
+  t2v1 ep 24/90  train 0.6681  val 0.6919 (73s)
+  t2v1 ep 25/90  train 0.6652  val 0.7933 (73s)
+  t2v1 ep 26/90  train 0.6682  val 0.7360 (73s)
+  t2v1 ep 27/90  train 0.6621  val 0.7869 (73s)
+  t2v1 ep 28/90  train 0.6415  val 0.7800 (73s)
+  t2v1 ep 29/90  train 0.6288  val 0.8299 (73s)
+  t2v1 ep 30/90  train 0.6226  val 0.7705 (73s)
+  t2v1 ep 31/90  train 0.6244  val 0.7273 (73s)
+  t2v1 ep 32/90  train 0.6127  val 0.6909 (73s)
+  t2v1 ep 33/90  train 0.6137  val 0.7225 (73s)
+  t2v1 ep 34/90  train 0.6063  val 0.7842 (73s)
+  t2v1 ep 35/90  train 0.5881  val 0.6733 (73s)
+  t2v1 ep 36/90  train 0.5832  val 0.7143 (73s)
+  t2v1 ep 37/90  train 0.5465  val 0.6381 (73s)
+  t2v1 ep 38/90  train 0.5519  val 0.6907 (73s)
+  t2v1 ep 39/90  train 0.5214  val 0.6307 (73s)
+  t2v1 ep 40/90  train 0.5163  val 0.6388 (73s)
+  t2v1 ep 41/90  train 0.5127  val 0.7306 (73s)
+  t2v1 ep 42/90  train 0.4983  val 0.6816 (73s)
+  t2v1 ep 43/90  train 0.4847  val 0.5934 (73s)
+  t2v1 ep 44/90  train 0.4680  val 0.6128 (73s)
+  t2v1 ep 45/90  train 0.4653  val 0.6813 (73s)
+  t2v1 ep 46/90  train 0.4493  val 0.6032 (73s)
+  t2v1 ep 47/90  train 0.4444  val 0.5815 (73s)
+  t2v1 ep 48/90  train 0.4340  val 0.6172 (73s)
+  t2v1 ep 49/90  train 0.4258  val 0.5873 (73s)
+  t2v1 ep 50/90  train 0.4204  val 0.5839 (73s)
+  t2v1 ep 51/90  train 0.4054  val 0.5615 (73s)
+  t2v1 ep 52/90  train 0.4046  val 0.6507 (73s)
+  t2v1 ep 53/90  train 0.3969  val 0.5818 (73s)
+  t2v1 ep 54/90  train 0.3855  val 0.5747 (73s)
+  t2v1 ep 55/90  train 0.3832  val 0.5853 (73s)
+  t2v1 ep 56/90  train 0.3950  val 0.5867 (73s)
+  t2v1 ep 57/90  train 0.3929  val 0.5839 (73s)
+  t2v1 ep 58/90  train 0.3766  val 0.5896 (73s)
+  t2v1 ep 59/90  train 0.3661  val 0.5784 (73s)
+  t2v1 ep 60/90  train 0.3635  val 0.5704 (73s)
+  t2v1 ep 61/90  train 0.3725  val 0.5932 (73s)
+  early stop at epoch 61 (best val 0.5615)
+wandb: updating run metadata
+wandb: uploading config.yaml; uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 61-61, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▁▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇██
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▇▇▆▅▅▄▄▄▄▄▄▄▄▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁
+wandb:        val/loss ██▇▇▇▅▄▄▃▃▃▃▃▃▃▃▂▄▃▄▄▃▃▄▂▂▂▂▃▂▂▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 61
+wandb:       test/beta 16
+wandb:         test/f1 0.76058
+wandb:   test/f1_beta0 0.73334
+wandb:        test/iou 0.61365
+wandb: test/prior_gain 0.02724
+wandb:        test/tau 0
+wandb:  test/tau_beta0 -0.5
+wandb:      train/loss 0.37251
+wandb:        val/loss 0.59317
+wandb: 
+wandb: 🚀 View run refine-t2v1 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/qefewroe
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_104250-qefewroe/logs
+t2v1: tau 0.0 beta 16.0  F1 0.7606 (beta=0: 0.7333, gain +0.0272)  IoU 0.6137  [5075s]
+
+wandb: setting up run lqhzks1q
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_120725-lqhzks1q
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t2v3
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/lqhzks1q
+  t2v3 ep 1/90  train 1.2194  val 1.2281 (73s)
+  t2v3 ep 2/90  train 1.1250  val 1.1169 (73s)
+  t2v3 ep 3/90  train 1.0553  val 1.0605 (73s)
+  t2v3 ep 4/90  train 1.0138  val 1.0564 (73s)
+  t2v3 ep 5/90  train 0.9650  val 0.9983 (73s)
+  t2v3 ep 6/90  train 0.9246  val 1.1351 (73s)
+  t2v3 ep 7/90  train 0.9099  val 1.0836 (73s)
+  t2v3 ep 8/90  train 0.8525  val 0.9637 (73s)
+  t2v3 ep 9/90  train 0.8166  val 0.8483 (73s)
+  t2v3 ep 10/90  train 0.8008  val 0.8780 (73s)
+  t2v3 ep 11/90  train 0.7647  val 0.8964 (73s)
+  t2v3 ep 12/90  train 0.7217  val 0.8752 (73s)
+  t2v3 ep 13/90  train 0.6948  val 0.7555 (73s)
+  t2v3 ep 14/90  train 0.6777  val 0.7419 (73s)
+  t2v3 ep 15/90  train 0.6758  val 0.7975 (73s)
+  t2v3 ep 16/90  train 0.7084  val 0.8878 (73s)
+  t2v3 ep 17/90  train 0.6895  val 0.7409 (73s)
+  t2v3 ep 18/90  train 0.6744  val 0.7208 (73s)
+  t2v3 ep 19/90  train 0.6397  val 0.7717 (73s)
+  t2v3 ep 20/90  train 0.6192  val 0.7018 (73s)
+  t2v3 ep 21/90  train 0.6090  val 0.7254 (73s)
+  t2v3 ep 22/90  train 0.5912  val 0.8057 (73s)
+  t2v3 ep 23/90  train 0.5809  val 0.7669 (73s)
+  t2v3 ep 24/90  train 0.5683  val 0.6845 (73s)
+  t2v3 ep 25/90  train 0.5954  val 0.8255 (73s)
+  t2v3 ep 26/90  train 0.6288  val 0.8089 (73s)
+  t2v3 ep 27/90  train 0.6075  val 0.8671 (73s)
+  t2v3 ep 28/90  train 0.6311  val 0.7689 (73s)
+  t2v3 ep 29/90  train 0.6139  val 0.7706 (73s)
+  t2v3 ep 30/90  train 0.5777  val 0.7730 (73s)
+  t2v3 ep 31/90  train 0.5463  val 0.7079 (73s)
+  t2v3 ep 32/90  train 0.5735  val 0.7440 (73s)
+  t2v3 ep 33/90  train 0.5395  val 0.7247 (73s)
+  t2v3 ep 34/90  train 0.5060  val 0.7242 (73s)
+  early stop at epoch 34 (best val 0.6845)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▂▃▃▃▃▄▄▄▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▆▆▆▅▅▄▄▄▄▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▂▁▁
+wandb:        val/loss █▇▆▆▅▇▆▅▃▃▄▃▂▂▂▄▂▁▂▁▂▃▂▁▃▃▃▂▂▂▁▂▂▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 34
+wandb:       test/beta 16
+wandb:         test/f1 0.69301
+wandb:   test/f1_beta0 0.68032
+wandb:        test/iou 0.53023
+wandb: test/prior_gain 0.01269
+wandb:        test/tau -1
+wandb:  test/tau_beta0 -1
+wandb:      train/loss 0.50602
+wandb:        val/loss 0.72419
+wandb: 
+wandb: 🚀 View run refine-t2v3 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/lqhzks1q
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_120725-lqhzks1q/logs
+t2v3: tau -1.0 beta 16.0  F1 0.6930 (beta=0: 0.6803, gain +0.0127)  IoU 0.5302  [3135s]
+
+wandb: setting up run vg0o866i
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_125940-vg0o866i
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t2v4
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/vg0o866i
+  t2v4 ep 1/90  train 1.2257  val 1.1849 (73s)
+  t2v4 ep 2/90  train 1.1301  val 1.2138 (73s)
+  t2v4 ep 3/90  train 1.0632  val 1.0954 (73s)
+  t2v4 ep 4/90  train 1.0225  val 0.9929 (73s)
+  t2v4 ep 5/90  train 0.9875  val 1.0161 (73s)
+  t2v4 ep 6/90  train 0.9307  val 0.8878 (73s)
+  t2v4 ep 7/90  train 0.9355  val 0.8471 (73s)
+  t2v4 ep 8/90  train 0.8683  val 1.1125 (73s)
+  t2v4 ep 9/90  train 0.8331  val 0.8225 (73s)
+  t2v4 ep 10/90  train 0.8314  val 0.8926 (73s)
+  t2v4 ep 11/90  train 0.8247  val 0.8545 (73s)
+  t2v4 ep 12/90  train 0.8167  val 0.8342 (73s)
+  t2v4 ep 13/90  train 0.7992  val 0.7996 (73s)
+  t2v4 ep 14/90  train 0.7712  val 0.8811 (73s)
+  t2v4 ep 15/90  train 0.7559  val 0.9130 (73s)
+  t2v4 ep 16/90  train 0.7336  val 0.8118 (73s)
+  t2v4 ep 17/90  train 0.7095  val 0.8413 (73s)
+  t2v4 ep 18/90  train 0.7139  val 0.9209 (73s)
+  t2v4 ep 19/90  train 0.6764  val 0.7353 (73s)
+  t2v4 ep 20/90  train 0.6588  val 0.7645 (73s)
+  t2v4 ep 21/90  train 0.6511  val 0.9467 (73s)
+  t2v4 ep 22/90  train 0.6431  val 0.8937 (73s)
+  t2v4 ep 23/90  train 0.6288  val 0.7738 (73s)
+  t2v4 ep 24/90  train 0.6470  val 0.7709 (73s)
+  t2v4 ep 25/90  train 0.6116  val 0.7907 (73s)
+  t2v4 ep 26/90  train 0.6317  val 0.7040 (73s)
+  t2v4 ep 27/90  train 0.6641  val 0.7733 (73s)
+  t2v4 ep 28/90  train 0.6763  val 0.8429 (73s)
+  t2v4 ep 29/90  train 0.6857  val 0.8937 (73s)
+  t2v4 ep 30/90  train 0.6461  val 0.7360 (73s)
+  t2v4 ep 31/90  train 0.5977  val 0.8534 (73s)
+  t2v4 ep 32/90  train 0.5794  val 0.8260 (73s)
+  t2v4 ep 33/90  train 0.5926  val 0.7123 (73s)
+  t2v4 ep 34/90  train 0.5572  val 0.6990 (73s)
+  t2v4 ep 35/90  train 0.5701  val 0.7511 (73s)
+  t2v4 ep 36/90  train 0.6038  val 0.7000 (73s)
+  t2v4 ep 37/90  train 0.5268  val 0.7872 (73s)
+  t2v4 ep 38/90  train 0.5414  val 0.6709 (73s)
+  t2v4 ep 39/90  train 0.5066  val 0.6635 (73s)
+  t2v4 ep 40/90  train 0.4956  val 0.6538 (73s)
+  t2v4 ep 41/90  train 0.4708  val 0.8072 (73s)
+  t2v4 ep 42/90  train 0.4812  val 0.6749 (73s)
+  t2v4 ep 43/90  train 0.4555  val 0.6109 (73s)
+  t2v4 ep 44/90  train 0.4477  val 0.6188 (73s)
+  t2v4 ep 45/90  train 0.4333  val 0.6163 (73s)
+  t2v4 ep 46/90  train 0.4496  val 0.6213 (73s)
+  t2v4 ep 47/90  train 0.4390  val 0.6783 (73s)
+  t2v4 ep 48/90  train 0.4227  val 0.6901 (73s)
+  t2v4 ep 49/90  train 0.4115  val 0.6391 (73s)
+  t2v4 ep 50/90  train 0.4129  val 0.6441 (73s)
+  t2v4 ep 51/90  train 0.4030  val 0.7606 (73s)
+  t2v4 ep 52/90  train 0.3922  val 0.6413 (73s)
+  t2v4 ep 53/90  train 0.3865  val 0.6188 (73s)
+  early stop at epoch 53 (best val 0.6109)
+wandb: uploading data; updating run metadata
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▆▆▆▅▅▅▅▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▂▃▂▂▂▂▂▂▂▁▂▁▁▁▁▁
+wandb:        val/loss ██▅▆▄▇▃▄▄▄▃▄▅▂▃▄▃▃▃▂▄▄▂▄▃▂▃▂▃▂▃▂▁▁▁▂▂▁▃▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 53
+wandb:       test/beta 16
+wandb:         test/f1 0.72035
+wandb:   test/f1_beta0 0.70035
+wandb:        test/iou 0.56292
+wandb: test/prior_gain 0.01999
+wandb:        test/tau 0.5
+wandb:  test/tau_beta0 0.5
+wandb:      train/loss 0.38647
+wandb:        val/loss 0.61879
+wandb: 
+wandb: 🚀 View run refine-t2v4 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/vg0o866i
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_125940-vg0o866i/logs
+t2v4: tau 0.5 beta 16.0  F1 0.7203 (beta=0: 0.7004, gain +0.0200)  IoU 0.5629  [4482s]
+
+wandb: setting up run vduz0czq
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_141422-vduz0czq
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t3v0
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/vduz0czq
+  t3v0 ep 1/90  train 1.2004  val 1.4005 (73s)
+  t3v0 ep 2/90  train 1.1018  val 1.5694 (73s)
+  t3v0 ep 3/90  train 1.0188  val 1.0222 (73s)
+  t3v0 ep 4/90  train 0.9305  val 0.9566 (73s)
+  t3v0 ep 5/90  train 0.9310  val 0.9505 (73s)
+  t3v0 ep 6/90  train 0.9051  val 1.0319 (73s)
+  t3v0 ep 7/90  train 0.8673  val 0.8614 (73s)
+  t3v0 ep 8/90  train 0.8125  val 0.8858 (73s)
+  t3v0 ep 9/90  train 0.7860  val 0.8469 (73s)
+  t3v0 ep 10/90  train 0.7381  val 0.7796 (73s)
+  t3v0 ep 11/90  train 0.7407  val 0.8753 (73s)
+  t3v0 ep 12/90  train 0.7391  val 0.8179 (73s)
+  t3v0 ep 13/90  train 0.7623  val 1.1257 (73s)
+  t3v0 ep 14/90  train 0.7740  val 0.8507 (74s)
+  t3v0 ep 15/90  train 0.7921  val 0.9556 (73s)
+  t3v0 ep 16/90  train 0.7968  val 0.9950 (73s)
+  t3v0 ep 17/90  train 0.7984  val 0.8966 (73s)
+  t3v0 ep 18/90  train 0.7571  val 0.8665 (73s)
+  t3v0 ep 19/90  train 0.7241  val 0.7843 (73s)
+  t3v0 ep 20/90  train 0.7257  val 0.7905 (73s)
+  early stop at epoch 20 (best val 0.7796)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 20-20, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▂▂▂▃▃▄▄▄▅▅▅▆▆▇▇▇██
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▅▄▄▄▃▂▂▁▁▁▂▂▂▂▂▁▁▁
+wandb:        val/loss ▇█▃▃▃▃▂▂▂▁▂▁▄▂▃▃▂▂▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 20
+wandb:       test/beta 16
+wandb:         test/f1 0.68255
+wandb:   test/f1_beta0 0.64237
+wandb:        test/iou 0.51808
+wandb: test/prior_gain 0.04018
+wandb:        test/tau 0
+wandb:  test/tau_beta0 0
+wandb:      train/loss 0.72569
+wandb:        val/loss 0.79055
+wandb: 
+wandb: 🚀 View run refine-t3v0 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/vduz0czq
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_141422-vduz0czq/logs
+t3v0: tau 0.0 beta 16.0  F1 0.6825 (beta=0: 0.6424, gain +0.0402)  IoU 0.5181  [2271s]
+
+wandb: setting up run v8bag8qm
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_145212-v8bag8qm
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t3v1
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/v8bag8qm
+  t3v1 ep 1/90  train 1.2177  val 1.1684 (73s)
+  t3v1 ep 2/90  train 1.1456  val 1.1326 (73s)
+  t3v1 ep 3/90  train 1.0814  val 1.0734 (73s)
+  t3v1 ep 4/90  train 1.0201  val 1.0226 (73s)
+  t3v1 ep 5/90  train 0.9799  val 0.9824 (73s)
+  t3v1 ep 6/90  train 0.9556  val 0.9617 (73s)
+  t3v1 ep 7/90  train 0.9209  val 0.9334 (73s)
+  t3v1 ep 8/90  train 0.8687  val 0.8338 (73s)
+  t3v1 ep 9/90  train 0.8198  val 0.8081 (73s)
+  t3v1 ep 10/90  train 0.7869  val 0.7814 (73s)
+  t3v1 ep 11/90  train 0.7684  val 0.8164 (73s)
+  t3v1 ep 12/90  train 0.7493  val 0.7729 (73s)
+  t3v1 ep 13/90  train 0.7295  val 0.7721 (73s)
+  t3v1 ep 14/90  train 0.7077  val 0.8067 (73s)
+  t3v1 ep 15/90  train 0.6910  val 0.9638 (73s)
+  t3v1 ep 16/90  train 0.6697  val 0.7359 (73s)
+  t3v1 ep 17/90  train 0.6631  val 0.7503 (73s)
+  t3v1 ep 18/90  train 0.7020  val 0.8062 (73s)
+  t3v1 ep 19/90  train 0.7416  val 0.7860 (73s)
+  t3v1 ep 20/90  train 0.7117  val 0.7844 (73s)
+  t3v1 ep 21/90  train 0.6956  val 0.7715 (73s)
+  t3v1 ep 22/90  train 0.6950  val 0.8261 (73s)
+  t3v1 ep 23/90  train 0.7295  val 0.7642 (73s)
+  t3v1 ep 24/90  train 0.7004  val 0.9040 (73s)
+  t3v1 ep 25/90  train 0.6688  val 0.7220 (73s)
+  t3v1 ep 26/90  train 0.6247  val 0.8166 (73s)
+  t3v1 ep 27/90  train 0.6205  val 0.7162 (73s)
+  t3v1 ep 28/90  train 0.6270  val 0.8116 (73s)
+  t3v1 ep 29/90  train 0.6498  val 0.7922 (73s)
+  t3v1 ep 30/90  train 0.6468  val 0.7291 (73s)
+  t3v1 ep 31/90  train 0.6432  val 0.6575 (73s)
+  t3v1 ep 32/90  train 0.5873  val 0.7180 (73s)
+  t3v1 ep 33/90  train 0.5869  val 0.8764 (73s)
+  t3v1 ep 34/90  train 0.6214  val 0.6866 (73s)
+  t3v1 ep 35/90  train 0.5993  val 0.7809 (73s)
+  t3v1 ep 36/90  train 0.5968  val 0.6982 (73s)
+  t3v1 ep 37/90  train 0.6151  val 0.7273 (73s)
+  t3v1 ep 38/90  train 0.5955  val 0.7316 (73s)
+  t3v1 ep 39/90  train 0.5791  val 1.0262 (73s)
+  t3v1 ep 40/90  train 0.5743  val 0.6150 (73s)
+  t3v1 ep 41/90  train 0.5480  val 0.7047 (73s)
+  t3v1 ep 42/90  train 0.5451  val 0.6496 (73s)
+  t3v1 ep 43/90  train 0.4995  val 0.6013 (73s)
+  t3v1 ep 44/90  train 0.4846  val 0.6455 (73s)
+  t3v1 ep 45/90  train 0.4925  val 0.6565 (73s)
+  t3v1 ep 46/90  train 0.4901  val 0.6851 (73s)
+  t3v1 ep 47/90  train 0.4965  val 0.6323 (73s)
+  t3v1 ep 48/90  train 0.4967  val 0.7364 (73s)
+  t3v1 ep 49/90  train 0.4764  val 0.6662 (73s)
+  t3v1 ep 50/90  train 0.4748  val 0.6720 (74s)
+  t3v1 ep 51/90  train 0.4805  val 0.6475 (73s)
+  t3v1 ep 52/90  train 0.4755  val 0.6414 (74s)
+  t3v1 ep 53/90  train 0.4560  val 0.6788 (73s)
+  early stop at epoch 53 (best val 0.6013)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 53-53, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▅▆▆▆▆▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▆▅▅▄▄▄▄▃▃▃▃▄▃▃▄▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁
+wandb:        val/loss ██▇▆▅▄▄▃▄▃▄▅▃▃▄▃▃▄▃▅▂▄▃▂▂▂▃▃▃▆▂▂▁▂▂▁▃▂▂▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 53
+wandb:       test/beta 16
+wandb:         test/f1 0.72827
+wandb:   test/f1_beta0 0.70078
+wandb:        test/iou 0.57267
+wandb: test/prior_gain 0.0275
+wandb:        test/tau -1
+wandb:  test/tau_beta0 -1
+wandb:      train/loss 0.45596
+wandb:        val/loss 0.67884
+wandb: 
+wandb: 🚀 View run refine-t3v1 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/v8bag8qm
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_145212-v8bag8qm/logs
+t3v1: tau -1.0 beta 16.0  F1 0.7283 (beta=0: 0.7008, gain +0.0275)  IoU 0.5727  [4574s]
+
+wandb: setting up run 1gz2otup
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_160827-1gz2otup
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t3v2
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/1gz2otup
+  t3v2 ep 1/90  train 1.2240  val 1.2214 (73s)
+  t3v2 ep 2/90  train 1.1445  val 1.0967 (73s)
+  t3v2 ep 3/90  train 1.0944  val 1.1030 (73s)
+  t3v2 ep 4/90  train 1.0794  val 1.3686 (73s)
+  t3v2 ep 5/90  train 1.0517  val 1.3114 (73s)
+  t3v2 ep 6/90  train 0.9955  val 1.0946 (73s)
+  t3v2 ep 7/90  train 0.9622  val 1.2390 (73s)
+  t3v2 ep 8/90  train 0.9210  val 0.9627 (73s)
+  t3v2 ep 9/90  train 0.8859  val 0.9299 (73s)
+  t3v2 ep 10/90  train 0.8809  val 0.9471 (73s)
+  t3v2 ep 11/90  train 0.8670  val 0.8708 (73s)
+  t3v2 ep 12/90  train 0.8643  val 0.9466 (73s)
+  t3v2 ep 13/90  train 0.8505  val 0.8882 (73s)
+  t3v2 ep 14/90  train 0.8026  val 0.8431 (74s)
+  t3v2 ep 15/90  train 0.7767  val 0.8243 (73s)
+  t3v2 ep 16/90  train 0.7325  val 0.7544 (73s)
+  t3v2 ep 17/90  train 0.7099  val 0.7739 (73s)
+  t3v2 ep 18/90  train 0.7059  val 0.8478 (73s)
+  t3v2 ep 19/90  train 0.6770  val 0.9477 (73s)
+  t3v2 ep 20/90  train 0.6687  val 0.7311 (73s)
+  t3v2 ep 21/90  train 0.6853  val 0.7910 (73s)
+  t3v2 ep 22/90  train 0.6593  val 0.8479 (73s)
+  t3v2 ep 23/90  train 0.6508  val 0.7710 (73s)
+  t3v2 ep 24/90  train 0.7498  val 0.8836 (73s)
+  t3v2 ep 25/90  train 0.8333  val 0.8839 (73s)
+  t3v2 ep 26/90  train 0.7710  val 0.8277 (73s)
+  t3v2 ep 27/90  train 0.7317  val 0.7970 (73s)
+  t3v2 ep 28/90  train 0.7144  val 0.7992 (73s)
+  t3v2 ep 29/90  train 0.6804  val 0.8380 (73s)
+  t3v2 ep 30/90  train 0.6714  val 0.7956 (73s)
+  early stop at epoch 30 (best val 0.7311)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 30-30, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▆▆▆▅▅▄▄▄▄▄▃▃▃▂▂▂▁▁▁▁▁▂▃▂▂▂▁▁
+wandb:        val/loss ▆▅▅█▇▅▇▄▃▃▃▃▃▂▂▁▁▂▃▁▂▂▁▃▃▂▂▂▂▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 30
+wandb:       test/beta 16
+wandb:         test/f1 0.71146
+wandb:   test/f1_beta0 0.65106
+wandb:        test/iou 0.55214
+wandb: test/prior_gain 0.0604
+wandb:        test/tau 0
+wandb:  test/tau_beta0 0
+wandb:      train/loss 0.67136
+wandb:        val/loss 0.79555
+wandb: 
+wandb: 🚀 View run refine-t3v2 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/1gz2otup
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_160827-1gz2otup/logs
+t3v2: tau 0.0 beta 16.0  F1 0.7115 (beta=0: 0.6511, gain +0.0604)  IoU 0.5521  [3076s]
+
+wandb: setting up run q1v5n379
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_165942-q1v5n379
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t3v4
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/q1v5n379
+  t3v4 ep 1/90  train 1.2182  val 1.3962 (73s)
+  t3v4 ep 2/90  train 1.1575  val 1.1395 (73s)
+  t3v4 ep 3/90  train 1.1000  val 1.1415 (73s)
+  t3v4 ep 4/90  train 1.0366  val 1.2204 (73s)
+  t3v4 ep 5/90  train 0.9824  val 1.0210 (73s)
+  t3v4 ep 6/90  train 0.9460  val 0.9383 (73s)
+  t3v4 ep 7/90  train 0.8900  val 0.9053 (73s)
+  t3v4 ep 8/90  train 0.8678  val 0.9103 (73s)
+  t3v4 ep 9/90  train 0.8448  val 1.0174 (73s)
+  t3v4 ep 10/90  train 0.8354  val 1.0082 (73s)
+  t3v4 ep 11/90  train 0.7870  val 0.8622 (73s)
+  t3v4 ep 12/90  train 0.7722  val 0.9276 (73s)
+  t3v4 ep 13/90  train 0.7374  val 0.9941 (73s)
+  t3v4 ep 14/90  train 0.7002  val 0.7844 (73s)
+  t3v4 ep 15/90  train 0.6926  val 0.7490 (73s)
+  t3v4 ep 16/90  train 0.6788  val 0.8455 (73s)
+  t3v4 ep 17/90  train 0.6544  val 0.7211 (73s)
+  t3v4 ep 18/90  train 0.6472  val 0.7459 (73s)
+  t3v4 ep 19/90  train 0.6347  val 0.7334 (73s)
+  t3v4 ep 20/90  train 0.6398  val 0.7070 (73s)
+  t3v4 ep 21/90  train 0.6209  val 0.7515 (73s)
+  t3v4 ep 22/90  train 0.6176  val 0.7241 (73s)
+  t3v4 ep 23/90  train 0.6103  val 0.7402 (73s)
+  t3v4 ep 24/90  train 0.6238  val 0.7091 (73s)
+  t3v4 ep 25/90  train 0.6214  val 0.7509 (73s)
+  t3v4 ep 26/90  train 0.6335  val 0.8520 (73s)
+  t3v4 ep 27/90  train 0.6641  val 0.8323 (73s)
+  t3v4 ep 28/90  train 0.6516  val 0.7827 (73s)
+  t3v4 ep 29/90  train 0.6351  val 0.8050 (73s)
+  t3v4 ep 30/90  train 0.6491  val 0.7925 (73s)
+  early stop at epoch 30 (best val 0.7070)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▆▅▅▄▄▄▄▃▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▂▁▁▁
+wandb:        val/loss █▅▅▆▄▃▃▃▄▄▃▃▄▂▁▂▁▁▁▁▁▁▁▁▁▂▂▂▂▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 30
+wandb:       test/beta 16
+wandb:         test/f1 0.65455
+wandb:   test/f1_beta0 0.63296
+wandb:        test/iou 0.48649
+wandb: test/prior_gain 0.02159
+wandb:        test/tau -2
+wandb:  test/tau_beta0 -2
+wandb:      train/loss 0.64912
+wandb:        val/loss 0.79245
+wandb: 
+wandb: 🚀 View run refine-t3v4 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/q1v5n379
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_165942-q1v5n379/logs
+t3v4: tau -2.0 beta 16.0  F1 0.6546 (beta=0: 0.6330, gain +0.0216)  IoU 0.4865  [2907s]
+
+wandb: setting up run kqrjlmmy
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_174809-kqrjlmmy
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t4v0
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/kqrjlmmy
+  t4v0 ep 1/90  train 1.2205  val 1.1672 (73s)
+  t4v0 ep 2/90  train 1.1409  val 1.1716 (73s)
+  t4v0 ep 3/90  train 1.0854  val 1.0953 (73s)
+  t4v0 ep 4/90  train 1.0159  val 1.1740 (73s)
+  t4v0 ep 5/90  train 0.9752  val 1.0900 (73s)
+  t4v0 ep 6/90  train 0.9536  val 0.9570 (73s)
+  t4v0 ep 7/90  train 0.9210  val 0.9232 (73s)
+  t4v0 ep 8/90  train 0.8920  val 0.9434 (73s)
+  t4v0 ep 9/90  train 0.8833  val 0.9589 (73s)
+  t4v0 ep 10/90  train 0.8962  val 0.9969 (73s)
+  t4v0 ep 11/90  train 0.8763  val 1.0041 (74s)
+  t4v0 ep 12/90  train 0.8606  val 0.9280 (74s)
+  t4v0 ep 13/90  train 0.8567  val 0.9323 (74s)
+  t4v0 ep 14/90  train 0.8516  val 0.9060 (73s)
+  t4v0 ep 15/90  train 0.8390  val 0.9820 (73s)
+  t4v0 ep 16/90  train 0.8488  val 0.9441 (73s)
+  t4v0 ep 17/90  train 0.8243  val 0.8851 (73s)
+  t4v0 ep 18/90  train 0.8389  val 1.0837 (73s)
+  t4v0 ep 19/90  train 0.8041  val 0.8870 (73s)
+  t4v0 ep 20/90  train 0.7562  val 0.8925 (73s)
+  t4v0 ep 21/90  train 0.7626  val 0.9550 (73s)
+  t4v0 ep 22/90  train 0.7483  val 0.9462 (73s)
+  t4v0 ep 23/90  train 0.7561  val 0.9025 (73s)
+  t4v0 ep 24/90  train 0.7403  val 0.8861 (73s)
+  t4v0 ep 25/90  train 0.7150  val 0.8639 (73s)
+  t4v0 ep 26/90  train 0.7101  val 0.8510 (73s)
+  t4v0 ep 27/90  train 0.6813  val 0.8298 (73s)
+  t4v0 ep 28/90  train 0.6632  val 0.8452 (73s)
+  t4v0 ep 29/90  train 0.6646  val 0.8112 (73s)
+  t4v0 ep 30/90  train 0.6364  val 0.7951 (74s)
+  t4v0 ep 31/90  train 0.6179  val 0.7719 (74s)
+  t4v0 ep 32/90  train 0.6195  val 0.9305 (74s)
+  t4v0 ep 33/90  train 0.6054  val 0.7975 (74s)
+  t4v0 ep 34/90  train 0.6263  val 0.8179 (74s)
+  t4v0 ep 35/90  train 0.6015  val 0.8838 (74s)
+  t4v0 ep 36/90  train 0.5793  val 0.7887 (74s)
+  t4v0 ep 37/90  train 0.5713  val 0.8464 (74s)
+  t4v0 ep 38/90  train 0.5513  val 0.7583 (74s)
+  t4v0 ep 39/90  train 0.5412  val 0.8342 (74s)
+  t4v0 ep 40/90  train 0.5275  val 0.7760 (74s)
+  t4v0 ep 41/90  train 0.5198  val 0.7510 (74s)
+  t4v0 ep 42/90  train 0.5150  val 0.7793 (74s)
+  t4v0 ep 43/90  train 0.4979  val 0.7381 (74s)
+  t4v0 ep 44/90  train 0.4878  val 0.7405 (74s)
+  t4v0 ep 45/90  train 0.4824  val 0.7518 (74s)
+  t4v0 ep 46/90  train 0.4744  val 0.7371 (74s)
+  t4v0 ep 47/90  train 0.4740  val 0.7371 (73s)
+  t4v0 ep 48/90  train 0.4636  val 0.7438 (74s)
+  t4v0 ep 49/90  train 0.4676  val 0.7345 (74s)
+  t4v0 ep 50/90  train 0.4533  val 0.7689 (74s)
+  t4v0 ep 51/90  train 0.4486  val 0.7423 (74s)
+  t4v0 ep 52/90  train 0.4452  val 0.7631 (74s)
+  t4v0 ep 53/90  train 0.4386  val 0.7381 (74s)
+  t4v0 ep 54/90  train 0.4289  val 0.7175 (74s)
+  t4v0 ep 55/90  train 0.4207  val 0.7618 (74s)
+  t4v0 ep 56/90  train 0.4124  val 0.7140 (74s)
+  t4v0 ep 57/90  train 0.4024  val 0.7019 (74s)
+  t4v0 ep 58/90  train 0.3975  val 0.7101 (74s)
+  t4v0 ep 59/90  train 0.3931  val 0.7006 (74s)
+  t4v0 ep 60/90  train 0.3797  val 0.7054 (74s)
+  t4v0 ep 61/90  train 0.3814  val 0.6919 (74s)
+  t4v0 ep 62/90  train 0.3752  val 0.6985 (74s)
+  t4v0 ep 63/90  train 0.3725  val 0.6788 (74s)
+  t4v0 ep 64/90  train 0.3660  val 0.7080 (74s)
+  t4v0 ep 65/90  train 0.3646  val 0.6942 (74s)
+  t4v0 ep 66/90  train 0.3553  val 0.7062 (74s)
+  t4v0 ep 67/90  train 0.3613  val 0.7064 (74s)
+  t4v0 ep 68/90  train 0.3623  val 0.7121 (74s)
+  t4v0 ep 69/90  train 0.3579  val 0.6885 (74s)
+  t4v0 ep 70/90  train 0.3539  val 0.7002 (74s)
+  t4v0 ep 71/90  train 0.3489  val 0.7164 (74s)
+  t4v0 ep 72/90  train 0.3521  val 0.7264 (74s)
+  t4v0 ep 73/90  train 0.3413  val 0.6772 (74s)
+  t4v0 ep 74/90  train 0.3434  val 0.6980 (74s)
+  t4v0 ep 75/90  train 0.3417  val 0.7062 (74s)
+  t4v0 ep 76/90  train 0.3358  val 0.6854 (74s)
+  t4v0 ep 77/90  train 0.3378  val 0.6993 (74s)
+  t4v0 ep 78/90  train 0.3327  val 0.6976 (74s)
+  t4v0 ep 79/90  train 0.3384  val 0.6848 (74s)
+  t4v0 ep 80/90  train 0.3274  val 0.7057 (74s)
+  t4v0 ep 81/90  train 0.3322  val 0.6985 (74s)
+  t4v0 ep 82/90  train 0.3294  val 0.6914 (74s)
+  t4v0 ep 83/90  train 0.3276  val 0.6874 (74s)
+  early stop at epoch 83 (best val 0.6772)
+wandb: uploading data; updating run metadata
+wandb: updating run metadata; uploading data
+wandb: updating run metadata; uploading history steps 12-83, summary, console lines 12-83
+wandb: updating run metadata
+wandb: uploading config.yaml
+wandb: uploading output.log
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▂▂▃▃▃▃▃▃▃▄▄▄▄▄▄▄▅▅▅▅▅▅▅▆▆▆▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss ██▆▆▆▅▅▅▅▅▅▄▄▄▃▃▃▃▃▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:        val/loss ██▇▅▅▄▅▅▄▇▄▅▃▃▃▅▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▂▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 83
+wandb:       test/beta 16
+wandb:         test/f1 0.79107
+wandb:   test/f1_beta0 0.76369
+wandb:        test/iou 0.65436
+wandb: test/prior_gain 0.02738
+wandb:        test/tau -2
+wandb:  test/tau_beta0 -2
+wandb:      train/loss 0.32758
+wandb:        val/loss 0.68745
+wandb: 
+wandb: 🚀 View run refine-t4v0 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/kqrjlmmy
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_174809-kqrjlmmy/logs
+t4v0: tau -2.0 beta 16.0  F1 0.7911 (beta=0: 0.7637, gain +0.0274)  IoU 0.6544  [6955s]
+
+wandb: setting up run t679p1tg
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_194403-t679p1tg
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t4v1
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/t679p1tg
+  t4v1 ep 1/90  train 1.1994  val 1.2441 (74s)
+  t4v1 ep 2/90  train 1.1142  val 1.0557 (74s)
+  t4v1 ep 3/90  train 1.0632  val 1.0978 (74s)
+  t4v1 ep 4/90  train 1.0050  val 1.0315 (74s)
+  t4v1 ep 5/90  train 0.9610  val 0.9211 (74s)
+  t4v1 ep 6/90  train 0.9203  val 0.8694 (74s)
+  t4v1 ep 7/90  train 0.8825  val 0.9372 (74s)
+  t4v1 ep 8/90  train 0.8337  val 0.9073 (74s)
+  t4v1 ep 9/90  train 0.8124  val 0.7894 (74s)
+  t4v1 ep 10/90  train 0.7706  val 0.7414 (74s)
+  t4v1 ep 11/90  train 0.7567  val 0.8338 (74s)
+  t4v1 ep 12/90  train 0.8263  val 0.8134 (74s)
+  t4v1 ep 13/90  train 0.7984  val 0.8532 (74s)
+  t4v1 ep 14/90  train 0.7771  val 0.7427 (74s)
+  t4v1 ep 15/90  train 0.7504  val 0.7950 (74s)
+  t4v1 ep 16/90  train 0.7402  val 0.7713 (74s)
+  t4v1 ep 17/90  train 0.7302  val 0.8225 (74s)
+  t4v1 ep 18/90  train 0.7170  val 0.7829 (74s)
+  t4v1 ep 19/90  train 0.6929  val 0.7025 (74s)
+  t4v1 ep 20/90  train 0.7020  val 0.8604 (74s)
+  t4v1 ep 21/90  train 0.7172  val 0.7962 (74s)
+  t4v1 ep 22/90  train 0.7337  val 0.7939 (74s)
+  t4v1 ep 23/90  train 0.6968  val 0.7791 (74s)
+  t4v1 ep 24/90  train 0.6843  val 0.8254 (74s)
+  t4v1 ep 25/90  train 0.7279  val 0.8476 (74s)
+  t4v1 ep 26/90  train 0.7570  val 0.8564 (74s)
+  t4v1 ep 27/90  train 0.7304  val 0.8532 (74s)
+  t4v1 ep 28/90  train 0.7337  val 0.8019 (74s)
+  t4v1 ep 29/90  train 0.7123  val 1.1781 (74s)
+  early stop at epoch 29 (best val 0.7025)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading config.yaml
+wandb: uploading history steps 29-29, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▂▂▂▃▃▃▃▃▄▄▄▅▅▅▅▅▆▆▆▇▇▇▇▇██
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▆▅▅▄▄▃▃▂▂▃▃▂▂▂▂▁▁▁▁▂▁▁▂▂▂▂▁
+wandb:        val/loss █▆▆▅▄▃▄▄▂▂▃▂▃▂▂▂▃▂▁▃▂▂▂▃▃▃▃▂▇
+wandb: 
+wandb: Run summary:
+wandb:           epoch 29
+wandb:       test/beta 16
+wandb:         test/f1 0.69077
+wandb:   test/f1_beta0 0.6576
+wandb:        test/iou 0.52761
+wandb: test/prior_gain 0.03316
+wandb:        test/tau -1
+wandb:  test/tau_beta0 -1
+wandb:      train/loss 0.71232
+wandb:        val/loss 1.17806
+wandb: 
+wandb: 🚀 View run refine-t4v1 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/t679p1tg
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_194403-t679p1tg/logs
+t4v1: tau -1.0 beta 16.0  F1 0.6908 (beta=0: 0.6576, gain +0.0332)  IoU 0.5276  [2783s]
+
+wandb: setting up run bg7rf2re
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_203026-bg7rf2re
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t4v2
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/bg7rf2re
+  t4v2 ep 1/90  train 1.2301  val 1.1990 (74s)
+  t4v2 ep 2/90  train 1.1736  val 1.1779 (73s)
+  t4v2 ep 3/90  train 1.1240  val 1.0662 (73s)
+  t4v2 ep 4/90  train 1.0659  val 1.0189 (74s)
+  t4v2 ep 5/90  train 1.0210  val 0.9671 (74s)
+  t4v2 ep 6/90  train 0.9665  val 0.9538 (74s)
+  t4v2 ep 7/90  train 0.9210  val 0.9115 (74s)
+  t4v2 ep 8/90  train 0.8677  val 0.9067 (73s)
+  t4v2 ep 9/90  train 0.8309  val 0.9904 (74s)
+  t4v2 ep 10/90  train 0.8020  val 0.8082 (74s)
+  t4v2 ep 11/90  train 0.7741  val 0.7967 (74s)
+  t4v2 ep 12/90  train 0.7733  val 0.8875 (74s)
+  t4v2 ep 13/90  train 0.7846  val 0.8793 (74s)
+  t4v2 ep 14/90  train 0.7642  val 0.8822 (74s)
+  t4v2 ep 15/90  train 0.8725  val 0.9647 (74s)
+  t4v2 ep 16/90  train 0.9008  val 0.8550 (74s)
+  t4v2 ep 17/90  train 0.8127  val 0.8215 (74s)
+  t4v2 ep 18/90  train 0.7233  val 0.7831 (74s)
+  t4v2 ep 19/90  train 0.6955  val 0.7597 (74s)
+  t4v2 ep 20/90  train 0.6776  val 0.7957 (74s)
+  t4v2 ep 21/90  train 0.6473  val 0.7948 (74s)
+  t4v2 ep 22/90  train 0.6291  val 0.6847 (74s)
+  t4v2 ep 23/90  train 0.6165  val 0.6950 (74s)
+  t4v2 ep 24/90  train 0.6082  val 0.6808 (74s)
+  t4v2 ep 25/90  train 0.6058  val 0.6895 (74s)
+  t4v2 ep 26/90  train 0.5802  val 0.6451 (74s)
+  t4v2 ep 27/90  train 0.5538  val 0.6701 (74s)
+  t4v2 ep 28/90  train 0.5483  val 0.6797 (74s)
+  t4v2 ep 29/90  train 0.5422  val 0.6961 (74s)
+  t4v2 ep 30/90  train 0.5311  val 0.6420 (74s)
+  t4v2 ep 31/90  train 0.5279  val 0.6498 (74s)
+  t4v2 ep 32/90  train 0.5164  val 0.6695 (74s)
+  t4v2 ep 33/90  train 0.4946  val 0.6606 (74s)
+  t4v2 ep 34/90  train 0.4835  val 0.6351 (73s)
+  t4v2 ep 35/90  train 0.4712  val 0.6448 (73s)
+  t4v2 ep 36/90  train 0.4716  val 0.6491 (73s)
+  t4v2 ep 37/90  train 0.4701  val 0.6533 (73s)
+  t4v2 ep 38/90  train 0.4574  val 0.7085 (73s)
+  t4v2 ep 39/90  train 0.7077  val 0.8843 (73s)
+  t4v2 ep 40/90  train 0.7401  val 0.7889 (73s)
+  t4v2 ep 41/90  train 0.7077  val 0.8276 (73s)
+  t4v2 ep 42/90  train 0.6801  val 0.7465 (73s)
+  t4v2 ep 43/90  train 0.6403  val 0.7049 (73s)
+  t4v2 ep 44/90  train 0.5984  val 0.7222 (73s)
+  early stop at epoch 44 (best val 0.6351)
+wandb: updating run metadata
+wandb: uploading config.yaml; uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 44-44, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▇▆▆▅▅▄▄▄▄▄▅▅▄▃▃▃▃▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▃▄▃▃▂
+wandb:        val/loss ██▆▆▅▅▄▄▅▃▄▄▄▅▄▃▃▃▃▃▂▂▂▁▁▂▂▁▁▁▁▁▁▁▂▄▃▃▂▂
+wandb: 
+wandb: Run summary:
+wandb:           epoch 44
+wandb:       test/beta 16
+wandb:         test/f1 0.71926
+wandb:   test/f1_beta0 0.68996
+wandb:        test/iou 0.56159
+wandb: test/prior_gain 0.02929
+wandb:        test/tau -1
+wandb:  test/tau_beta0 -1
+wandb:      train/loss 0.59835
+wandb:        val/loss 0.72216
+wandb: 
+wandb: 🚀 View run refine-t4v2 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/bg7rf2re
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_203026-bg7rf2re/logs
+t4v2: tau -1.0 beta 16.0  F1 0.7193 (beta=0: 0.6900, gain +0.0293)  IoU 0.5616  [3853s]
+
+wandb: setting up run n0dxkxre
+wandb: Tracking run with wandb version 0.29.0
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/run-20260914_213440-n0dxkxre
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run refine-t4v3
+wandb: ⭐️ View project at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: 🚀 View run at https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/n0dxkxre
+  t4v3 ep 1/90  train 1.2119  val 1.1755 (74s)
+  t4v3 ep 2/90  train 1.1204  val 1.1662 (73s)
+  t4v3 ep 3/90  train 1.0945  val 1.1677 (73s)
+  t4v3 ep 4/90  train 1.0566  val 1.0996 (73s)
+  t4v3 ep 5/90  train 1.0068  val 1.1008 (73s)
+  t4v3 ep 6/90  train 0.9739  val 0.9838 (73s)
+  t4v3 ep 7/90  train 0.9184  val 0.9914 (73s)
+  t4v3 ep 8/90  train 0.8946  val 0.8614 (73s)
+  t4v3 ep 9/90  train 0.8722  val 1.2796 (73s)
+  t4v3 ep 10/90  train 0.8123  val 0.8436 (73s)
+  t4v3 ep 11/90  train 0.7774  val 0.8324 (73s)
+  t4v3 ep 12/90  train 0.7418  val 0.8148 (73s)
+  t4v3 ep 13/90  train 0.7450  val 0.9939 (73s)
+  t4v3 ep 14/90  train 0.7030  val 0.7838 (73s)
+  t4v3 ep 15/90  train 0.6983  val 0.8718 (73s)
+  t4v3 ep 16/90  train 0.7153  val 0.7742 (73s)
+  t4v3 ep 17/90  train 0.6833  val 0.7584 (73s)
+  t4v3 ep 18/90  train 0.6456  val 0.7375 (73s)
+  t4v3 ep 19/90  train 0.6531  val 0.7620 (73s)
+  t4v3 ep 20/90  train 0.6369  val 0.8093 (73s)
+  t4v3 ep 21/90  train 0.6210  val 0.7746 (73s)
+  t4v3 ep 22/90  train 0.6059  val 0.7921 (73s)
+  t4v3 ep 23/90  train 0.5955  val 0.7324 (73s)
+  t4v3 ep 24/90  train 0.5726  val 0.8089 (73s)
+  t4v3 ep 25/90  train 0.5726  val 0.7469 (73s)
+  t4v3 ep 26/90  train 0.5678  val 0.7494 (73s)
+  t4v3 ep 27/90  train 0.5588  val 0.6759 (73s)
+  t4v3 ep 28/90  train 0.5455  val 0.7560 (73s)
+  t4v3 ep 29/90  train 0.5375  val 0.7237 (73s)
+  t4v3 ep 30/90  train 0.5403  val 0.7318 (73s)
+  t4v3 ep 31/90  train 0.5380  val 0.6949 (73s)
+  t4v3 ep 32/90  train 0.5511  val 0.7449 (73s)
+  t4v3 ep 33/90  train 0.5593  val 0.7579 (73s)
+  t4v3 ep 34/90  train 0.5667  val 0.6625 (73s)
+  t4v3 ep 35/90  train 0.4993  val 0.7300 (73s)
+  t4v3 ep 36/90  train 0.4858  val 0.6818 (73s)
+  t4v3 ep 37/90  train 0.4809  val 0.6822 (73s)
+  t4v3 ep 38/90  train 0.4646  val 0.6910 (73s)
+  t4v3 ep 39/90  train 0.4542  val 0.6490 (73s)
+  t4v3 ep 40/90  train 0.4563  val 0.6899 (73s)
+  t4v3 ep 41/90  train 0.4266  val 0.6984 (73s)
+  t4v3 ep 42/90  train 0.4256  val 0.6579 (73s)
+  t4v3 ep 43/90  train 0.4171  val 0.6729 (73s)
+  t4v3 ep 44/90  train 0.4142  val 0.6690 (73s)
+  t4v3 ep 45/90  train 0.3995  val 0.6536 (73s)
+  t4v3 ep 46/90  train 0.3881  val 0.6147 (73s)
+  t4v3 ep 47/90  train 0.3862  val 0.6778 (73s)
+  t4v3 ep 48/90  train 0.3767  val 0.6767 (73s)
+  t4v3 ep 49/90  train 0.3651  val 0.6536 (73s)
+  t4v3 ep 50/90  train 0.3681  val 0.6312 (73s)
+  t4v3 ep 51/90  train 0.3635  val 0.6714 (73s)
+  t4v3 ep 52/90  train 0.3520  val 0.6750 (73s)
+  t4v3 ep 53/90  train 0.3420  val 0.6790 (73s)
+  t4v3 ep 54/90  train 0.3426  val 0.6403 (73s)
+  t4v3 ep 55/90  train 0.3312  val 0.6607 (73s)
+  t4v3 ep 56/90  train 0.3292  val 0.6380 (73s)
+  early stop at epoch 56 (best val 0.6147)
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 56-56, summary
+wandb: 
+wandb: Run history:
+wandb:           epoch ▁▂▂▂▂▂▃▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇▇██
+wandb:       test/beta ▁
+wandb:         test/f1 ▁
+wandb:   test/f1_beta0 ▁
+wandb:        test/iou ▁
+wandb: test/prior_gain ▁
+wandb:        test/tau ▁
+wandb:  test/tau_beta0 ▁
+wandb:      train/loss █▇▇▇▆▅▅▅▄▄▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁
+wandb:        val/loss ██▇▇▆▄▄▄▃▆▄▃▃▃▃▃▂▃▃▃▃▂▂▃▃▂▂▂▁▂▂▂▂▁▁▂▁▂▁▁
+wandb: 
+wandb: Run summary:
+wandb:           epoch 56
+wandb:       test/beta 16
+wandb:         test/f1 0.77906
+wandb:   test/f1_beta0 0.7545
+wandb:        test/iou 0.63808
+wandb: test/prior_gain 0.02455
+wandb:        test/tau -0.5
+wandb:  test/tau_beta0 -0.5
+wandb:      train/loss 0.32917
+wandb:        val/loss 0.63801
+wandb: 
+wandb: 🚀 View run refine-t4v3 at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation/runs/n0dxkxre
+wandb: ⭐️ View project at: https://wandb.ai/2671907-university-of-the-witwatersrand/cv-splice-localisation
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260914_213440-n0dxkxre/logs
+t4v3: tau -0.5 beta 16.0  F1 0.7791 (beta=0: 0.7545, gain +0.0246)  IoU 0.6381  [4699s]
+
+summarise: python3 src/methods/merge_refine.py

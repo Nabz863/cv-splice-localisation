@@ -1,0 +1,21 @@
+2026-09-14 08:15:01,551 INFO    MainThread:79095 [wandb_init.py:setup_run_log_directory():739] Logging user logs to /home/dell/cv-project/wandb/run-20260914_081501-ktelc6nw/logs/debug.log
+2026-09-14 08:15:01,551 INFO    MainThread:79095 [wandb_init.py:setup_run_log_directory():740] Logging internal logs to /home/dell/cv-project/wandb/run-20260914_081501-ktelc6nw/logs/debug-internal.log
+2026-09-14 08:15:01,551 INFO    MainThread:79095 [wandb_init.py:init():783] calling init triggers
+2026-09-14 08:15:01,551 INFO    MainThread:79095 [wandb_init.py:init():788] wandb.init called with sweep_config: {}
+config: {'test_fold': 1, 'val_fold': 4, 'epochs_max': 90, 'patience': 10, 'batch': 8, 'lr': 0.001, 'weight_decay': 0.0001, 'grad_clip': 1.0, 'amp_dtype': 'bfloat16', 'taus': '[-2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0]', 'betas': '[0.0, 0.25, 1.0, 2.0, 4.0, 8.0, 16.0]', '_wandb': {}}
+2026-09-14 08:15:01,551 INFO    MainThread:79095 [wandb_init.py:init():831] starting backend
+2026-09-14 08:15:01,551 INFO    MainThread:79095 [wandb_init.py:init():846] sending inform_init request
+2026-09-14 08:15:02,528 INFO    MainThread:79095 [wandb_init.py:init():851] backend started and connected
+2026-09-14 08:15:02,530 INFO    MainThread:79095 [wandb_init.py:init():921] updated telemetry
+2026-09-14 08:15:02,533 INFO    MainThread:79095 [wandb_init.py:init():944] communicating run to backend with 90.0 second timeout
+2026-09-14 08:15:04,223 INFO    MainThread:79095 [wandb_init.py:init():981] starting run threads in backend
+2026-09-14 08:15:04,250 INFO    MainThread:79095 [wandb_run.py:_console_start():2545] atexit reg
+2026-09-14 08:15:04,250 INFO    MainThread:79095 [wandb_run.py:_redirect():2395] redirect: wrap_raw
+2026-09-14 08:15:04,250 INFO    MainThread:79095 [wandb_run.py:_redirect():2464] Wrapping output streams.
+2026-09-14 08:15:04,250 INFO    MainThread:79095 [wandb_run.py:_redirect():2487] Redirects installed.
+2026-09-14 08:15:04,251 INFO    MainThread:79095 [wandb_init.py:init():1019] run started, returning control to user process
+2026-09-14 09:37:41,549 INFO    MainThread:79095 [wandb_run.py:_finish():2316] finishing run 2671907-university-of-the-witwatersrand/cv-splice-localisation/ktelc6nw
+2026-09-14 09:37:41,549 INFO    MainThread:79095 [wandb_run.py:_atexit_cleanup():2512] got exitcode: 0
+2026-09-14 09:37:41,550 INFO    MainThread:79095 [wandb_run.py:_restore():2494] restore
+2026-09-14 09:37:41,550 INFO    MainThread:79095 [wandb_run.py:_restore():2500] restore done
+2026-09-14 09:37:43,694 INFO    MainThread:79095 [wandb_run.py:_footer_sync_info():3917] logging synced files
