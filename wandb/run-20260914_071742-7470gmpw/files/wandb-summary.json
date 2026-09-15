@@ -1,0 +1,1 @@
+{"train/loss":0.5294786709934227,"_timestamp":1.7893664968865075e+09,"test/iou":0.6119210844648839,"test/f1_beta0":0.7352694983195643,"test/f1":0.7592444696733102,"test/tau":-1,"test/beta":16,"test/tau_beta0":-1,"_wandb":{"runtime":3433},"test/prior_gain":0.023974971353745822,"epoch":38,"_runtime":3433,"val/loss":0.8126439022691283,"_step":38}

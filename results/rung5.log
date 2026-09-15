@@ -1,0 +1,38 @@
+device cuda | 1822 pairs | 49 (tau, beta) points | amp=bf16 wd=0.0001 clip=1.0
+20 (test, val) pairs | 1 done | 19 to run
+
+wandb: Tracking run with wandb version 0.29.0
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /home/dell/cv-project/wandb/offline-run-20260915_192926-kfp3lpio
+wandb: View this run in the terminal with `wandb leet`
+  loaded results/models/refine_t0v2.pt - skipping training
+    cal logits done (2s), 7350 cuts across 6 workers
+    cal 50/150 (64s)
+    cal 100/150 (155s)
+    cal 150/150 (193s)
+Traceback (most recent call last):
+  File "/home/dell/cv-project/src/methods/run_mrf_refine.py", line 289, in <module>
+    tau, beta, f1, iou, f1_0 = run_pair(k, v, rows)
+                               ~~~~~~~~^^^^^^^^^^^^
+  File "/home/dell/cv-project/src/methods/run_mrf_refine.py", line 253, in run_pair
+    ct, et = counts_over(model, te, "test")
+             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dell/cv-project/src/methods/run_mrf_refine.py", line 192, in counts_over
+    lg = logits_full(model, r["image"]).astype(np.float32)
+         ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/dell/cv-project/src/methods/run_mrf_refine.py", line 72, in logits_full
+    x = torch.from_numpy(img.transpose(2, 0, 1))[None].to(DEV)
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+The CUDA driver logged these messages, which may provide useful details:
+Returning 700 (CUDA_ERROR_ILLEGAL_ADDRESS) from cuStreamSynchronize
+
+
+[1;34mwandb[0m: 
+[1;34mwandb[0m: You can sync this run to the cloud by running:
+[1;34mwandb[0m: [1mwandb sync /home/dell/cv-project/wandb/offline-run-20260915_192926-kfp3lpio[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/offline-run-20260915_192926-kfp3lpio/logs[0m

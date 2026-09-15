@@ -5,3 +5,9 @@ results/*.npy
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+results/models/
+results/logits/
+results/models/
+results/ckpt/
+results/ckpt_refine/
+wandb/
