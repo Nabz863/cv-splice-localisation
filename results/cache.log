@@ -1,0 +1,43 @@
+device cuda | 20 pairs | no multiprocessing in this phase
+t0v1: loaded results/models/refine_t0v1.pt
+t0v1: cached 150 cal + 364 test (120 MB, 11s)
+
+t0v2: loaded results/models/refine_t0v2.pt
+t0v2: cached 150 cal + 364 test (120 MB, 13s)
+
+t0v3: training
+Traceback (most recent call last):
+  File "/home/dell/cv-project/src/methods/cache_logits.py", line 185, in <module>
+    cache_pair(k, v, rows)
+    ~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/dell/cv-project/src/methods/cache_logits.py", line 153, in cache_pair
+    model = train_one(test_fold, val_fold, rows, tag)
+  File "/home/dell/cv-project/src/methods/cache_logits.py", line 64, in train_one
+    model = UNet(norm=NORM).to(DEV)
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1388, in to
+    return self._apply(convert)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+    ~~~~~~~~~~~~~^^^^
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 966, in _apply
+    param_applied = fn(param)
+  File "/home/dell/cv-project/venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1374, in convert
+    return t.to(
+           ~~~~^
+        device,
+        ^^^^^^^
+        dtype if t.is_floating_point() or t.is_complex() else None,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        non_blocking,
+        ^^^^^^^^^^^^^
+    )
+    ^
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+The CUDA driver logged these messages, which may provide useful details:
+Returning 700 (CUDA_ERROR_ILLEGAL_ADDRESS) from cuStreamSynchronize
+
+

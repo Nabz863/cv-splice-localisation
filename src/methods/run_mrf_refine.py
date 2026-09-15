@@ -20,6 +20,8 @@ Tau is in LOGIT space here, not the z-score space rung 2 used: 0 corresponds to
 p(tampered) = 0.5. Hence the negative values in the grid.
 """
 import csv, os, sys, time
+import multiprocessing as mp
+from concurrent.futures import ProcessPoolExecutor
 import numpy as np
 import torch
 from PIL import Image
@@ -47,6 +49,7 @@ CLIP = float(os.environ.get("CLIP", 1.0))
 NESTED = bool(int(os.environ.get("NESTED", 1)))
 N_TRAIN = int(os.environ.get("N_TRAIN", 0))     # 0 = all; for smoke tests
 N_CAL = int(os.environ.get("N_CAL", 150))       # calibration images
+CUT_WORKERS = int(os.environ.get("CUT_WORKERS", 10))
 USE_WANDB = bool(int(os.environ.get("WANDB", 1)))
 AMP_DTYPE = torch.bfloat16
 
@@ -163,17 +166,48 @@ def train_one(test_fold, val_fold, rows, tag):
     return model
 
 
-def counts_over(model, subset):
-    """Confusion counts for every (tau, beta), plus the energy reached."""
+def _cuts_one(args):
+    """Graph cuts for one image across the whole grid. CPU-bound, so this runs
+    in a worker process; the logits are computed on the GPU beforehand."""
+    lg, t = args
     c = np.zeros((len(GRID), 3), np.int64)
     e = np.zeros(len(GRID))
+    for gi, (tau, beta) in enumerate(GRID):
+        x = solve_graphcut(lg, tau, beta)
+        c[gi] = ((x & t).sum(), (x & ~t).sum(), (~x & t).sum())
+        e[gi] = energy(lg, x, tau, beta)
+    return c, e
+
+
+def counts_over(model, subset, label=""):
+    """Confusion counts for every (tau, beta), plus the energy reached.
+
+    Two phases: logits on the GPU (fast, serial), then graph cuts fanned across
+    CPU workers. Single-threaded this is 49 solves per image and dominates the
+    runtime -- at high beta a single solve can take most of a second.
+    """
+    t0 = time.time()
+    payload = []
     for r in subset:
-        lg = logits_full(model, r["image"])
+        lg = logits_full(model, r["image"]).astype(np.float32)
         t = np.array(Image.open(r["mask"]).convert("L")) > 127
-        for gi, (tau, beta) in enumerate(GRID):
-            x = solve_graphcut(lg, tau, beta)
-            c[gi] += ((x & t).sum(), (x & ~t).sum(), (~x & t).sum())
-            e[gi] += energy(lg, x, tau, beta)
+        payload.append((lg, t))
+        if len(payload) % 50 == 0:
+            torch.cuda.empty_cache()
+    print(f"    {label} logits done ({time.time()-t0:.0f}s), "
+          f"{len(payload)*len(GRID)} cuts across {CUT_WORKERS} workers", flush=True)
+
+    c = np.zeros((len(GRID), 3), np.int64)
+    e = np.zeros(len(GRID))
+    # spawn, not fork: forking a process with a live CUDA context corrupts it,
+    # and the next CUDA call fails with an illegal memory access.
+    with ProcessPoolExecutor(max_workers=CUT_WORKERS,
+                             mp_context=mp.get_context("spawn")) as ex:
+        for i, (ci, ei) in enumerate(ex.map(_cuts_one, payload, chunksize=2)):
+            c += ci; e += ei
+            if (i + 1) % 50 == 0:
+                print(f"    {label} {i+1}/{len(payload)} ({time.time()-t0:.0f}s)",
+                      flush=True)
     return c, e / max(len(subset), 1)
 
 
@@ -205,7 +239,7 @@ def run_pair(test_fold, val_fold, rows):
     te = [r for r in rows if int(r["fold"]) == test_fold]
 
     cal = list(np.random.default_rng(1).permutation(va))[:N_CAL]
-    cc, _ = counts_over(model, cal)
+    cc, _ = counts_over(model, cal, "cal")
 
     gi = int(np.argmax([f1_of(cc, g) for g in range(len(GRID))]))
     tau, beta = GRID[gi]
@@ -216,7 +250,7 @@ def run_pair(test_fold, val_fold, rows):
     gi0 = zero[int(np.argmax([f1_of(cc, g) for g in zero]))]
     tau0 = GRID[gi0][0]
 
-    ct, et = counts_over(model, te)
+    ct, et = counts_over(model, te, "test")
     f1, iou = f1_of(ct, gi), ct[gi][0] / ct[gi].sum() if ct[gi].sum() else 0.0
     tp, fp, fn = ct[gi]
     iou = tp / (tp + fp + fn)
