@@ -1,0 +1,34 @@
+node: mscluster77.ms.wits.ac.za
+Tue Sep 15 22:42:30 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 3090        Off |   00000000:17:00.0 Off |                  N/A |
+|  0%   43C    P8             18W /  350W |       1MiB /  24576MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+GPU ok on mscluster77.ms.wits.ac.za: NVIDIA GeForce RTX 3090
+device cuda | 20 pairs | no multiprocessing in this phase
+t0v1: training
+Traceback (most recent call last):
+  File "/home-mscluster/nmahomed/cv-project/src/methods/cache_logits.py", line 185, in <module>
+    cache_pair(k, v, rows)
+    ~~~~~~~~~~^^^^^^^^^^^^
+  File "/home-mscluster/nmahomed/cv-project/src/methods/cache_logits.py", line 153, in cache_pair
+    model = train_one(test_fold, val_fold, rows, tag)
+  File "/home-mscluster/nmahomed/cv-project/src/methods/cache_logits.py", line 53, in train_one
+    tr = [r for r in rows if int(r["fold"]) not in (test_fold, val_fold)]
+                                 ~^^^^^^^^
+KeyError: 'fold'

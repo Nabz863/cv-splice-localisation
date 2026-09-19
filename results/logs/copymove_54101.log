@@ -1,0 +1,38 @@
+3284 copy-move pairs | tau=0.75 beta=8.0 (selected on splicing) | 12 workers
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/concurrent/futures/process.py", line 254, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+  File "/usr/lib/python3.14/concurrent/futures/process.py", line 203, in _process_chunk
+    return [fn(*args) for args in chunk]
+            ~~^^^^^^^
+  File "/home-mscluster/nmahomed/cv-project/src/methods/run_copymove.py", line 35, in one
+    for x in (s >= TAU, solve_graphcut(s, TAU, BETA)):      # rung 1, then rung 2
+                        ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home-mscluster/nmahomed/cv-project/src/methods/mrf.py", line 45, in solve_graphcut
+    import maxflow
+ModuleNotFoundError: No module named 'maxflow'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home-mscluster/nmahomed/cv-project/src/methods/run_copymove.py", line 49, in <module>
+    for i, (c, rate) in enumerate(ex.map(one, rows, chunksize=8)):
+                        ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/concurrent/futures/process.py", line 617, in _chain_from_iterable_of_lists
+    for element in iterable:
+                   ^^^^^^^^
+  File "/usr/lib/python3.14/concurrent/futures/_base.py", line 639, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib/python3.14/concurrent/futures/_base.py", line 311, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3.14/concurrent/futures/_base.py", line 450, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/concurrent/futures/_base.py", line 395, in __get_result
+    raise self._exception
+ModuleNotFoundError: No module named 'maxflow'

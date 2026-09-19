@@ -1,0 +1,119 @@
+node: mscluster42.ms.wits.ac.za
+deps ok
+20 cached pairs | 49 (tau, beta) points | 12 workers | CPU only
+t0v1: done already
+    t0v2 cal 100/150 (87s)
+    t0v2 test 100/364 (68s)
+    t0v2 test 200/364 (114s)
+    t0v2 test 300/364 (126s)
+t0v2: tau 0.0 beta 32.0  F1 0.7789 (beta=0: 0.7510, gain +0.0279)  IoU 0.6378  [290s]
+
+    t0v3 cal 100/150 (58s)
+    t0v3 test 100/364 (66s)
+    t0v3 test 200/364 (176s)
+    t0v3 test 300/364 (176s)
+t0v3: tau -2.0 beta 64.0  F1 0.7658 (beta=0: 0.7014, gain +0.0644)  IoU 0.6205  [291s]
+
+    t0v4 cal 100/150 (66s)
+    t0v4 test 100/364 (60s)
+    t0v4 test 200/364 (162s)
+    t0v4 test 300/364 (162s)
+t0v4: tau -0.5 beta 64.0  F1 0.8072 (beta=0: 0.7695, gain +0.0377)  IoU 0.6767  [244s]
+
+    t1v0 cal 100/150 (55s)
+    t1v0 test 100/364 (84s)
+    t1v0 test 200/364 (117s)
+    t1v0 test 300/364 (152s)
+t1v0: tau 0.0 beta 64.0  F1 0.7794 (beta=0: 0.7687, gain +0.0107)  IoU 0.6385  [280s]
+
+    t1v2 cal 100/150 (97s)
+    t1v2 test 100/364 (109s)
+    t1v2 test 200/364 (109s)
+    t1v2 test 300/364 (151s)
+t1v2: tau -2.0 beta 64.0  F1 0.7454 (beta=0: 0.6849, gain +0.0605)  IoU 0.5941  [270s]
+
+    t1v3 cal 100/150 (79s)
+    t1v3 test 100/364 (78s)
+    t1v3 test 200/364 (105s)
+    t1v3 test 300/364 (145s)
+t1v3: tau -2.0 beta 64.0  F1 0.8143 (beta=0: 0.7713, gain +0.0430)  IoU 0.6868  [248s]
+
+    t1v4 cal 100/150 (60s)
+    t1v4 test 100/364 (93s)
+    t1v4 test 200/364 (103s)
+    t1v4 test 300/364 (140s)
+t1v4: tau 0.0 beta 64.0  F1 0.7991 (beta=0: 0.7737, gain +0.0254)  IoU 0.6655  [237s]
+
+    t2v0 cal 100/150 (94s)
+    t2v0 test 100/364 (87s)
+    t2v0 test 200/364 (156s)
+    t2v0 test 300/364 (221s)
+t2v0: tau 1.0 beta 32.0  F1 0.7090 (beta=0: 0.6733, gain +0.0357)  IoU 0.5492  [379s]
+
+    t2v1 cal 100/150 (66s)
+    t2v1 test 100/364 (85s)
+    t2v1 test 200/364 (104s)
+    t2v1 test 300/364 (207s)
+t2v1: tau 0.5 beta 32.0  F1 0.7988 (beta=0: 0.7741, gain +0.0247)  IoU 0.6651  [274s]
+
+    t2v3 cal 100/150 (105s)
+    t2v3 test 100/364 (92s)
+    t2v3 test 200/364 (126s)
+    t2v3 test 300/364 (198s)
+t2v3: tau -0.5 beta 64.0  F1 0.7370 (beta=0: 0.7300, gain +0.0070)  IoU 0.5835  [313s]
+
+    t2v4 cal 100/150 (80s)
+    t2v4 test 100/364 (89s)
+    t2v4 test 200/364 (133s)
+    t2v4 test 300/364 (164s)
+t2v4: tau -2.0 beta 64.0  F1 0.7491 (beta=0: 0.7240, gain +0.0251)  IoU 0.5989  [249s]
+
+    t3v0 cal 100/150 (59s)
+    t3v0 test 100/365 (111s)
+    t3v0 test 200/365 (148s)
+    t3v0 test 300/365 (213s)
+t3v0: tau -0.5 beta 64.0  F1 0.7180 (beta=0: 0.6954, gain +0.0226)  IoU 0.5600  [296s]
+
+    t3v1 cal 100/150 (69s)
+    t3v1 test 100/365 (108s)
+    t3v1 test 200/365 (146s)
+    t3v1 test 300/365 (194s)
+t3v1: tau -1.0 beta 64.0  F1 0.7773 (beta=0: 0.7177, gain +0.0596)  IoU 0.6358  [265s]
+
+    t3v2 cal 100/150 (99s)
+    t3v2 test 100/365 (79s)
+    t3v2 test 200/365 (108s)
+    t3v2 test 300/365 (175s)
+t3v2: tau -1.0 beta 64.0  F1 0.7446 (beta=0: 0.7130, gain +0.0316)  IoU 0.5931  [290s]
+
+    t3v4 cal 100/150 (81s)
+    t3v4 test 100/365 (99s)
+    t3v4 test 200/365 (169s)
+    t3v4 test 300/365 (183s)
+t3v4: tau -2.0 beta 64.0  F1 0.7757 (beta=0: 0.7487, gain +0.0270)  IoU 0.6335  [267s]
+
+    t4v0 cal 100/150 (71s)
+    t4v0 test 100/365 (105s)
+    t4v0 test 200/365 (126s)
+    t4v0 test 300/365 (191s)
+t4v0: tau -1.0 beta 64.0  F1 0.7544 (beta=0: 0.7159, gain +0.0385)  IoU 0.6056  [325s]
+
+    t4v1 cal 100/150 (92s)
+    t4v1 test 100/365 (117s)
+    t4v1 test 200/365 (192s)
+    t4v1 test 300/365 (203s)
+t4v1: tau 0.0 beta 32.0  F1 0.7132 (beta=0: 0.6698, gain +0.0434)  IoU 0.5542  [319s]
+
+    t4v2 cal 100/150 (98s)
+    t4v2 test 100/365 (91s)
+    t4v2 test 200/365 (127s)
+    t4v2 test 300/365 (149s)
+t4v2: tau -0.5 beta 64.0  F1 0.7625 (beta=0: 0.7363, gain +0.0262)  IoU 0.6162  [306s]
+
+    t4v3 cal 100/150 (67s)
+    t4v3 test 100/365 (90s)
+    t4v3 test 200/365 (92s)
+    t4v3 test 300/365 (146s)
+t4v3: tau -2.0 beta 64.0  F1 0.7751 (beta=0: 0.7253, gain +0.0498)  IoU 0.6328  [257s]
+
+summarise: python3 src/methods/merge_refine.py

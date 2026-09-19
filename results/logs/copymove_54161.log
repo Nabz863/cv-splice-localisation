@@ -1,0 +1,16 @@
+3284 copy-move pairs | tau=0.75 beta=8.0 (selected on splicing) | 12 workers
+  500/3284 (34s)
+  1000/3284 (58s)
+  1500/3284 (88s)
+  2000/3284 (122s)
+  2500/3284 (149s)
+  3000/3284 (178s)
+
+mean tampered-pixel rate 0.0656
+chance F1 (predict all)  0.1232
+
+method                       F1      IoU   vs chance
+rung 1 (ELA)             0.1278   0.0683     +0.0046
+rung 2 (ELA+MRF)         0.1391   0.0747     +0.0159
+
+wrote results/copymove.csv

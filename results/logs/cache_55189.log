@@ -1,0 +1,7 @@
+node: mscluster50.ms.wits.ac.za
+Unable to determine the device handle for GPU0: 0000:17:00.0: Unknown Error
+No devices were found
+nvidia-smi failed on mscluster50.ms.wits.ac.za
+/home-mscluster/nmahomed/cv-project/venv/lib/python3.14/site-packages/torch/cuda/__init__.py:228: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /__w/pytorch/pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+NO GPU on mscluster50.ms.wits.ac.za - add to the exclude list
