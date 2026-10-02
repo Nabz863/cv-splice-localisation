@@ -1,0 +1,5 @@
+convention,method,f1,chance_f1,margin,tau,beta,n
+micro,rung 1 (ELA),0.1278,0.0924,0.0354,0.75,8.0,3284
+micro,rung 2 (ELA+MRF),0.1391,0.0924,0.0467,0.75,8.0,3284
+per-image,rung 1 (ELA),0.1409,0.1067,0.0342,0.75,8.0,3284
+per-image,rung 2 (ELA+MRF),0.1571,0.1067,0.0504,0.75,8.0,3284
