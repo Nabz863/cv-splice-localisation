@@ -9,4 +9,4 @@
 export DATASETS=/datasets/nmahomed
 cd ~/cv-project
 source venv/bin/activate 2>/dev/null || true
-WORKERS=12 python3 src/methods/run_copymove.py
+WORKERS=12 python3 src/methods/copymove_matched.py
