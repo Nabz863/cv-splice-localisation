@@ -198,7 +198,7 @@ def fig_datasize():
         ax.text(x, v - sd[i] - 0.012, f"{v:.3f}", ha="center", va="top", fontsize=7.5)
     r4 = num(t["rung4"], "f1")
     ax.plot([n[-1]], [r4], "D", ms=6, color=BLUE, mec="white", mew=1.2, zorder=4)
-    ax.text(n[-1] * 0.9, r4 + 0.02, f"{r4:.3f}: same data, longer\ntraining (Table 1)",
+    ax.text(n[-1] * 0.9, r4 + 0.02, f"{r4:.3f}: Table 1's rung 4\n(separately trained models)",
             ha="right", va="bottom", fontsize=7.5, color=INK2)
     for key, lab, ls in (("rung2", "ELA + MRF", (0, (3, 2))), ("chance", "chance", (0, (1, 2)))):
         v = num(t[key], "f1")
