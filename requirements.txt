@@ -4,6 +4,6 @@ pillow
 opencv-python-headless
 scikit-image
 PyMaxflow
-wandb
-wandb
 matplotlib
+wandb
+torch

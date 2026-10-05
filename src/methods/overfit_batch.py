@@ -43,7 +43,7 @@ for step in range(STEPS):
     opt.zero_grad()
     loss = dice_bce(model(x), y)
     if not torch.isfinite(loss):
-        print(f"NON-FINITE loss at step {step} — {model.diagnostics()}")
+        print(f"NON-FINITE loss at step {step} - weight norm {model.weight_norm():.4g}")
         break
     loss.backward()
     opt.step()
@@ -53,9 +53,7 @@ for step in range(STEPS):
         print(f"PASS — reached {loss.item():.4f} at step {step}")
         break
     if step % 200 == 0:
-        d = model.diagnostics()
-        extra = "  ".join(f"{k} {v:.4g}" for k, v in d.items())
-        print(f"  step {step:>5}  loss {loss.item():.4f}  {extra}")
+        print(f"  step {step:>5}  loss {loss.item():.4f}  weight norm {model.weight_norm():.4g}")
 else:
     print(f"FAILED — final loss {loss.item():.4f} after {STEPS} steps. "
           f"Investigate before training on the full dataset.")
