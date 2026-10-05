@@ -23,7 +23,7 @@ import numpy as np
 from PIL import Image
 
 GRID = "results/rung2_grid.npz"
-MANIFEST = os.environ.get("MANIFEST", "/home/dell/datasets/casia2/splice_manifest.csv")
+MANIFEST = os.environ.get("MANIFEST", os.path.join(os.environ["DATASETS"], "casia2", "splice_manifest.csv"))
 TAU = float(os.environ.get("TAU", 0.75))
 BETA = float(os.environ.get("BETA", 8.0))
 

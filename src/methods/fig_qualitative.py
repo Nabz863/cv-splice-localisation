@@ -34,6 +34,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from noise_variants import v_ela
 from mrf import solve_graphcut
 
+ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 MODE = os.environ.get("MODE", "splice")
 TAG = os.environ.get("TAG", "t0v1")
 N_ROWS = int(os.environ.get("N_ROWS", 5))
@@ -48,20 +49,9 @@ def f1(pred, gt):
     return 2 * tp / den if den else 1.0
 
 
-def zscore(m):
-    # v_ela already returns the normalised map rung 2 thresholds; matching
-    # run_copymove.py, it is used as-is. ZSCORE=1 restores re-standardising.
-    if os.environ.get("ZSCORE", "0") != "1":
-        return m
-    mu, sd = float(m.mean()), float(m.std())
-    if abs(mu) < 1e-2 and abs(sd - 1.0) < 5e-2:
-        return m
-    return (m - mu) / max(sd, 1e-6)
-
-
 def ela_of(path):
     img = np.asarray(Image.open(path).convert("RGB"))   # uint8, as run_mrf.py
-    return zscore(np.asarray(v_ela(img), np.float32))
+    return v_ela(img)                    # robust z-score map, as run_mrf.py
 
 
 def read_pair_params(tag):
@@ -89,7 +79,7 @@ def panel(ax, data, kind, title):
 def splice():
     tau, beta = read_pair_params(TAG)
     test_fold = int(TAG[1])
-    rows = [r for r in csv.DictReader(open(os.environ.get("MANIFEST", "/home/dell/datasets/casia2/splice_manifest.csv")))
+    rows = [r for r in csv.DictReader(open(os.environ.get("MANIFEST", os.path.join(ROOT, "splice_manifest.csv"))))
             if int(r["fold"]) == test_fold]
 
     z = np.load(f"results/logits/{TAG}.npz", allow_pickle=False)
@@ -125,7 +115,7 @@ def splice():
 
         panel(axes[r, 0], img, "rgb", f"{lab}  {os.path.basename(rows[i]['image'])[:22]}")
         panel(axes[r, 1], gt, "mask", f"ground truth  ({gt.mean()*100:.1f}% tampered)")
-        panel(axes[r, 2], ela, "heat", f"ELA (z)   F1 {f1(e1, gt):.3f}")
+        panel(axes[r, 2], ela, "heat", f"ELA   F1 {f1(e1, gt):.3f}")
         panel(axes[r, 3], e2, "mask", f"ELA+MRF   F1 {f1(e2, gt):.3f}")
         panel(axes[r, 4], 1 / (1 + np.exp(-lg)), "heat", f"U-Net p   F1 {f1(u4, gt):.3f}")
         panel(axes[r, 5], u5, "mask", f"U-Net+MRF   F1 {f1(u5, gt):.3f}")
@@ -141,7 +131,7 @@ def splice():
 
 
 def copymove():
-    mf = os.environ.get("CM_MANIFEST", "/home/dell/datasets/casia2/copymove_manifest.csv")
+    mf = os.environ.get("CM_MANIFEST", os.path.join(ROOT, "copymove_manifest.csv"))
     rows = list(csv.DictReader(open(mf)))
     pick = list(np.random.default_rng(0).permutation(len(rows))[:N_ROWS])
 
@@ -157,7 +147,7 @@ def copymove():
         f1s.append(f1(e2, gt))
         panel(axes[r, 0], img, "rgb", os.path.basename(rows[i]["image"])[:26])
         panel(axes[r, 1], gt, "mask", f"ground truth  ({gt.mean()*100:.1f}%)")
-        panel(axes[r, 2], ela, "heat", f"ELA (z)   F1 {f1(e1, gt):.3f}")
+        panel(axes[r, 2], ela, "heat", f"ELA   F1 {f1(e1, gt):.3f}")
         panel(axes[r, 3], e2, "mask", f"ELA+MRF   F1 {f1(e2, gt):.3f}")
 
     fig.suptitle("Copy-move, splicing-selected (tau, beta) applied unchanged. Random examples; "

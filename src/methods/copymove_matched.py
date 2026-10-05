@@ -11,8 +11,10 @@ values, applied unchanged, as before: the question is transfer, not refitting.
 CPU only. Imports no torch.
 
 Usage (from the repo root):
-    CM_MANIFEST=/home/dell/datasets/casia2/copymove_manifest.csv \
-        python src/methods/copymove_matched.py
+    python src/methods/copymove_matched.py
+    CM_MANIFEST=$DATASETS/casia2/splice_manifest.csv python src/methods/copymove_matched.py
+        (the second form is the validation check: it must reproduce rung 2's
+         0.2653 / 0.2898 exactly at tau=0.75, beta=8)
 
 Writes results/copymove_matched.csv (summary) and results/copymove_counts.npz
 (per-image tp/fp/fn, so nothing needs recomputing later).
@@ -25,9 +27,9 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(__file__))
 from noise_variants import v_ela
 from mrf import solve_graphcut
-from image_auc_classical import zscore
 
-MANIFEST = os.environ.get("CM_MANIFEST", "/home/dell/datasets/casia2/copymove_manifest.csv")
+ROOT = os.path.join(os.environ["DATASETS"], "casia2")
+MANIFEST = os.environ.get("CM_MANIFEST", os.path.join(ROOT, "copymove_manifest.csv"))
 TAU = float(os.environ.get("TAU", 0.75))
 BETA = float(os.environ.get("BETA", 8.0))
 WORKERS = int(os.environ.get("WORKERS", 10))
@@ -36,7 +38,7 @@ WORKERS = int(os.environ.get("WORKERS", 10))
 def counts_one(r):
     img = np.asarray(Image.open(r["image"]).convert("RGB"))   # uint8, as run_mrf.py
     gt = np.asarray(Image.open(r["mask"]).convert("L")) > 127
-    z = zscore(np.asarray(v_ela(img), np.float32))
+    z = v_ela(img)                       # robust z-score map, as run_mrf.py
     x1 = z >= TAU
     x2 = np.asarray(solve_graphcut(z, TAU, BETA), bool)
     c = lambda x: ((x & gt).sum(), (x & ~gt).sum(), (~x & gt).sum())

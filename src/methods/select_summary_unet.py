@@ -17,19 +17,27 @@ run that first.
 Usage (from the repo root):
     python src/methods/select_summary_unet.py
     TAG=t0v2 python src/methods/select_summary_unet.py
+
+Writes results/image_auc_select_{tag}.csv, which build_tables.py reads.
 """
 import csv, os, sys
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import numpy as np
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
-from image_auc_unet import scores_one, auc, boot_ci, read_pair_params
+from eval.metrics import image_auc, bootstrap_auc_ci
+from image_auc_unet import scores_one, read_pair_params
 
 TAG = os.environ.get("TAG", "t0v1")
 WORKERS = int(os.environ.get("WORKERS", 10))
 KEYS = ["unet_area", "mrf_area", "prob_mean", "prob_max", "prob_p99"]
 PREREG = {"unet_area", "mrf_area"}
+
+
+def auc(pos, neg):
+    return image_auc(list(pos) + list(neg), [1] * len(pos) + [0] * len(neg))
 
 
 def main():
@@ -60,13 +68,23 @@ def main():
 
     print(f"{'summary':<11}{'select AUC':>12}{'report AUC':>12}{'95% CI':>20}")
     print("-" * 57)
+    out = []
     for k in KEYS:
         t = [s[k] for s in test_t]; a = [s[k] for s in auth_rep]
-        v = auc(t, a); lo, hi = boot_ci(t, a)
+        v = auc(t, a); lo, hi = bootstrap_auc_ci(t, a)
+        out.append(dict(tag=TAG, summary=k, select_auc=round(sel[k], 4),
+                        report_auc=round(v, 4), ci_lo=round(lo, 4), ci_hi=round(hi, 4),
+                        selected=int(k == best), preregistered=int(k in PREREG),
+                        n_tampered=len(t), n_authentic=len(a), tau=tau, beta=beta))
         tag = "  <- selected" if k == best else ("  (pre-registered)" if k in PREREG else "")
         print(f"{k:<11}{sel[k]:>12.4f}{v:>12.4f}   [{lo:.4f}, {hi:.4f}]{tag}")
 
     print(f"\nquote '{best}' at its REPORT AUC: it was chosen without seeing the test fold.")
+    path = f"results/image_auc_select_{TAG}.csv"
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(out[0].keys()))
+        w.writeheader(); w.writerows(out)
+    print(f"wrote {path}")
 
 
 if __name__ == "__main__":

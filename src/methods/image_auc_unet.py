@@ -25,7 +25,9 @@ from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 import numpy as np
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
+from eval.metrics import image_auc, bootstrap_auc_ci
 from mrf import solve_graphcut
 
 TAG = os.environ.get("TAG", "t0v1")
@@ -76,36 +78,6 @@ def scores_one(lg, TAU, BETA):
     )
 
 
-def auc(pos, neg):
-    """Mann-Whitney AUC with tie correction."""
-    pos, neg = np.asarray(pos, float), np.asarray(neg, float)
-    if not len(pos) or not len(neg):
-        return float("nan")
-    allv = np.concatenate([pos, neg])
-    order = allv.argsort(kind="mergesort")
-    ranks = np.empty(len(allv), float)
-    ranks[order] = np.arange(1, len(allv) + 1)
-    s = allv[order]
-    i = 0
-    while i < len(s):
-        j = i
-        while j + 1 < len(s) and s[j + 1] == s[i]:
-            j += 1
-        if j > i:
-            ranks[order[i:j + 1]] = (i + 1 + j + 1) / 2
-        i = j + 1
-    return float((ranks[:len(pos)].sum() - len(pos) * (len(pos) + 1) / 2)
-                 / (len(pos) * len(neg)))
-
-
-def boot_ci(pos, neg, n=2000, seed=0):
-    rng = np.random.default_rng(seed)
-    pos, neg = np.asarray(pos, float), np.asarray(neg, float)
-    v = [auc(rng.choice(pos, len(pos), True), rng.choice(neg, len(neg), True))
-         for _ in range(n)]
-    return float(np.percentile(v, 2.5)), float(np.percentile(v, 97.5))
-
-
 def run(maps, label, tau, beta):
     t0, out = time.time(), []
     fn = partial(scores_one, TAU=tau, BETA=beta)
@@ -141,7 +113,7 @@ def main():
     for name, rung in (("unet_area", 4), ("mrf_area", 5),
                        ("prob_mean", "4*"), ("prob_max", "4*"), ("prob_p99", "4*")):
         p = [r[name] for r in t]; n = [r[name] for r in a]
-        v = auc(p, n); lo, hi = boot_ci(p, n)
+        v = image_auc(p + n, [1] * len(p) + [0] * len(n)); lo, hi = bootstrap_auc_ci(p, n)
         rows.append((name, v))
         print(f"{name:<12}{str(rung):>6}{v:>8.4f}   [{lo:.4f}, {hi:.4f}]")
 

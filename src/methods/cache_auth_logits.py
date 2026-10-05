@@ -27,10 +27,11 @@ sys.path.insert(0, os.path.dirname(__file__))
 from unet import UNet
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
+if DEV == "cpu" and not os.environ.get("ALLOW_CPU"):
+    raise SystemExit("GPU unavailable - refusing CPU fallback. Set ALLOW_CPU=1 to override.")
 NORM = os.environ.get("NORM", "sum")
 TAG = os.environ.get("TAG", "t0v1")
 N_AUTH = int(os.environ.get("N_AUTH", 2000))
-MANIFEST = os.environ.get("MANIFEST", "/home/dell/datasets/casia2/splice_manifest.csv")
 
 
 @torch.no_grad()
@@ -42,20 +43,6 @@ def logits_full(model, path):
     img = np.pad(img, ((0, ph), (0, pw), (0, 0)), mode="reflect")
     x = torch.from_numpy(img.transpose(2, 0, 1))[None].to(DEV)
     return model(x)[0, 0].float().cpu().numpy()[:h, :w]
-
-
-def find_auth_dir(sample_image):
-    if os.environ.get("AUTH_DIR"):
-        return os.environ["AUTH_DIR"]
-    d = os.path.dirname(os.path.abspath(sample_image))
-    for _ in range(4):
-        d = os.path.dirname(d)
-        for cand in ("Au", "au", "AU", "Authentic", "authentic"):
-            p = os.path.join(d, cand)
-            if os.path.isdir(p):
-                return p
-    raise SystemExit(f"could not find the authentic directory from {sample_image}; "
-                     f"set AUTH_DIR=")
 
 
 def main():
@@ -74,8 +61,8 @@ def main():
     model.eval()
     print(f"loaded {saved} on {DEV}")
 
-    rows = list(csv.DictReader(open(MANIFEST)))
-    auth_dir = find_auth_dir(rows[0]["image"])
+    auth_dir = os.environ.get("AUTH_DIR", os.path.join(os.environ["DATASETS"], "casia2",
+                                                       "images", "CASIA2.0_revised", "Au"))
     paths = sorted(sum((glob.glob(os.path.join(auth_dir, e))
                         for e in ("*.jpg", "*.JPG", "*.tif", "*.TIF",
                                   "*.png", "*.PNG", "*.bmp", "*.BMP")), []))

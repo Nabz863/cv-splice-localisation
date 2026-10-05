@@ -44,17 +44,27 @@ def image_auc(scores, labels):
 
     scores: per-image tamperedness score (higher = more likely tampered)
     labels: 1 = tampered, 0 = authentic
+
+    Equals P(score of a random tampered image > score of a random authentic
+    one), counting ties as half. Tied scores take their average rank, else ties
+    would be broken by input order and bias the result.
     """
+    from scipy.stats import rankdata
     scores, labels = np.asarray(scores, float), np.asarray(labels, int)
     n_pos, n_neg = int((labels == 1).sum()), int((labels == 0).sum())
     if n_pos == 0 or n_neg == 0:
         return float("nan")
-    order = scores.argsort()
-    ranks = np.empty(len(scores), float)
-    ranks[order] = np.arange(1, len(scores) + 1)
-    # average ranks within ties, else tied scores bias the result
-    for v in np.unique(scores):
-        m = scores == v
-        if m.sum() > 1:
-            ranks[m] = ranks[m].mean()
-    return (ranks[labels == 1].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
+    ranks = rankdata(scores, method="average")
+    return float((ranks[labels == 1].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg))
+
+
+def bootstrap_auc_ci(pos, neg, n=2000, seed=0, level=0.95):
+    """Percentile bootstrap CI for image_auc, resampling each class with
+    replacement. pos/neg are the scores of tampered/authentic images."""
+    rng = np.random.default_rng(seed)
+    pos, neg = np.asarray(pos, float), np.asarray(neg, float)
+    lab = np.r_[np.ones(len(pos), int), np.zeros(len(neg), int)]
+    v = [image_auc(np.r_[rng.choice(pos, len(pos), True), rng.choice(neg, len(neg), True)], lab)
+         for _ in range(n)]
+    a = (1 - level) / 2 * 100
+    return float(np.percentile(v, a)), float(np.percentile(v, 100 - a))
