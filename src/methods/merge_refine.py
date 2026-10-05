@@ -29,7 +29,7 @@ print(f"beta = 0 (raw U-Net)    F1 {fm0.mean():.4f} +/- {fm0.std():.4f}")
 print(f"prior contributes       {fm.mean()-fm0.mean():+.4f}")
 print(f"\nbeta = 0 selected in {(betas == 0).sum()}/{len(betas)} pairs")
 print(f"beta > 0 median        {np.median(betas[betas > 0]) if (betas > 0).any() else 0}")
-print(f"\nfor comparison, over the ELA map (rung 1 -> rung 2): +0.0224")
+print("\nfor the same comparison over ELA, see results/tables/main.csv (build_tables.py)")
 
 with open("results/rung5_mrf_refine.csv", "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=rows[0].keys())
