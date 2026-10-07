@@ -59,7 +59,7 @@ if [ ! -e results/.rerun_unet_started ]; then
   for f in results/models/refine_* results/logits/* results/ckpt_refine/* \
            results/rung5_pair_*.csv results/rung5_mrf_refine.csv results/rung5_training.csv \
            results/image_auc_unet_t*.csv results/image_auc_select_t*.csv; do
-    mv "$f" "$STALE/"
+    if [ -e "$f" ]; then mv "$f" "$STALE/"; fi
   done
   shopt -u nullglob
   echo "old rung 4/5 outputs moved to $STALE"
