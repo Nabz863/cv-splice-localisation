@@ -249,14 +249,21 @@ def fig_category():
 # ------------------------------------------------------------- 5. image AUC
 def fig_auc():
     rows = [r for r in table("auc.csv") if r["subset"] == "all"]
+    cv = any(r["tag"] == "all20" for r in rows)
+    if cv:   # all 20 pairs cached: show the cross-validated rows, interval = +-1 SD over folds
+        rows = [dict(r) for r in rows if r["tag"] in ("all", "all20")]
+        for r in rows:
+            if r["tag"] == "all20":
+                a, sd = float(r["auc"]), float(r["auc_sd"])
+                r["ci_lo"], r["ci_hi"] = a - sd, a + sd
     groups = [("ELA  (area)", "1", "area", BLUE), ("ELA + MRF  (area)", "2", "area", ORANGE),
               ("U-Net  (area)", "4", "area", BLUE), ("U-Net + MRF  (area)", "5", "area", ORANGE)]
     sel = [r for r in rows if r["selected_on_heldout"] == "1"]
     if sel:
-        groups.append((f"U-Net  ({sel[0]['score'].replace('_', ' ')}, held-out)", "4",
-                       sel[0]["score"], AQUA))
-    tags = sorted({r["tag"] for r in rows if r["tag"] != "all"})
-    marks = {"all": "o", **{tg: m for tg, m in zip(tags, "os^")}}
+        name = "held-out choice" if cv else sel[0]["score"].replace("_", " ") + ", held-out"
+        groups.append((f"U-Net  ({name})", "4", sel[0]["score"], AQUA))
+    tags = [] if cv else sorted({r["tag"] for r in rows if r["tag"] != "all"})
+    marks = {"all": "o", "all20": "o", **{tg: m for tg, m in zip(tags, "os^")}}
     fig, ax = plt.subplots(figsize=(6.4, 2.9))
     y = np.arange(len(groups))[::-1].astype(float)
     for yi, (lab, rung, score, c) in zip(y, groups):
@@ -277,7 +284,9 @@ def fig_auc():
     ax.spines["left"].set_visible(False)
     lo = min(float(r["ci_lo"]) for r in rows)
     ax.set_xlim(min(lo - 0.03, 0.45), 1.0); ax.set_ylim(-0.6, len(groups) - 0.4)
-    ax.set_xlabel("Image-level AUC, tampered vs. authentic (95% bootstrap CI)")
+    ax.set_xlabel("Image-level AUC, tampered vs. authentic ("
+                  + ("classical: 95% bootstrap CI; U-Net: \u00b11 SD over test folds)" if cv
+                     else "95% bootstrap CI)"))
     grid_x(ax)
     if tags:
         h = [plt.Line2D([], [], marker=marks[tg], ls="", ms=5.5, color=INK2) for tg in tags]

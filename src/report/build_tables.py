@@ -20,9 +20,18 @@ Inputs
   results/image_auc_classical.csv       per-image scores, rungs 1-2
   results/image_auc_unet_{tag}.csv      per-image scores, rungs 4-5
   results/image_auc_select_{tag}.csv    which U-Net summary was chosen on held-out
-                                        data (select_summary_unet.py)
+                                        data (select_summary_unet.py). TAGS=all (the
+                                        default) reads all 20 pairs and adds the
+                                        cross-validated rows; TAGS=t0v1,t0v2 reads two
   results/rung3_sam2.csv                OPTIONAL. columns: variant,f1,iou with
                                         variant in {automatic, oracle}
+  results/rung2_grid_icm.npz            ICM on the same grid (icm_vs_graphcut.py)
+  results/cue_auc.csv                   rung 1 cue comparison (compare_variants.py)
+  results/ela_tuning.csv                ELA quality/window sweep (tune_ela.py)
+  results/texture_corr.csv              noise cue vs texture (diagnose_texture.py)
+  results/rung4_unet.csv                also used for the fixed-pairing bias
+  results/rung5_training.csv            per-pair stopping epoch of the rung 4/5 models
+                                        and their training config (cache_logits.py)
   wandb/run-*/run-*.wandb               stabiliser training histories
 
 Outputs (results/tables/)
@@ -33,6 +42,13 @@ Outputs (results/tables/)
   auc.csv         image-level AUC with bootstrap CIs (Table 2)
   copymove.csv    margin over chance, splicing vs copy-move, with CIs
   stabiliser.csv  per-epoch weight norm for each stabiliser candidate
+  splits.csv      fixed (k, k+1 mod 5) pairing vs all 20 pairs, per model family
+  icm.csv         ICM vs graph cuts: selected F1 and beta under the 20-pair protocol
+  icm_energy.csv  ICM vs graph-cut energy on identical problems, per beta
+  cues.csv        rung 1 cue AUCs, the chosen ELA setting, texture correlation
+  unet_families.csv  per pair: run_unet.py's model vs cache_logits.py's model
+                  (stopping epoch, best val loss, test F1), to show whether Table 1's
+                  rung 4 and the data-size curve's full-data point are the same model
 
 Usage (from the repo root, CPU only, about a minute):
     python src/report/build_tables.py
@@ -47,7 +63,9 @@ from eval.metrics import image_auc, bootstrap_auc_ci
 RES = "results"
 OUT = os.path.join(RES, "tables")
 N_FOLDS = 5
-TAGS = os.environ.get("TAGS", "t0v1,t0v2").split(",")
+ALL_TAGS = [f"t{k}v{v}" for k in range(N_FOLDS) for v in range(N_FOLDS) if k != v]
+_t = os.environ.get("TAGS", "all")
+TAGS = ALL_TAGS if _t == "all" else _t.split(",")
 
 
 # --------------------------------------------------------------------------- utils
@@ -103,13 +121,10 @@ def load_manifest():
 
 
 # ------------------------------------------------------------------ rungs 1 and 2
-def rung12(folds):
-    z = np.load(os.path.join(RES, "rung2_grid.npz"), allow_pickle=True)
-    solvers = [str(s) for s in z["solvers"]]
-    counts = z["counts"][:, solvers.index("graphcut")]          # (images, grid, 3)
-    grid = [tuple(map(float, g)) for g in z["grid"]]
-    if counts.shape[0] != len(folds):
-        raise SystemExit(f"rung2_grid has {counts.shape[0]} images, manifest {len(folds)}")
+def select_pairs(counts, grid, folds):
+    """For every ordered (test, val) pair: choose (tau, beta) on the val fold by
+    pooled F1, over the whole grid (rung 2) and over beta = 0 only (rung 1), and
+    score both on the test fold. Ties go to the earlier grid entry."""
     beta0 = [g for g, (t, b) in enumerate(grid) if b == 0.0]
 
     def pooled(idx, gi):
@@ -127,6 +142,17 @@ def rung12(folds):
                           tau1=grid[g1][0], f1_rung1=f1, iou_rung1=iou_from_f1(f1),
                           tau2=grid[g2][0], beta2=grid[g2][1], f1_rung2=f2,
                           iou_rung2=iou_from_f1(f2), gain=f2 - f1))
+    return pairs
+
+
+def rung12(folds):
+    z = np.load(os.path.join(RES, "rung2_grid.npz"), allow_pickle=True)
+    solvers = [str(s) for s in z["solvers"]]
+    counts = z["counts"][:, solvers.index("graphcut")]          # (images, grid, 3)
+    grid = [tuple(map(float, g)) for g in z["grid"]]
+    if counts.shape[0] != len(folds):
+        raise SystemExit(f"rung2_grid has {counts.shape[0]} images, manifest {len(folds)}")
+    pairs = select_pairs(counts, grid, folds)
 
     # Cross-check: run_mrf.py / nested_pairs.py already selected rung 2 on all 20
     # pairs. If the manifest's order differs from the grid's, this is where it shows.
@@ -137,7 +163,7 @@ def rung12(folds):
         raise SystemExit(f"rung 2 recomputation disagrees with rung2_nested_pairs.csv "
                          f"by {worst:.2e}: the manifest is not in rung2_grid.npz's order")
     print(f"  rung 2 reproduces rung2_nested_pairs.csv on all 20 pairs (max diff {worst:.1e})")
-    return pairs, counts, grid
+    return pairs, counts, grid, z["energies"][:, solvers.index("graphcut")]
 
 
 def fixed_operating_point():
@@ -171,11 +197,117 @@ def rung3():
     return {r["variant"]: r for r in read_csv(path)}
 
 
+# ------------------------------------------------------- validation-pairing bias
+def splits_table(pairs, r45):
+    """How much would the usual single pairing (val = test + 1 mod 5) have
+    misstated each result, relative to averaging over all four val folds?"""
+    fams = [("MRF (rung 2)", {(p["test_fold"], p["val_fold"]): p["f1_rung2"] for p in pairs}),
+            ("U-Net, run_unet.py", {(int(r["test_fold"]), int(r["val_fold"])): float(r["f1"])
+                                    for r in read_csv(os.path.join(RES, "rung4_unet.csv"))}),
+            ("U-Net, cache_logits.py (rung 4)", {(int(r["test_fold"]), int(r["val_fold"])):
+                                                 float(r["f1_beta0"]) for r in r45}),
+            ("U-Net + MRF (rung 5)", {(int(r["test_fold"]), int(r["val_fold"])): float(r["f1"])
+                                      for r in r45})]
+    out = []
+    for name, d in fams:
+        fixed = np.mean([d[(k, (k + 1) % N_FOLDS)] for k in range(N_FOLDS)])
+        per_k = [[d[(k, v)] for v in range(N_FOLDS) if v != k] for k in range(N_FOLDS)]
+        allp = np.mean([np.mean(x) for x in per_k])
+        rng_ = [max(x) - min(x) for x in per_k]
+        out.append(dict(model=name, f1_fixed_pairing=float(fixed), f1_all_pairs=float(allp),
+                        fixed_minus_all=float(fixed - allp),
+                        val_range_min=float(min(rng_)), val_range_max=float(max(rng_))))
+    return out
+
+
+# ------------------------------------------------------------------ ICM vs cuts
+def icm_tables(folds, grid, gc_counts, gc_energy, tau_fixed):
+    path = os.path.join(RES, "rung2_grid_icm.npz")
+    if not os.path.exists(path):
+        print("  icm: results/rung2_grid_icm.npz not present - run icm_vs_graphcut.py")
+        return None, None
+    z = np.load(path)
+    if [tuple(map(float, g)) for g in z["grid"]] != grid:
+        raise SystemExit("rung2_grid_icm.npz grid differs from rung2_grid.npz")
+    ic, ie = z["counts"], z["energies"]
+    # graph cuts is exact, so it can never end above ICM on the same problem
+    worst = float((gc_energy - ie).max())
+    if worst > 1e-6 * max(1.0, float(np.abs(ie).max())):
+        raise SystemExit(f"graph cut energy exceeds ICM's by up to {worst:.3g}: not exact?")
+
+    rows = []
+    for solver, c in (("graph cut", gc_counts), ("ICM", ic)):
+        p = select_pairs(c, grid, folds)
+        f, fs = fold_mean(p, "f1_rung2")
+        betas = Counter(x["beta2"] for x in p)
+        rows.append(dict(solver=solver, f1=f, f1_sd=fs, n_pairs=len(p),
+                         beta_counts=" ".join(f"{b:g}:{n}" for b, n in sorted(betas.items())),
+                         beta0_selected=betas.get(0.0, 0)))
+    erows = []
+    for gi, (tau, beta) in enumerate(grid):
+        if tau != tau_fixed or beta == 0.0:
+            continue
+        g, i = gc_energy[:, gi], ie[:, gi]
+        erows.append(dict(tau=tau, beta=beta, mean_energy_gc=float(g.mean()),
+                          mean_energy_icm=float(i.mean()), ratio_icm_over_gc=float(i.sum() / g.sum()),
+                          frac_images_gc_lower=float((g < i - 1e-9).mean())))
+    return rows, erows
+
+
+# ---------------------------------------------------- the two U-Net model families
+def unet_families(r45):
+    path = os.path.join(RES, "rung5_training.csv")
+    if not os.path.exists(path):
+        print("  unet_families: results/rung5_training.csv not present - rerun cache_logits.py")
+        return None
+    a = {(int(r["test_fold"]), int(r["val_fold"])): r
+         for r in read_csv(os.path.join(RES, "rung4_unet.csv"))}
+    b = {(int(r["test_fold"]), int(r["val_fold"])): r for r in read_csv(path)}
+    c = {(int(r["test_fold"]), int(r["val_fold"])): r for r in r45}
+    if len(b) != len(c) or set(b) != set(c):
+        raise SystemExit("rung5_training.csv and rung5_mrf_refine.csv cover different pairs")
+    cfgs = {tuple((k, r[k]) for k in r if k not in ("test_fold", "val_fold", "stopped_at",
+                                                    "best_val")) for r in b.values()}
+    if len(cfgs) != 1:
+        raise SystemExit(f"rung 4/5 models were trained under {len(cfgs)} configs: {cfgs}")
+    out = []
+    for key in sorted(b):
+        out.append(dict(test_fold=key[0], val_fold=key[1],
+                        stopped_run_unet=int(a[key]["stopped_at"]),
+                        stopped_cache_logits=int(b[key]["stopped_at"]),
+                        best_val_run_unet=float(a[key]["best_val"]),
+                        best_val_cache_logits=float(b[key]["best_val"]),
+                        f1_run_unet=float(a[key]["f1"]), f1_cache_logits_beta0=float(c[key]["f1_beta0"])))
+    return out
+
+
+# ------------------------------------------------------------------- rung 1 cues
+def cue_table():
+    need = [os.path.join(RES, f) for f in ("cue_auc.csv", "ela_tuning.csv", "texture_corr.csv")]
+    missing = [p for p in need if not os.path.exists(p)]
+    if missing:
+        print(f"  cues: {', '.join(missing)} not present - run compare_variants.py, "
+              f"tune_ela.py, diagnose_texture.py")
+        return None
+    rows = [dict(item=f"auc {r['variant']}", value=float(r["mean_auc"]), n=int(r["n_images"]))
+            for r in read_csv(need[0])]
+    tun = read_csv(need[1])
+    best = max(tun, key=lambda r: float(r["mean_auc"]))
+    rows += [dict(item="ela best quality", value=float(best["quality"]), n=int(best["n_images"])),
+             dict(item="ela best window", value=float(best["window"]), n=int(best["n_images"])),
+             dict(item="ela best auc", value=float(best["mean_auc"]), n=int(best["n_images"]))]
+    c = np.array([float(r["corr_score_texture"]) for r in read_csv(need[2])])
+    c = c[np.isfinite(c)]
+    rows += [dict(item="texture corr mean", value=float(c.mean()), n=len(c)),
+             dict(item="texture |corr|>0.3 frac", value=float((np.abs(c) > 0.3).mean()), n=len(c))]
+    return rows
+
+
 # --------------------------------------------------------------------------- main
 def main():
     print("building tables")
     rows, folds, area = load_manifest()
-    pairs, counts, grid = rung12(folds)
+    pairs, counts, grid, gc_energy = rung12(folds)
     r45 = rung45()
     r3 = rung3()
     cat = read_csv(os.path.join(RES, "per_category.csv"))
@@ -250,8 +382,10 @@ def main():
         a_ = [r for r in ur if r["label"] == "0"]
         perm = np.random.default_rng(0).permutation(len(a_))       # as select_summary_unet.py
         half_b = [a_[i] for i in perm[len(a_) // 2:]]
-        for score, rung, label in (("unet_area", 4, "U-Net"), ("mrf_area", 5, "U-Net + MRF"),
-                                   (chosen, 4, "U-Net")):
+        scores = [("unet_area", 4, "U-Net"), ("mrf_area", 5, "U-Net + MRF")]
+        if chosen not in ("unet_area", "mrf_area"):     # else already a row, flagged selected
+            scores.append((chosen, 4, "U-Net"))
+        for score, rung, label in scores:
             t = [float(r[score]) for r in t_]
             a = [float(r[score]) for r in half_b]
             lo, hi = bootstrap_auc_ci(t, a)
@@ -265,6 +399,27 @@ def main():
                                  tag=tag, subset="all", auc=v, ci_lo=lo, ci_hi=hi,
                                  n_tampered=len(t), n_authentic=len(a),
                                  selected_on_heldout=int(score == chosen)))
+    # With every pair cached, add the cross-validated summary: mean over test folds
+    # of the per-fold mean over val folds, as for pixel F1, and its SD across folds.
+    if set(TAGS) == set(ALL_TAGS):
+        per = [r for r in auc_rows if r["tag"] in ALL_TAGS]
+        groups = (("U-Net", 4, lambda r: r["rung"] == 4 and r["score"] == "area"),
+                  ("U-Net + MRF", 5, lambda r: r["rung"] == 5 and r["score"] == "area"),
+                  ("U-Net", 4, lambda r: r["selected_on_heldout"] == 1))
+        for i, (label, rung, keep) in enumerate(groups):
+            by_tag = {r["tag"]: r for r in per if keep(r)}       # one row per pair
+            assert len(by_tag) == len(ALL_TAGS), f"auc group {i}: {len(by_tag)} pairs"
+            m, sd = fold_mean([dict(test_fold=int(t[1]), auc=r["auc"])
+                               for t, r in by_tag.items()], "auc")
+            score = "area"
+            if i == 2:
+                chosen = Counter(r["score"] for r in by_tag.values())
+                score = "held-out choice: " + ", ".join(f"{k} {n}/20" for k, n in chosen.most_common())
+            auc_rows.append(dict(rung=rung, label=label, score=score, tag="all20", subset="all",
+                                 auc=m, ci_lo="", ci_hi="", n_tampered="", n_authentic="",
+                                 selected_on_heldout=int(i == 2), auc_sd=sd))
+        for r in auc_rows:
+            r.setdefault("auc_sd", "")
     write_csv("auc.csv", auc_rows)
 
     # ---- copymove.csv: margin over each dataset's own pooled chance line
@@ -291,6 +446,25 @@ def main():
                                 margin=f - ch, ci_lo=float(np.percentile(b, 2.5)),
                                 ci_hi=float(np.percentile(b, 97.5)), tau=tau, beta=beta))
     write_csv("copymove.csv", cm_rows)
+
+    # ---- splits.csv
+    write_csv("splits.csv", splits_table(pairs, r45))
+
+    # ---- icm.csv, icm_energy.csv
+    icm_rows, icm_e = icm_tables(folds, grid, counts, gc_energy, tau)
+    if icm_rows:
+        write_csv("icm.csv", icm_rows)
+        write_csv("icm_energy.csv", icm_e)
+
+    # ---- unet_families.csv
+    fam = unet_families(r45)
+    if fam:
+        write_csv("unet_families.csv", fam)
+
+    # ---- cues.csv
+    cues = cue_table()
+    if cues:
+        write_csv("cues.csv", cues)
 
     # ---- stabiliser.csv
     st = stabiliser_histories()
