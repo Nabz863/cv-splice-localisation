@@ -29,4 +29,11 @@ assert image_auc([0.1, 0.2, 0.8, 0.9], [0, 0, 1, 1]) == 1.0
 assert image_auc([0.9, 0.8, 0.2, 0.1], [0, 0, 1, 1]) == 0.0
 assert image_auc([0.5, 0.5, 0.5, 0.5], [0, 0, 1, 1]) == 0.5
 
+# pixel_auc: ties take the average rank, so a constant map scores exactly 0.5
+from metrics import pixel_auc
+_t = np.zeros((40, 40), bool); _t[10:20, 10:20] = True
+assert abs(pixel_auc(np.ones((40, 40)), _t) - 0.5) < 1e-12
+assert abs(pixel_auc(_t.astype(float), _t) - 1.0) < 1e-12
+assert pixel_auc(np.ones((40, 40)), np.zeros((40, 40), bool)) is None
+
 print("all metric tests pass")

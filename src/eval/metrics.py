@@ -58,6 +58,24 @@ def image_auc(scores, labels):
     return float((ranks[labels == 1].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg))
 
 
+def pixel_auc(score, truth, n_sample=20000, seed=0):
+    """Pixel-level ROC AUC of one score map against one binary mask.
+
+    A fixed random subsample of n_sample pixels keeps the cost bounded on large
+    images (same pixels for every score map of that image, since the seed is
+    fixed). Returns None if the sampled pixels are all one class. Ties take their
+    average rank, via image_auc; ties are common here (flat image regions give
+    identical scores), and breaking them by position would bias the AUC.
+    """
+    truth = np.asarray(truth, bool)
+    idx = np.random.default_rng(seed).choice(truth.size, size=min(n_sample, truth.size),
+                                             replace=False)
+    s, t = np.asarray(score, float).ravel()[idx], truth.ravel()[idx]
+    if t.all() or not t.any():
+        return None
+    return image_auc(s, t.astype(int))
+
+
 def bootstrap_auc_ci(pos, neg, n=2000, seed=0, level=0.95):
     """Percentile bootstrap CI for image_auc, resampling each class with
     replacement. pos/neg are the scores of tampered/authentic images."""

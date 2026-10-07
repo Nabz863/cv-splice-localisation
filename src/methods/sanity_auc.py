@@ -5,7 +5,8 @@ from PIL import Image
 from scipy import ndimage
 
 sys.path.insert(0, os.path.dirname(__file__))
-from compare_variants import pixel_auc
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from eval.metrics import pixel_auc
 
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 rows = list(csv.DictReader(open(os.path.join(ROOT, "splice_manifest.csv"))))[:50]

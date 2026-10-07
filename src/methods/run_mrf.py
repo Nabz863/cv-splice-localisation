@@ -1,4 +1,6 @@
-"""Rung 2: nested (tau, beta) grid search per fold, ICM and graph cuts."""
+"""Rung 2: per-image counts at every (tau, beta) with the exact graph-cut solver.
+
+ICM on the same grid is a separate script, icm_vs_graphcut.py."""
 import csv, os, sys, time
 from concurrent.futures import ProcessPoolExecutor
 import numpy as np
@@ -16,7 +18,7 @@ CACHE = os.path.join(ROOT, "ela_cache")
 TAUS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1.0]
 BETAS = [0.0, 0.5, 2.0, 4.0, 8.0, 16.0]
 GRID = [(t, b) for t in TAUS for b in BETAS]
-SOLVERS = {"graphcut": solve_graphcut}   # ICM result recorded in results/rung2_mrf.csv
+SOLVERS = {"graphcut": solve_graphcut}   # ICM on the same grid: icm_vs_graphcut.py
 
 rows = list(csv.DictReader(open(os.path.join(ROOT, "splice_manifest.csv"))))
 os.makedirs(CACHE, exist_ok=True)
