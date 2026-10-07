@@ -8,6 +8,14 @@ trying to work around it.
 Writes results/logits/{tag}.npz holding the validation-calibration and test
 logits for one (test, val) pair, as float16 to keep the files small. Phase 2
 (sweep_cached.py) consumes these and touches no GPU.
+
+Every saved model and logits file gets a JSON sidecar with the training config;
+an existing file whose sidecar is missing or differs is refused, never silently
+reused (refine_meta.py). Per-pair stopping epochs and best validation losses are
+appended to results/rung5_training.csv, which is committed.
+
+Usage (from the repo root; slurm/cache_logits.sbatch is the canonical call):
+    BATCH=8 WORKERS=2 python src/methods/cache_logits.py
 """
 import csv, os, sys, time
 import numpy as np
@@ -19,7 +27,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 from utils.seed import set_seed
 from unet import UNet, dice_bce
-from patch_data import SpliceCrops, load_rows
+from patch_data import SpliceCrops, load_rows, PATCH
+import refine_meta
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
 if DEV == "cpu" and not os.environ.get("ALLOW_CPU"):
@@ -36,6 +45,10 @@ CLIP = float(os.environ.get("CLIP", 1.0))
 N_CAL = int(os.environ.get("N_CAL", 150))
 NESTED = bool(int(os.environ.get("NESTED", 1)))
 AMP_DTYPE = torch.bfloat16
+CROPS = 8                                           # SpliceCrops default
+CONFIG = dict(epochs_max=EPOCHS, patience=PATIENCE, batch=BATCH, workers=WORKERS, lr=1e-3,
+              weight_decay=WD, grad_clip=CLIP, constraint_norm=NORM, amp_dtype="bfloat16",
+              n_cal=N_CAL, crops_per_image=CROPS, patch=PATCH)
 
 
 @torch.no_grad()
@@ -56,7 +69,8 @@ def train_one(test_fold, val_fold, rows, tag):
     os.makedirs("results/ckpt_refine", exist_ok=True)
     ck = f"results/ckpt_refine/{tag}.pt"
 
-    dl = DataLoader(SpliceCrops(tr, train=True, seed=test_fold), batch_size=BATCH,
+    dl = DataLoader(SpliceCrops(tr, train=True, crops_per_image=CROPS, seed=test_fold),
+                    batch_size=BATCH,
                     shuffle=True, num_workers=WORKERS, drop_last=True)
     vdl = DataLoader(SpliceCrops(va, train=False), batch_size=BATCH,
                      shuffle=False, num_workers=WORKERS)
@@ -67,8 +81,9 @@ def train_one(test_fold, val_fold, rows, tag):
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, EPOCHS)
     scaler = torch.amp.GradScaler(DEV, enabled=(DEV == "cuda"))
 
-    best, best_state, bad, start_ep = float("inf"), None, 0, 0
+    best, best_state, bad, start_ep, stopped = float("inf"), None, 0, 0, EPOCHS
     if os.path.exists(ck):
+        refine_meta.check(ck, CONFIG)
         st = torch.load(ck, map_location=DEV, weights_only=False)
         model.load_state_dict(st["model"]); opt.load_state_dict(st["opt"])
         sched.load_state_dict(st["sched"]); scaler.load_state_dict(st["scaler"])
@@ -115,6 +130,7 @@ def train_one(test_fold, val_fold, rows, tag):
         else:
             bad += 1
             if bad >= PATIENCE:
+                stopped = ep + 1
                 print(f"  early stop at epoch {ep+1} (best val {best:.4f})", flush=True)
                 break
 
@@ -123,15 +139,27 @@ def train_one(test_fold, val_fold, rows, tag):
                     "best": best, "best_state": best_state, "bad": bad,
                     "epoch": ep + 1}, ck + ".tmp")
         os.replace(ck + ".tmp", ck)
+        refine_meta.write(ck, CONFIG)
 
     if best_state is not None:
         model.load_state_dict(best_state)
     model.eval()
     if os.path.exists(ck):
         os.remove(ck)
+        os.remove(refine_meta.sidecar(ck))
 
     os.makedirs("results/models", exist_ok=True)
-    torch.save(model.state_dict(), f"results/models/refine_{tag}.pt")
+    saved = f"results/models/refine_{tag}.pt"
+    torch.save(model.state_dict(), saved)
+    refine_meta.write(saved, CONFIG, stopped_at=stopped, best_val=best)
+
+    log = "results/rung5_training.csv"
+    new = not os.path.exists(log)
+    with open(log, "a", newline="") as f:
+        w = csv.writer(f)
+        if new:
+            w.writerow(["test_fold", "val_fold", "stopped_at", "best_val"] + list(refine_meta.KEYS))
+        w.writerow([test_fold, val_fold, stopped, f"{best:.6f}"] + [CONFIG[k] for k in refine_meta.KEYS])
     return model
 
 
@@ -139,11 +167,13 @@ def cache_pair(test_fold, val_fold, rows):
     tag = f"t{test_fold}v{val_fold}"
     out = f"results/logits/{tag}.npz"
     if os.path.exists(out):
+        refine_meta.check(out, CONFIG)
         print(f"{tag}: cached already", flush=True)
         return
 
     saved = f"results/models/refine_{tag}.pt"
     if os.path.exists(saved):
+        refine_meta.check(saved, CONFIG)
         model = UNet(norm=NORM).to(DEV)
         model.load_state_dict(torch.load(saved, map_location=DEV))
         model.eval()
@@ -170,6 +200,7 @@ def cache_pair(test_fold, val_fold, rows):
     os.makedirs("results/logits", exist_ok=True)
     np.savez_compressed(out + ".tmp.npz", **blob)
     os.replace(out + ".tmp.npz", out)
+    refine_meta.write(out, CONFIG)
     mb = os.path.getsize(out) / 1e6
     print(f"{tag}: cached {len(cal)} cal + {len(te)} test "
           f"({mb:.0f} MB, {time.time()-t0:.0f}s)\n", flush=True)
@@ -179,8 +210,8 @@ if __name__ == "__main__":
     rows = load_rows()
     pairs = ([(k, v) for k in range(N_FOLDS) for v in range(N_FOLDS) if k != v]
              if NESTED else [(k, (k + 1) % N_FOLDS) for k in range(N_FOLDS)])
-    print(f"device {DEV} | {len(pairs)} pairs | no multiprocessing in this phase",
-          flush=True)
+    print(f"device {DEV} | {len(pairs)} pairs | no multiprocessing in this phase", flush=True)
+    print("config " + " ".join(f"{k}={v}" for k, v in CONFIG.items()), flush=True)
     for k, v in pairs:
         cache_pair(k, v, rows)
     print("phase 1 done. now run: python3 src/methods/sweep_cached.py", flush=True)

@@ -29,4 +29,4 @@ if not torch.cuda.is_available():
 print(f"GPU ok on {socket.gethostname()}: {torch.cuda.get_device_name(0)}", flush=True)
 PY
 
-NESTED=1 WORKERS=4 BATCH=16 python3 src/methods/cache_logits.py
+NESTED=1 WORKERS=2 BATCH=8 python3 src/methods/cache_logits.py   # same config as run_unet.py

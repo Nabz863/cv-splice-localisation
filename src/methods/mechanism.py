@@ -19,8 +19,8 @@ Also reports connected components before and after (spurious = no overlap with
 the ground truth), and the per-image F1 distribution for rungs 4 and 5.
 
 CPU only, imports no torch. Uses the cached test logits and each pair's own
-selected (tau, beta). Both cached pairs share test fold 0, so this is a
-mechanism analysis on 364 images, not a cross-validated estimate.
+selected (tau, beta). By default all 20 (test, val) pairs, so every image is
+counted four times, once under each val fold's model; TAGS=t0v1 restricts it.
 
 Usage (from the repo root):
     python src/methods/mechanism.py
@@ -37,7 +37,8 @@ from scipy import ndimage
 sys.path.insert(0, os.path.dirname(__file__))
 from mrf import solve_graphcut
 
-TAGS = os.environ.get("TAGS", "t0v1,t0v2").split(",")
+_ALL = ",".join(f"t{k}v{v}" for k in range(5) for v in range(5) if k != v)
+TAGS = os.environ.get("TAGS", _ALL).split(",")
 B1, B2 = (float(x) for x in os.environ.get("BANDS", "3,15").split(","))
 WORKERS = int(os.environ.get("WORKERS", 10))
 BANDS = [f"<= {B1:g} px", f"{B1:g}-{B2:g} px", f"> {B2:g} px"]

@@ -25,6 +25,8 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(__file__))
 from unet import UNet
+import json
+import refine_meta
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
 if DEV == "cpu" and not os.environ.get("ALLOW_CPU"):
@@ -56,6 +58,11 @@ def main():
         have = sorted(glob.glob("results/models/*.pt"))
         raise SystemExit(f"{saved} not found. models present: {have}")
 
+    # The model must be the one whose test logits are in results/logits/{TAG}.npz.
+    lg_meta = refine_meta.sidecar(f"results/logits/{TAG}.npz")
+    if not os.path.exists(lg_meta):
+        raise SystemExit(f"{lg_meta} missing: run cache_logits.py first")
+    refine_meta.check(saved, json.load(open(lg_meta)))
     model = UNet(norm=NORM).to(DEV)
     model.load_state_dict(torch.load(saved, map_location=DEV))
     model.eval()
