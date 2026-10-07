@@ -35,8 +35,12 @@ OUT = os.environ.get("FIG_DIR", "results/figures")
 BLUE, ORANGE, AQUA, VIOLET = "#2a78d6", "#eb6834", "#1baf7a", "#4a3aa7"
 INK, INK2, MUTED, GRID, PALE = "#0b0b0b", "#52514e", "#8a8984", "#e4e3df", "#c3c2b7"
 
+# Figures are drawn at their printed size in the IEEE two-column layout, so a
+# font size here is the size on the page (body text is 10 pt).
+COL, FULL = 3.5, 7.16          # IEEEtran column and text widths, inches
 plt.rcParams.update({
-    "font.size": 9, "axes.titlesize": 9.5, "axes.labelsize": 9,
+    "font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8,
+    "xtick.labelsize": 7.5, "ytick.labelsize": 7.5, "legend.fontsize": 7,
     "axes.edgecolor": MUTED, "axes.labelcolor": INK2, "axes.linewidth": 0.6,
     "xtick.color": INK2, "ytick.color": INK2, "xtick.major.width": 0.6,
     "ytick.major.width": 0.6, "text.color": INK, "axes.titlecolor": INK,
@@ -77,7 +81,7 @@ def swatch(c):
 
 # --------------------------------------------------------------------- 0. method
 def fig_method():
-    fig, ax = plt.subplots(figsize=(6.8, 3.2))
+    fig, ax = plt.subplots(figsize=(FULL, 2.5))
     ax.set_xlim(0, 10.6); ax.set_ylim(0, 5.7); ax.axis("off")
 
     def box(x, y, w, h, text, fc, ec, fs=8):
@@ -104,24 +108,24 @@ def fig_method():
              "learned evidence + spatial prior")]
     h = 0.72
     for y, r, ft, fk, dt, dk, know in rows:
-        ax.text(0.1, y + h / 2, f"Rung {r}", va="center", fontsize=8.5, weight="bold")
+        ax.text(0.1, y + h / 2, f"Rung {r}", va="center", fontsize=7, weight="bold")
         box(1.3, y, 0.9, h, "image", "white", MUTED)
         arrow(2.2, 2.45, y + h / 2)
         box(2.45, y, 2.45, h, ft, *tint[fk], fs=7.4)
         arrow(4.9, 5.15, y + h / 2)
         box(5.15, y, 2.0, h, dt, *tint[dk])
         arrow(7.15, 7.7, y + h / 2)
-        ax.text(7.78, y + h / 2, know, va="center", fontsize=7.5, color=INK2)
+        ax.text(7.78, y + h / 2, know, va="center", fontsize=7, color=INK2)
     for top, bot in ((4.75, 3.80), (1.90, 0.95)):          # the beta = 0 reductions
         x = 7.32
         ax.annotate("", xy=(x, top + 0.03), xytext=(x, bot + h - 0.03), arrowprops=dict(
             arrowstyle="<->", color=ORANGE, lw=0.9, shrinkA=0, shrinkB=0, mutation_scale=7))
         ax.text(x + 0.1, (top + bot + h) / 2, "β = 0", va="center", fontsize=7, color=ORANGE)
-    ax.text(7.78, 5.58, "where the knowledge comes from", fontsize=7.5, color=MUTED,
+    ax.text(7.78, 5.58, "where the knowledge comes from", fontsize=7, color=MUTED,
             style="italic", va="center")
     ax.text(0.1, 0.35, "Same image in, same binary mask out, same folds, same evaluation code. "
             "At β = 0, rung 2 reduces exactly to rung 1, and rung 5 to rung 4.",
-            fontsize=7.3, color=INK2, va="center")
+            fontsize=7, color=INK2, va="center")
     return fig
 
 
@@ -146,7 +150,7 @@ def fig_main():
         ax.text(v + (sd or 0) + 0.015, yi, f"{v:.3f}", va="center")
     ax.axvline(chance, color=MUTED, ls=(0, (3, 2)), lw=1)
     ax.text(chance, 1.0, f"chance {chance:.3f}", transform=above_axes(ax), ha="center",
-            va="bottom", color=INK2, fontsize=8)
+            va="bottom", color=INK2, fontsize=7)
     ax.set_yticks(y, [o[1] for o in order]); ax.tick_params(axis="y", length=0)
     ax.spines["left"].set_visible(False)
     ax.set_xlim(0, xmax * 1.16); ax.set_ylim(-0.6, len(order) - 0.4)
@@ -154,7 +158,7 @@ def fig_main():
                   "bars ±1 SD across test folds")
     grid_x(ax)
     ax.legend([swatch(BLUE), swatch(ORANGE)], ["no spatial prior (β = 0)", "with spatial prior"],
-              loc="center right", fontsize=8, handlelength=1, handleheight=1)
+              loc="center right", fontsize=7, handlelength=1, handleheight=1)
     return fig
 
 
@@ -164,7 +168,7 @@ def fig_gain():
     by = defaultdict(list)
     for r in g:
         by[r["unary"]].append(float(r["gain"]))
-    fig, ax = plt.subplots(figsize=(4.6, 2.8))
+    fig, ax = plt.subplots(figsize=(COL, 2.5))
     labels = []
     for x, (u, key, desc) in enumerate((("ELA", "rung2", "hand-crafted"),
                                         ("U-Net", "rung5", "learned"))):
@@ -173,7 +177,7 @@ def fig_gain():
         ax.plot(x + jit, v, "o", ms=4.5, color=ORANGE, alpha=0.75, mec="white", mew=0.6)
         m = num(t[key], "f1") - num(t["rung1" if key == "rung2" else "rung4"], "f1")
         ax.plot([x - 0.24, x + 0.24], [m, m], color=INK, lw=1.6)
-        ax.text(x + 0.27, m, f"mean +{m:.3f}", va="center", fontsize=8)
+        ax.text(x + 0.27, m, f"mean +{m:.3f}", va="center", fontsize=7)
         b0 = t[key]["beta0_selected"]
         labels.append(f"over {u}\n({desc})\nβ = 0 chosen {b0}/{len(v)}")
     ax.axhline(0, color=INK2, lw=0.8)
@@ -191,27 +195,31 @@ def fig_datasize():
     d = table("datasize.csv"); t = {r["key"]: r for r in table("main.csv")}
     n = np.array([int(r["n_train"]) for r in d]); f = np.array([float(r["f1"]) for r in d])
     sd = np.array([float(r["f1_sd"]) for r in d])
-    fig, ax = plt.subplots(figsize=(5.2, 3.0))
+    fig, ax = plt.subplots(figsize=(COL, 2.6))
     ax.fill_between(n, f - sd, f + sd, color=BLUE, alpha=0.12, lw=0)
     ax.plot(n, f, color=BLUE, lw=2, marker="o", ms=5, mec="white", mew=1.2, zorder=3)
-    for i, (x, v) in enumerate(zip(n, f)):       # every value label sits under its band
-        ax.text(x, v - sd[i] - 0.012, f"{v:.3f}", ha="center", va="top", fontsize=7.5)
+    for i, (x, v) in enumerate(zip(n[:-1], f[:-1])):  # value labels sit under the band
+        ax.text(x, v - sd[i] - 0.012, f"{v:.3f}", ha="center", va="top", fontsize=7)
+    ax.text(n[-1] * 1.08, f[-1], f"{f[-1]:.3f}", ha="left", va="center", fontsize=7)
     r4 = num(t["rung4"], "f1")
     ax.plot([n[-1]], [r4], "D", ms=6, color=BLUE, mec="white", mew=1.2, zorder=4)
-    ax.text(n[-1] * 0.9, r4 + 0.02, f"{r4:.3f}: Table 1's rung 4\n(separately trained models)",
-            ha="right", va="bottom", fontsize=7.5, color=INK2)
+    ax.text(n[-1] * 0.9, r4 + 0.02, f"{r4:.3f}: Table 1 rung 4\n(separate models)",
+            ha="right", va="bottom", fontsize=7, color=INK2)
     for key, lab, ls in (("rung2", "ELA + MRF", (0, (3, 2))), ("chance", "chance", (0, (1, 2)))):
         v = num(t[key], "f1")
         ax.axhline(v, color=MUTED, ls=ls, lw=1)
-        ax.text(n[0], v + 0.008, f"{lab} {v:.3f}", fontsize=7.5, color=INK2, va="bottom")
-    ax.set_xscale("log"); ax.set_xticks(n, [f"{v:,}" for v in n]); ax.minorticks_off()
-    ax.set_xlim(n[0] * 0.8, n[-1] * 1.25); ax.set_ylim(0.18, max(f + sd) + 0.12)
+        ax.text(n[0], v + 0.008, f"{lab} {v:.3f}", fontsize=7, color=INK2, va="bottom")
+    ax.set_xscale("log"); ax.set_xticks(n, [str(v) for v in n]); ax.minorticks_off()
+    ax.tick_params(axis="x", labelsize=7)
+    lab = ax.get_xticklabels()                   # the last two ticks are close on a
+    lab[-2].set_ha("right"); lab[-1].set_ha("left")   # log axis: push them apart
+    ax.set_xlim(n[0] * 0.8, n[-1] * 1.55); ax.set_ylim(0.18, max(f + sd) + 0.12)
     ax.set_xlabel("Labelled training masks (log scale)")
     ax.set_ylabel("U-Net pixel F1 (±1 SD across folds)")
     grid_y(ax)
     gap = f[-1] - f[-2]
-    ax.text(n[-1], f[-2] - sd[-2] - 0.09, f"last {n[-1]-n[-2]} masks:\n{gap:+.3f} F1",
-            ha="right", va="top", fontsize=7.5, color=INK2)
+    ax.text(n[-1] * 1.5, 0.47, f"last {n[-1]-n[-2]} masks:\n{gap:+.3f} F1",
+            ha="right", va="top", fontsize=7, color=INK2)
     return fig
 
 
@@ -242,7 +250,7 @@ def fig_category():
          plt.Line2D([], [], marker="o", ls="", ms=6, color=BLUE),
          plt.Line2D([], [], marker="o", ls="", ms=7, color=ORANGE)]
     ax.legend(h, ["own chance line", "ELA", "ELA + MRF"], loc="lower left",
-              bbox_to_anchor=(0, 1.0), ncol=3, fontsize=8)
+              bbox_to_anchor=(0, 1.0), ncol=3, fontsize=7)
     return fig
 
 
@@ -276,10 +284,10 @@ def fig_auc():
         if c == AQUA:
             ax.text(min(float(r["ci_lo"]) for r in pts) - 0.012, yi,
                     " / ".join(f"{float(r['auc']):.3f}" for r in pts), ha="right", va="center",
-                    fontsize=8)
+                    fontsize=7)
     ax.axvline(0.5, color=MUTED, ls=(0, (3, 2)), lw=1)
     ax.text(0.5, 1.0, "chance", transform=above_axes(ax), ha="center", va="bottom",
-            color=INK2, fontsize=8)
+            color=INK2, fontsize=7)
     ax.set_yticks(y, [g[0] for g in groups]); ax.tick_params(axis="y", length=0)
     ax.spines["left"].set_visible(False)
     lo = min(float(r["ci_lo"]) for r in rows)
@@ -290,7 +298,7 @@ def fig_auc():
     grid_x(ax)
     if tags:
         h = [plt.Line2D([], [], marker=marks[tg], ls="", ms=5.5, color=INK2) for tg in tags]
-        ax.legend(h, [f"pair {tg}" for tg in tags], loc="upper right", fontsize=7.5)
+        ax.legend(h, [f"pair {tg}" for tg in tags], loc="upper right", fontsize=7)
     return fig
 
 
@@ -306,7 +314,7 @@ def fig_copymove():
             v, lo, hi = float(r["margin"]), float(r["ci_lo"]), float(r["ci_hi"])
             ax.bar(i + dx, v, width=w, color=c, edgecolor="white", lw=2)
             ax.errorbar(i + dx, v, yerr=[[v - lo], [hi - v]], color=INK, lw=0.9, capsize=2.5)
-            ax.text(i + dx, hi + 0.002, f"{v:+.3f}", ha="center", va="bottom", fontsize=7.5)
+            ax.text(i + dx, hi + 0.002, f"{v:+.3f}", ha="center", va="bottom", fontsize=7)
     n = {r["dataset"]: r["n"] for r in d}
     ax.set_xticks(range(len(sets)), [f"{s.capitalize()}\n({int(n[s]):,} images)" for s in sets])
     ax.tick_params(axis="x", length=0)
@@ -316,7 +324,7 @@ def fig_copymove():
     ax.set_ylabel("F1 above own chance line\n(95% bootstrap CI)")
     grid_y(ax)
     ax.legend([swatch(BLUE), swatch(ORANGE)], ["ELA", "ELA + MRF"], loc="upper left", ncol=2,
-              fontsize=8, handlelength=1, handleheight=1)
+              fontsize=7, handlelength=1, handleheight=1)
     return fig
 
 
@@ -335,7 +343,7 @@ def fig_stabiliser():
         by[r["candidate"]].append(r)
     colours = dict(zip(sorted(by), (BLUE, AQUA, VIOLET)))
     names = {"baseline": "no stabiliser", "clip": "gradient clipping", "wd1e-3": "weight decay 1e-3"}
-    fig, ax = plt.subplots(figsize=(5.8, 3.0))
+    fig, ax = plt.subplots(figsize=(FULL - 0.95, 2.3))   # end labels overhang the axes
     ends = []
     for cand, rs in sorted(by.items()):
         ep = np.array([int(r["epoch"]) for r in rs]); wn = np.array([float(r["weight_norm"]) for r in rs])
@@ -366,13 +374,13 @@ def fig_stabiliser():
             v = ypos[-1] + min_gap
         ypos.append(v)
     for (wn, text, last), v in zip(ends, ypos):
-        ax.text(last + 2, 10 ** v, text, va="center", fontsize=7.2, color=INK)
+        ax.text(last + 2, 10 ** v, text, va="center", fontsize=7, color=INK)
     ax.set_xlim(0, max(e[2] for e in ends) + 2)
     ax.set_xlabel("Epoch (400 optimiser steps each; fp16 autocast)")
     ax.set_ylabel("Weight norm, all parameters (log)")
     grid_y(ax)
     ax.plot([], [], "X", color=INK2, ms=7, ls="", label="first non-finite loss")
-    ax.legend(loc="lower right", fontsize=7.5)
+    ax.legend(loc="lower right", fontsize=7)
     return fig
 
 
@@ -396,7 +404,7 @@ def fig_mechanism():
             lw=2, label="false positives added")
     gain = v["fp_removed"] + v["fn_filled"]
     for yi, gv, r in zip(y, gain, d):
-        ax.text(gv + gain.max() * 0.02, yi, f"net {float(r['share']):.0%}", va="center", fontsize=8)
+        ax.text(gv + gain.max() * 0.02, yi, f"net {float(r['share']):.0%}", va="center", fontsize=7)
     ax.axvline(0, color=INK2, lw=0.8)
     ax.set_yticks(y, [r["band"].replace("<=", "≤").replace("-", "–") for r in d])
     ax.tick_params(axis="y", length=0)
@@ -405,7 +413,7 @@ def fig_mechanism():
                 gain.max() * 1.22)
     ax.set_xlabel("pixels the prior changes (thousands); losses left of zero, gains right")
     grid_x(ax)
-    ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, fontsize=7.5,
+    ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, fontsize=7,
               handlelength=1, handleheight=1)
     return fig
 
@@ -426,7 +434,7 @@ def fig_perimage():
     top = max(np.histogram(f4, bins)[0].max(), np.histogram(f5, bins)[0].max())
     ax.set_ylim(0, top * 1.35)
     grid_y(ax)
-    ax.legend(loc="upper center", ncol=2, fontsize=8)
+    ax.legend(loc="upper center", ncol=2, fontsize=7)
     return fig
 
 
