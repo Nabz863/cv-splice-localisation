@@ -1,0 +1,3 @@
+solver,f1,f1_sd,n_pairs,beta_counts,beta0_selected
+graph cut,0.284548,0.020005,20,8:16 16:4,0
+ICM,0.264645,0.012132,20,0.5:16 2:4,0

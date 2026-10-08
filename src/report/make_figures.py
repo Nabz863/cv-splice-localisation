@@ -81,10 +81,10 @@ def swatch(c):
 
 # --------------------------------------------------------------------- 0. method
 def fig_method():
-    fig, ax = plt.subplots(figsize=(FULL, 2.5))
-    ax.set_xlim(0, 10.6); ax.set_ylim(0, 5.7); ax.axis("off")
+    fig, ax = plt.subplots(figsize=(FULL, 2.9))
+    ax.set_xlim(0, 10.6); ax.set_ylim(0, 6.15); ax.axis("off")
 
-    def box(x, y, w, h, text, fc, ec, fs=8):
+    def box(x, y, w, h, text, fc, ec, fs=7.4):
         ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0,rounding_size=0.12",
                                     fc=fc, ec=ec, lw=0.9, gid="box"))
         ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=fs,
@@ -96,17 +96,17 @@ def fig_method():
 
     tint = {"ela": ("#dce9f9", BLUE), "unet": ("#dce9f9", BLUE), "sam": ("#d6f1e6", AQUA),
             "mrf": ("#fbe2d7", ORANGE), "thr": ("#f2f1ee", MUTED)}
-    rows = [(4.75, 1, "ELA\nJPEG re-compression", "ela", "threshold τ", "thr",
+    rows = [(5.00, 1, "ELA\nJPEG re-compression", "ela", "threshold τ", "thr",
              "compression physics; 1 parameter"),
-            (3.80, 2, "ELA\nJPEG re-compression", "ela", "MRF (τ, β)\nexact graph cut", "mrf",
+            (4.00, 2, "ELA\nJPEG re-compression", "ela", "MRF (τ, β)\nexact graph cut", "mrf",
              "+ spatial prior; 2 parameters"),
-            (2.85, 3, "SAM2\nunprompted", "sam", "size filter", "thr",
+            (3.00, 3, "SAM2\nunprompted", "sam", "size filter", "thr",
              "general segmentation; no forensics"),
-            (1.90, 4, "U-Net\nconstrained 1st layer", "unet", "threshold τ", "thr",
+            (2.00, 4, "U-Net\nconstrained 1st layer", "unet", "threshold τ", "thr",
              "~1,093 labelled masks"),
-            (0.95, 5, "U-Net\nconstrained 1st layer", "unet", "MRF (τ, β)\nexact graph cut", "mrf",
+            (1.00, 5, "U-Net\nconstrained 1st layer", "unet", "MRF (τ, β)\nexact graph cut", "mrf",
              "learned evidence + spatial prior")]
-    h = 0.72
+    h = 0.80
     for y, r, ft, fk, dt, dk, know in rows:
         ax.text(0.1, y + h / 2, f"Rung {r}", va="center", fontsize=7, weight="bold")
         box(1.3, y, 0.9, h, "image", "white", MUTED)
@@ -116,12 +116,12 @@ def fig_method():
         box(5.15, y, 2.0, h, dt, *tint[dk])
         arrow(7.15, 7.7, y + h / 2)
         ax.text(7.78, y + h / 2, know, va="center", fontsize=7, color=INK2)
-    for top, bot in ((4.75, 3.80), (1.90, 0.95)):          # the beta = 0 reductions
+    for top, bot in ((5.00, 4.00), (2.00, 1.00)):          # the beta = 0 reductions
         x = 7.32
         ax.annotate("", xy=(x, top + 0.03), xytext=(x, bot + h - 0.03), arrowprops=dict(
             arrowstyle="<->", color=ORANGE, lw=0.9, shrinkA=0, shrinkB=0, mutation_scale=7))
         ax.text(x + 0.1, (top + bot + h) / 2, "β = 0", va="center", fontsize=7, color=ORANGE)
-    ax.text(7.78, 5.58, "where the knowledge comes from", fontsize=7, color=MUTED,
+    ax.text(7.78, 6.03, "where the knowledge comes from", fontsize=7, color=MUTED,
             style="italic", va="center")
     ax.text(0.1, 0.35, "Same image in, same binary mask out, same folds, same evaluation code. "
             "At β = 0, rung 2 reduces exactly to rung 1, and rung 5 to rung 4.",

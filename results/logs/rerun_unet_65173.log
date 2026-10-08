@@ -1,0 +1,2703 @@
+node: mscluster87.ms.wits.ac.za   commit: cd43ccb
+Wed Oct  7 11:40:26 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 595.71.05              Driver Version: 595.71.05      CUDA Version: 13.2     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 3090        Off |   00000000:17:00.0 Off |                  N/A |
+| 30%   30C    P8             27W /  350W |       1MiB /  24576MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+GPU ok on mscluster87.ms.wits.ac.za: NVIDIA GeForce RTX 3090
+old rung 4/5 outputs moved to results/stale/20261007_114037
+device cuda | 20 pairs | no multiprocessing in this phase
+config epochs_max=90 patience=10 batch=8 workers=2 lr=0.001 weight_decay=0.0001 grad_clip=1.0 constraint_norm=sum amp_dtype=bfloat16 n_cal=150 crops_per_image=8 patch=256
+t0v1: training
+  t0v1 ep 1/90  train 1.1987  val 1.1489 (91s)
+  t0v1 ep 2/90  train 1.1199  val 1.1264 (44s)
+  t0v1 ep 3/90  train 1.0757  val 1.1024 (39s)
+  t0v1 ep 4/90  train 1.0371  val 0.9983 (39s)
+  t0v1 ep 5/90  train 0.9998  val 0.9776 (47s)
+  t0v1 ep 6/90  train 0.9744  val 0.9533 (57s)
+  t0v1 ep 7/90  train 0.9427  val 0.9275 (44s)
+  t0v1 ep 8/90  train 0.9590  val 1.0335 (41s)
+  t0v1 ep 9/90  train 0.9912  val 0.9925 (40s)
+  t0v1 ep 10/90  train 0.9421  val 1.0164 (41s)
+  t0v1 ep 11/90  train 0.8805  val 0.8617 (40s)
+  t0v1 ep 12/90  train 0.8494  val 0.8226 (41s)
+  t0v1 ep 13/90  train 0.8150  val 0.7954 (39s)
+  t0v1 ep 14/90  train 0.7750  val 0.7464 (41s)
+  t0v1 ep 15/90  train 0.7534  val 0.8549 (40s)
+  t0v1 ep 16/90  train 0.7501  val 0.8192 (41s)
+  t0v1 ep 17/90  train 0.7156  val 0.7620 (40s)
+  t0v1 ep 18/90  train 0.7079  val 0.7592 (40s)
+  t0v1 ep 19/90  train 0.6894  val 0.7984 (40s)
+  t0v1 ep 20/90  train 0.7009  val 0.7596 (41s)
+  t0v1 ep 21/90  train 0.6763  val 0.6949 (40s)
+  t0v1 ep 22/90  train 0.6796  val 0.7115 (41s)
+  t0v1 ep 23/90  train 0.6528  val 0.6751 (40s)
+  t0v1 ep 24/90  train 0.6210  val 0.6697 (41s)
+  t0v1 ep 25/90  train 0.6041  val 0.6628 (40s)
+  t0v1 ep 26/90  train 0.5879  val 0.6726 (41s)
+  t0v1 ep 27/90  train 0.5739  val 0.6382 (41s)
+  t0v1 ep 28/90  train 0.5895  val 0.6616 (40s)
+  t0v1 ep 29/90  train 0.6948  val 0.8884 (40s)
+  t0v1 ep 30/90  train 0.8745  val 0.9302 (41s)
+  t0v1 ep 31/90  train 0.8646  val 0.8776 (40s)
+  t0v1 ep 32/90  train 0.8101  val 0.9728 (40s)
+  t0v1 ep 33/90  train 0.8223  val 0.8658 (41s)
+  t0v1 ep 34/90  train 0.7897  val 0.8534 (40s)
+  t0v1 ep 35/90  train 0.7578  val 0.8221 (40s)
+  t0v1 ep 36/90  train 0.7010  val 0.7663 (40s)
+  t0v1 ep 37/90  train 0.6404  val 0.8384 (41s)
+  early stop at epoch 37 (best val 0.6382)
+t0v1: cached 150 cal + 364 test (118 MB, 23s)
+
+t0v2: training
+  t0v2 ep 1/90  train 1.2233  val 1.2191 (39s)
+  t0v2 ep 2/90  train 1.1839  val 1.1032 (41s)
+  t0v2 ep 3/90  train 1.1196  val 1.1798 (41s)
+  t0v2 ep 4/90  train 1.0750  val 1.0242 (40s)
+  t0v2 ep 5/90  train 1.0352  val 1.0352 (41s)
+  t0v2 ep 6/90  train 0.9963  val 1.0505 (41s)
+  t0v2 ep 7/90  train 0.9429  val 0.9656 (41s)
+  t0v2 ep 8/90  train 0.9077  val 0.9487 (41s)
+  t0v2 ep 9/90  train 0.8738  val 0.9140 (41s)
+  t0v2 ep 10/90  train 0.8369  val 0.9416 (41s)
+  t0v2 ep 11/90  train 0.8019  val 0.8853 (40s)
+  t0v2 ep 12/90  train 0.7700  val 0.8293 (40s)
+  t0v2 ep 13/90  train 0.7443  val 0.8311 (41s)
+  t0v2 ep 14/90  train 0.7771  val 0.9913 (41s)
+  t0v2 ep 15/90  train 0.8583  val 0.8844 (40s)
+  t0v2 ep 16/90  train 0.8131  val 0.8910 (40s)
+  t0v2 ep 17/90  train 0.7885  val 0.9086 (41s)
+  t0v2 ep 18/90  train 0.7881  val 0.9055 (40s)
+  t0v2 ep 19/90  train 0.8152  val 0.8698 (40s)
+  t0v2 ep 20/90  train 0.7514  val 0.8432 (40s)
+  t0v2 ep 21/90  train 0.6943  val 0.7625 (41s)
+  t0v2 ep 22/90  train 0.6756  val 0.7383 (40s)
+  t0v2 ep 23/90  train 0.6668  val 0.7672 (40s)
+  t0v2 ep 24/90  train 0.6540  val 0.7807 (41s)
+  t0v2 ep 25/90  train 0.6365  val 0.7133 (40s)
+  t0v2 ep 26/90  train 0.6117  val 0.7692 (41s)
+  t0v2 ep 27/90  train 0.6249  val 0.7361 (40s)
+  t0v2 ep 28/90  train 0.6029  val 0.7246 (40s)
+  t0v2 ep 29/90  train 0.5912  val 0.7446 (41s)
+  t0v2 ep 30/90  train 0.5803  val 0.7448 (40s)
+  t0v2 ep 31/90  train 0.5647  val 0.7089 (40s)
+  t0v2 ep 32/90  train 0.5629  val 0.6599 (41s)
+  t0v2 ep 33/90  train 0.5480  val 0.6529 (42s)
+  t0v2 ep 34/90  train 0.5399  val 0.6205 (40s)
+  t0v2 ep 35/90  train 0.5166  val 0.6925 (40s)
+  t0v2 ep 36/90  train 0.5128  val 0.6352 (40s)
+  t0v2 ep 37/90  train 0.5008  val 0.6330 (40s)
+  t0v2 ep 38/90  train 0.4831  val 0.6401 (40s)
+  t0v2 ep 39/90  train 0.4740  val 0.6070 (41s)
+  t0v2 ep 40/90  train 0.4640  val 0.6071 (41s)
+  t0v2 ep 41/90  train 0.4675  val 0.6133 (40s)
+  t0v2 ep 42/90  train 0.4623  val 0.6305 (40s)
+  t0v2 ep 43/90  train 0.4613  val 0.6156 (41s)
+  t0v2 ep 44/90  train 0.4596  val 0.6306 (40s)
+  t0v2 ep 45/90  train 0.4543  val 0.6520 (41s)
+  t0v2 ep 46/90  train 0.4558  val 0.6309 (41s)
+  t0v2 ep 47/90  train 0.4517  val 0.6293 (42s)
+  t0v2 ep 48/90  train 0.4506  val 0.6062 (40s)
+  t0v2 ep 49/90  train 0.4361  val 0.6057 (41s)
+  t0v2 ep 50/90  train 0.4349  val 0.6180 (41s)
+  t0v2 ep 51/90  train 0.4248  val 0.6116 (41s)
+  t0v2 ep 52/90  train 0.4154  val 0.6249 (40s)
+  t0v2 ep 53/90  train 0.4082  val 0.6096 (41s)
+  t0v2 ep 54/90  train 0.4124  val 0.6166 (41s)
+  t0v2 ep 55/90  train 0.4081  val 0.6936 (41s)
+  t0v2 ep 56/90  train 0.4005  val 0.6005 (41s)
+  t0v2 ep 57/90  train 0.3966  val 0.6387 (40s)
+  t0v2 ep 58/90  train 0.3898  val 0.5946 (42s)
+  t0v2 ep 59/90  train 0.3866  val 0.5932 (40s)
+  t0v2 ep 60/90  train 0.3824  val 0.5950 (42s)
+  t0v2 ep 61/90  train 0.3837  val 0.5852 (41s)
+  t0v2 ep 62/90  train 0.3828  val 0.6109 (41s)
+  t0v2 ep 63/90  train 0.3869  val 0.5873 (41s)
+  t0v2 ep 64/90  train 0.3838  val 0.5908 (41s)
+  t0v2 ep 65/90  train 0.3761  val 0.5862 (40s)
+  t0v2 ep 66/90  train 0.3672  val 0.5732 (40s)
+  t0v2 ep 67/90  train 0.3678  val 0.6329 (41s)
+  t0v2 ep 68/90  train 0.3732  val 0.6441 (41s)
+  t0v2 ep 69/90  train 0.3635  val 0.5970 (41s)
+  t0v2 ep 70/90  train 0.3631  val 0.5973 (40s)
+  t0v2 ep 71/90  train 0.3613  val 0.5898 (41s)
+  t0v2 ep 72/90  train 0.3556  val 0.6036 (42s)
+  t0v2 ep 73/90  train 0.3523  val 0.5944 (40s)
+  t0v2 ep 74/90  train 0.3517  val 0.5897 (40s)
+  t0v2 ep 75/90  train 0.3486  val 0.6012 (40s)
+  t0v2 ep 76/90  train 0.3487  val 0.6260 (40s)
+  early stop at epoch 76 (best val 0.5732)
+t0v2: cached 150 cal + 364 test (122 MB, 13s)
+
+t0v3: training
+  t0v3 ep 1/90  train 1.1864  val 1.2427 (40s)
+  t0v3 ep 2/90  train 1.1042  val 1.0769 (40s)
+  t0v3 ep 3/90  train 1.0381  val 1.1558 (41s)
+  t0v3 ep 4/90  train 0.9454  val 1.1087 (40s)
+  t0v3 ep 5/90  train 0.8851  val 0.9787 (40s)
+  t0v3 ep 6/90  train 0.8451  val 0.9301 (40s)
+  t0v3 ep 7/90  train 0.8208  val 0.8813 (41s)
+  t0v3 ep 8/90  train 0.8098  val 0.8519 (40s)
+  t0v3 ep 9/90  train 0.7993  val 0.9666 (40s)
+  t0v3 ep 10/90  train 0.7884  val 1.0874 (41s)
+  t0v3 ep 11/90  train 0.7517  val 0.8469 (40s)
+  t0v3 ep 12/90  train 0.7406  val 1.0057 (41s)
+  t0v3 ep 13/90  train 0.7045  val 0.8304 (40s)
+  t0v3 ep 14/90  train 0.6628  val 0.8093 (41s)
+  t0v3 ep 15/90  train 0.6313  val 0.7341 (40s)
+  t0v3 ep 16/90  train 0.6079  val 0.7378 (41s)
+  t0v3 ep 17/90  train 0.5967  val 0.8654 (40s)
+  t0v3 ep 18/90  train 0.5787  val 0.7256 (41s)
+  t0v3 ep 19/90  train 0.5632  val 0.7470 (40s)
+  t0v3 ep 20/90  train 0.5528  val 0.7735 (41s)
+  t0v3 ep 21/90  train 0.5392  val 0.9570 (41s)
+  t0v3 ep 22/90  train 0.5324  val 0.6903 (40s)
+  t0v3 ep 23/90  train 0.5106  val 0.6743 (40s)
+  t0v3 ep 24/90  train 0.5027  val 0.6756 (42s)
+  t0v3 ep 25/90  train 0.4904  val 0.7282 (41s)
+  t0v3 ep 26/90  train 0.4771  val 0.7031 (41s)
+  t0v3 ep 27/90  train 0.4668  val 0.7795 (41s)
+  t0v3 ep 28/90  train 0.4718  val 0.8671 (40s)
+  t0v3 ep 29/90  train 0.4385  val 0.6603 (41s)
+  t0v3 ep 30/90  train 0.4365  val 0.6859 (40s)
+  t0v3 ep 31/90  train 0.4260  val 0.6511 (40s)
+  t0v3 ep 32/90  train 0.4231  val 0.7273 (40s)
+  t0v3 ep 33/90  train 0.4136  val 0.7134 (40s)
+  t0v3 ep 34/90  train 0.4213  val 0.6686 (41s)
+  t0v3 ep 35/90  train 0.4143  val 0.6933 (41s)
+  t0v3 ep 36/90  train 0.4080  val 0.7989 (41s)
+  t0v3 ep 37/90  train 0.3946  val 0.6723 (41s)
+  t0v3 ep 38/90  train 0.3919  val 0.7031 (40s)
+  t0v3 ep 39/90  train 0.3815  val 0.6750 (40s)
+  t0v3 ep 40/90  train 0.3724  val 0.6762 (42s)
+  t0v3 ep 41/90  train 0.3701  val 0.6811 (42s)
+  early stop at epoch 41 (best val 0.6511)
+t0v3: cached 150 cal + 364 test (124 MB, 12s)
+
+t0v4: training
+  t0v4 ep 1/90  train 1.2130  val 1.2670 (40s)
+  t0v4 ep 2/90  train 1.1320  val 1.1425 (41s)
+  t0v4 ep 3/90  train 1.0770  val 1.0924 (41s)
+  t0v4 ep 4/90  train 1.0612  val 1.3469 (41s)
+  t0v4 ep 5/90  train 1.0233  val 1.0435 (42s)
+  t0v4 ep 6/90  train 0.9937  val 1.0239 (42s)
+  t0v4 ep 7/90  train 0.9474  val 1.0004 (43s)
+  t0v4 ep 8/90  train 0.9121  val 0.9793 (42s)
+  t0v4 ep 9/90  train 0.8825  val 0.9205 (40s)
+  t0v4 ep 10/90  train 0.8626  val 0.9094 (41s)
+  t0v4 ep 11/90  train 0.8312  val 0.9299 (41s)
+  t0v4 ep 12/90  train 0.8197  val 0.9678 (41s)
+  t0v4 ep 13/90  train 0.7781  val 0.9137 (40s)
+  t0v4 ep 14/90  train 0.7611  val 0.9849 (41s)
+  t0v4 ep 15/90  train 0.7578  val 0.9074 (41s)
+  t0v4 ep 16/90  train 0.7069  val 0.8505 (41s)
+  t0v4 ep 17/90  train 0.7018  val 0.7510 (41s)
+  t0v4 ep 18/90  train 0.6884  val 0.7795 (40s)
+  t0v4 ep 19/90  train 0.6725  val 0.8592 (40s)
+  t0v4 ep 20/90  train 0.6908  val 0.8361 (41s)
+  t0v4 ep 21/90  train 0.6808  val 0.7794 (41s)
+  t0v4 ep 22/90  train 0.6499  val 0.7829 (41s)
+  t0v4 ep 23/90  train 0.6399  val 0.7160 (40s)
+  t0v4 ep 24/90  train 0.6142  val 0.7491 (40s)
+  t0v4 ep 25/90  train 0.5998  val 0.6904 (41s)
+  t0v4 ep 26/90  train 0.5757  val 0.8282 (40s)
+  t0v4 ep 27/90  train 0.5609  val 0.7364 (40s)
+  t0v4 ep 28/90  train 0.5565  val 0.7569 (40s)
+  t0v4 ep 29/90  train 0.5493  val 0.7130 (41s)
+  t0v4 ep 30/90  train 0.5309  val 0.6548 (40s)
+  t0v4 ep 31/90  train 0.5098  val 0.7028 (40s)
+  t0v4 ep 32/90  train 0.5021  val 0.6914 (40s)
+  t0v4 ep 33/90  train 0.4927  val 0.6657 (41s)
+  t0v4 ep 34/90  train 0.4759  val 0.6442 (41s)
+  t0v4 ep 35/90  train 0.4635  val 0.6263 (40s)
+  t0v4 ep 36/90  train 0.4616  val 0.6381 (41s)
+  t0v4 ep 37/90  train 0.4506  val 0.6582 (40s)
+  t0v4 ep 38/90  train 0.4427  val 0.6153 (40s)
+  t0v4 ep 39/90  train 0.4300  val 0.6761 (40s)
+  t0v4 ep 40/90  train 0.4247  val 0.6397 (41s)
+  t0v4 ep 41/90  train 0.4223  val 0.6432 (41s)
+  t0v4 ep 42/90  train 0.4206  val 0.6979 (40s)
+  t0v4 ep 43/90  train 0.4083  val 0.6211 (40s)
+  t0v4 ep 44/90  train 0.3999  val 0.6412 (40s)
+  t0v4 ep 45/90  train 0.3899  val 0.6252 (40s)
+  t0v4 ep 46/90  train 0.3956  val 0.6563 (40s)
+  t0v4 ep 47/90  train 0.3758  val 0.6153 (41s)
+  t0v4 ep 48/90  train 0.3751  val 0.6438 (41s)
+  early stop at epoch 48 (best val 0.6153)
+t0v4: cached 150 cal + 364 test (120 MB, 13s)
+
+t1v0: training
+  t1v0 ep 1/90  train 1.2116  val 1.1730 (40s)
+  t1v0 ep 2/90  train 1.1377  val 1.1046 (41s)
+  t1v0 ep 3/90  train 1.0901  val 1.0928 (41s)
+  t1v0 ep 4/90  train 1.0414  val 1.0446 (41s)
+  t1v0 ep 5/90  train 0.9827  val 1.0309 (41s)
+  t1v0 ep 6/90  train 0.9676  val 1.0515 (41s)
+  t1v0 ep 7/90  train 0.9308  val 0.9800 (41s)
+  t1v0 ep 8/90  train 0.8696  val 0.9391 (41s)
+  t1v0 ep 9/90  train 0.8375  val 0.8546 (41s)
+  t1v0 ep 10/90  train 0.8085  val 0.8976 (41s)
+  t1v0 ep 11/90  train 0.8143  val 0.8274 (40s)
+  t1v0 ep 12/90  train 0.7534  val 0.8565 (40s)
+  t1v0 ep 13/90  train 0.7210  val 0.7867 (41s)
+  t1v0 ep 14/90  train 0.6980  val 0.8004 (40s)
+  t1v0 ep 15/90  train 0.6852  val 0.7895 (40s)
+  t1v0 ep 16/90  train 0.6610  val 0.7652 (40s)
+  t1v0 ep 17/90  train 0.6328  val 0.7447 (41s)
+  t1v0 ep 18/90  train 0.6131  val 0.7885 (41s)
+  t1v0 ep 19/90  train 0.5860  val 0.7484 (41s)
+  t1v0 ep 20/90  train 0.5841  val 0.7488 (40s)
+  t1v0 ep 21/90  train 0.5645  val 0.7333 (40s)
+  t1v0 ep 22/90  train 0.5546  val 0.7191 (40s)
+  t1v0 ep 23/90  train 0.5625  val 0.7783 (41s)
+  t1v0 ep 24/90  train 0.5667  val 0.7697 (40s)
+  t1v0 ep 25/90  train 0.5592  val 0.6978 (41s)
+  t1v0 ep 26/90  train 0.5666  val 0.7093 (40s)
+  t1v0 ep 27/90  train 0.5545  val 0.7443 (41s)
+  t1v0 ep 28/90  train 0.5635  val 0.7516 (40s)
+  t1v0 ep 29/90  train 0.5683  val 0.7807 (41s)
+  t1v0 ep 30/90  train 0.5786  val 0.7973 (40s)
+  t1v0 ep 31/90  train 0.5727  val 0.7473 (40s)
+  t1v0 ep 32/90  train 0.5622  val 0.7827 (41s)
+  t1v0 ep 33/90  train 0.5615  val 0.7301 (40s)
+  t1v0 ep 34/90  train 0.5692  val 0.7553 (40s)
+  t1v0 ep 35/90  train 0.5545  val 0.8674 (40s)
+  early stop at epoch 35 (best val 0.6978)
+t1v0: cached 150 cal + 364 test (120 MB, 13s)
+
+t1v2: training
+  t1v2 ep 1/90  train 1.2216  val 1.1808 (39s)
+  t1v2 ep 2/90  train 1.1761  val 1.1490 (40s)
+  t1v2 ep 3/90  train 1.1364  val 1.1171 (40s)
+  t1v2 ep 4/90  train 1.0705  val 1.0059 (41s)
+  t1v2 ep 5/90  train 0.9901  val 0.9437 (42s)
+  t1v2 ep 6/90  train 0.9290  val 0.9318 (41s)
+  t1v2 ep 7/90  train 0.9237  val 0.9962 (41s)
+  t1v2 ep 8/90  train 0.9085  val 0.9395 (40s)
+  t1v2 ep 9/90  train 0.8881  val 0.8993 (41s)
+  t1v2 ep 10/90  train 0.8699  val 0.8976 (40s)
+  t1v2 ep 11/90  train 0.8475  val 0.8143 (40s)
+  t1v2 ep 12/90  train 0.7833  val 0.8201 (41s)
+  t1v2 ep 13/90  train 0.7587  val 0.8112 (40s)
+  t1v2 ep 14/90  train 0.7277  val 0.8822 (40s)
+  t1v2 ep 15/90  train 0.7042  val 0.7816 (41s)
+  t1v2 ep 16/90  train 0.6886  val 0.7260 (40s)
+  t1v2 ep 17/90  train 0.6747  val 0.7409 (43s)
+  t1v2 ep 18/90  train 0.6770  val 0.7630 (41s)
+  t1v2 ep 19/90  train 0.6685  val 0.6984 (40s)
+  t1v2 ep 20/90  train 0.7058  val 0.8319 (40s)
+  t1v2 ep 21/90  train 0.6831  val 0.7203 (41s)
+  t1v2 ep 22/90  train 0.6823  val 1.0170 (40s)
+  t1v2 ep 23/90  train 0.9131  val 1.2129 (40s)
+  t1v2 ep 24/90  train 0.9623  val 1.0402 (40s)
+  t1v2 ep 25/90  train 0.9147  val 0.9939 (40s)
+  t1v2 ep 26/90  train 0.8373  val 0.8938 (41s)
+  t1v2 ep 27/90  train 0.7374  val 0.8651 (42s)
+  t1v2 ep 28/90  train 0.6719  val 0.7570 (43s)
+  t1v2 ep 29/90  train 0.6239  val 0.7363 (40s)
+  early stop at epoch 29 (best val 0.6984)
+t1v2: cached 150 cal + 364 test (116 MB, 12s)
+
+t1v3: training
+  t1v3 ep 1/90  train 1.1927  val 1.2000 (39s)
+  t1v3 ep 2/90  train 1.1234  val 1.1153 (40s)
+  t1v3 ep 3/90  train 1.0627  val 1.2380 (40s)
+  t1v3 ep 4/90  train 1.0183  val 1.2022 (40s)
+  t1v3 ep 5/90  train 0.9715  val 1.0340 (41s)
+  t1v3 ep 6/90  train 0.9108  val 0.9665 (40s)
+  t1v3 ep 7/90  train 0.8839  val 1.0068 (40s)
+  t1v3 ep 8/90  train 0.8372  val 0.8278 (40s)
+  t1v3 ep 9/90  train 0.7821  val 0.9041 (41s)
+  t1v3 ep 10/90  train 0.7873  val 0.9935 (41s)
+  t1v3 ep 11/90  train 0.8262  val 0.8645 (40s)
+  t1v3 ep 12/90  train 0.7722  val 0.8236 (40s)
+  t1v3 ep 13/90  train 0.7553  val 0.9016 (40s)
+  t1v3 ep 14/90  train 0.7295  val 0.8422 (41s)
+  t1v3 ep 15/90  train 0.7190  val 0.8013 (41s)
+  t1v3 ep 16/90  train 0.7110  val 0.7834 (41s)
+  t1v3 ep 17/90  train 0.6895  val 0.7775 (40s)
+  t1v3 ep 18/90  train 0.6769  val 0.7988 (40s)
+  t1v3 ep 19/90  train 0.6626  val 0.7862 (40s)
+  t1v3 ep 20/90  train 0.6522  val 0.7360 (40s)
+  t1v3 ep 21/90  train 0.6335  val 0.9158 (40s)
+  t1v3 ep 22/90  train 0.6284  val 0.7843 (41s)
+  t1v3 ep 23/90  train 0.6045  val 0.7756 (41s)
+  t1v3 ep 24/90  train 0.5782  val 0.7196 (41s)
+  t1v3 ep 25/90  train 0.5873  val 0.7240 (41s)
+  t1v3 ep 26/90  train 0.5800  val 0.7238 (41s)
+  t1v3 ep 27/90  train 0.5698  val 0.7353 (40s)
+  t1v3 ep 28/90  train 0.5446  val 0.6977 (40s)
+  t1v3 ep 29/90  train 0.5392  val 0.6836 (41s)
+  t1v3 ep 30/90  train 0.5211  val 0.7444 (41s)
+  t1v3 ep 31/90  train 0.5046  val 0.6902 (41s)
+  t1v3 ep 32/90  train 0.4959  val 0.6671 (42s)
+  t1v3 ep 33/90  train 0.4865  val 0.6971 (41s)
+  t1v3 ep 34/90  train 0.4671  val 0.7083 (40s)
+  t1v3 ep 35/90  train 0.4681  val 0.6708 (41s)
+  t1v3 ep 36/90  train 0.4625  val 0.6954 (40s)
+  t1v3 ep 37/90  train 0.4446  val 0.6631 (41s)
+  t1v3 ep 38/90  train 0.4241  val 0.6745 (40s)
+  t1v3 ep 39/90  train 0.4205  val 0.6323 (41s)
+  t1v3 ep 40/90  train 0.4195  val 0.6427 (40s)
+  t1v3 ep 41/90  train 0.4121  val 0.6998 (40s)
+  t1v3 ep 42/90  train 0.3964  val 0.6173 (40s)
+  t1v3 ep 43/90  train 0.3948  val 0.6556 (42s)
+  t1v3 ep 44/90  train 0.3910  val 0.6391 (41s)
+  t1v3 ep 45/90  train 0.3801  val 0.6209 (40s)
+  t1v3 ep 46/90  train 0.3653  val 0.6255 (41s)
+  t1v3 ep 47/90  train 0.3620  val 0.6150 (42s)
+  t1v3 ep 48/90  train 0.3656  val 0.6370 (40s)
+  t1v3 ep 49/90  train 0.3612  val 0.6407 (41s)
+  t1v3 ep 50/90  train 0.3524  val 0.6483 (40s)
+  t1v3 ep 51/90  train 0.3443  val 0.6170 (41s)
+  t1v3 ep 52/90  train 0.3442  val 0.6218 (40s)
+  t1v3 ep 53/90  train 0.3370  val 0.6435 (40s)
+  t1v3 ep 54/90  train 0.3290  val 0.6639 (40s)
+  t1v3 ep 55/90  train 0.3265  val 0.5988 (41s)
+  t1v3 ep 56/90  train 0.3181  val 0.6375 (40s)
+  t1v3 ep 57/90  train 0.3121  val 0.6348 (41s)
+  t1v3 ep 58/90  train 0.3104  val 0.6210 (41s)
+  t1v3 ep 59/90  train 0.3035  val 0.6155 (41s)
+  t1v3 ep 60/90  train 0.3028  val 0.6139 (41s)
+  t1v3 ep 61/90  train 0.2988  val 0.6664 (40s)
+  t1v3 ep 62/90  train 0.2958  val 0.6530 (41s)
+  t1v3 ep 63/90  train 0.2914  val 0.6380 (40s)
+  t1v3 ep 64/90  train 0.2897  val 0.6353 (40s)
+  t1v3 ep 65/90  train 0.2796  val 0.6286 (40s)
+  early stop at epoch 65 (best val 0.5988)
+t1v3: cached 150 cal + 364 test (118 MB, 11s)
+
+t1v4: training
+  t1v4 ep 1/90  train 1.2124  val 1.1866 (40s)
+  t1v4 ep 2/90  train 1.1375  val 1.1399 (41s)
+  t1v4 ep 3/90  train 1.1030  val 1.0695 (41s)
+  t1v4 ep 4/90  train 1.0437  val 1.0857 (40s)
+  t1v4 ep 5/90  train 0.9841  val 0.9902 (40s)
+  t1v4 ep 6/90  train 0.9609  val 0.9774 (40s)
+  t1v4 ep 7/90  train 0.9386  val 0.9571 (40s)
+  t1v4 ep 8/90  train 0.9254  val 0.9656 (41s)
+  t1v4 ep 9/90  train 0.8971  val 0.9730 (40s)
+  t1v4 ep 10/90  train 0.8786  val 1.0516 (41s)
+  t1v4 ep 11/90  train 0.9044  val 0.9366 (40s)
+  t1v4 ep 12/90  train 0.8269  val 0.7993 (40s)
+  t1v4 ep 13/90  train 0.7669  val 0.8030 (41s)
+  t1v4 ep 14/90  train 0.7280  val 0.7802 (41s)
+  t1v4 ep 15/90  train 0.6992  val 0.7726 (40s)
+  t1v4 ep 16/90  train 0.6813  val 0.8121 (40s)
+  t1v4 ep 17/90  train 0.6594  val 0.7169 (41s)
+  t1v4 ep 18/90  train 0.6498  val 0.6932 (40s)
+  t1v4 ep 19/90  train 0.6343  val 0.7175 (40s)
+  t1v4 ep 20/90  train 0.6292  val 0.7016 (40s)
+  t1v4 ep 21/90  train 0.6287  val 0.7279 (40s)
+  t1v4 ep 22/90  train 0.6185  val 0.7044 (41s)
+  t1v4 ep 23/90  train 0.6294  val 0.7286 (40s)
+  t1v4 ep 24/90  train 0.5840  val 0.6848 (41s)
+  t1v4 ep 25/90  train 0.5830  val 0.7148 (41s)
+  t1v4 ep 26/90  train 0.5867  val 0.8374 (41s)
+  t1v4 ep 27/90  train 0.5896  val 0.6688 (40s)
+  t1v4 ep 28/90  train 0.5483  val 0.6661 (41s)
+  t1v4 ep 29/90  train 0.5371  val 0.6832 (41s)
+  t1v4 ep 30/90  train 0.5377  val 0.6791 (41s)
+  t1v4 ep 31/90  train 0.5458  val 0.6740 (40s)
+  t1v4 ep 32/90  train 0.5377  val 0.6651 (41s)
+  t1v4 ep 33/90  train 0.5322  val 0.6716 (40s)
+  t1v4 ep 34/90  train 0.5323  val 0.6926 (40s)
+  t1v4 ep 35/90  train 0.5334  val 0.7054 (41s)
+  t1v4 ep 36/90  train 0.5331  val 0.7036 (40s)
+  t1v4 ep 37/90  train 0.4910  val 0.6521 (41s)
+  t1v4 ep 38/90  train 0.4711  val 0.6780 (40s)
+  t1v4 ep 39/90  train 0.4632  val 0.6721 (40s)
+  t1v4 ep 40/90  train 0.4532  val 0.6535 (40s)
+  t1v4 ep 41/90  train 0.4326  val 0.6374 (42s)
+  t1v4 ep 42/90  train 0.4333  val 0.6555 (40s)
+  t1v4 ep 43/90  train 0.4335  val 0.6907 (41s)
+  t1v4 ep 44/90  train 0.4361  val 0.6784 (41s)
+  t1v4 ep 45/90  train 0.4269  val 0.6444 (41s)
+  t1v4 ep 46/90  train 0.4113  val 0.6210 (40s)
+  t1v4 ep 47/90  train 0.4131  val 0.7145 (40s)
+  t1v4 ep 48/90  train 0.4123  val 0.6268 (41s)
+  t1v4 ep 49/90  train 0.3968  val 0.6186 (41s)
+  t1v4 ep 50/90  train 0.4079  val 0.6453 (40s)
+  t1v4 ep 51/90  train 0.4040  val 0.6616 (41s)
+  t1v4 ep 52/90  train 0.3853  val 0.6130 (41s)
+  t1v4 ep 53/90  train 0.3837  val 0.6506 (40s)
+  t1v4 ep 54/90  train 0.3781  val 0.6990 (41s)
+  t1v4 ep 55/90  train 0.3767  val 0.6693 (40s)
+  t1v4 ep 56/90  train 0.3760  val 0.6679 (41s)
+  t1v4 ep 57/90  train 0.3693  val 0.6663 (41s)
+  t1v4 ep 58/90  train 0.3593  val 0.6661 (41s)
+  t1v4 ep 59/90  train 0.3554  val 0.6441 (41s)
+  t1v4 ep 60/90  train 0.3426  val 0.6293 (41s)
+  t1v4 ep 61/90  train 0.3362  val 0.6346 (41s)
+  t1v4 ep 62/90  train 0.3306  val 0.6276 (40s)
+  early stop at epoch 62 (best val 0.6130)
+t1v4: cached 150 cal + 364 test (114 MB, 14s)
+
+t2v0: training
+  t2v0 ep 1/90  train 1.2062  val 1.1730 (40s)
+  t2v0 ep 2/90  train 1.1445  val 1.1544 (41s)
+  t2v0 ep 3/90  train 1.0953  val 1.1378 (41s)
+  t2v0 ep 4/90  train 1.0325  val 1.0277 (41s)
+  t2v0 ep 5/90  train 0.9770  val 1.0764 (41s)
+  t2v0 ep 6/90  train 0.9323  val 0.9668 (42s)
+  t2v0 ep 7/90  train 0.8960  val 1.0965 (41s)
+  t2v0 ep 8/90  train 0.8551  val 0.9323 (41s)
+  t2v0 ep 9/90  train 0.8302  val 0.9353 (40s)
+  t2v0 ep 10/90  train 0.8141  val 0.9308 (41s)
+  t2v0 ep 11/90  train 0.8090  val 0.8589 (40s)
+  t2v0 ep 12/90  train 0.7628  val 0.8253 (40s)
+  t2v0 ep 13/90  train 0.7513  val 1.1562 (40s)
+  t2v0 ep 14/90  train 0.7390  val 0.9033 (40s)
+  t2v0 ep 15/90  train 0.7417  val 0.8978 (40s)
+  t2v0 ep 16/90  train 0.7240  val 0.9449 (40s)
+  t2v0 ep 17/90  train 0.7177  val 1.0115 (41s)
+  t2v0 ep 18/90  train 0.7078  val 0.8393 (40s)
+  t2v0 ep 19/90  train 0.6888  val 0.9399 (40s)
+  t2v0 ep 20/90  train 0.6746  val 0.7986 (41s)
+  t2v0 ep 21/90  train 0.6101  val 0.8181 (40s)
+  t2v0 ep 22/90  train 0.6124  val 0.9257 (41s)
+  t2v0 ep 23/90  train 0.6116  val 0.9182 (40s)
+  t2v0 ep 24/90  train 0.6198  val 0.8127 (40s)
+  t2v0 ep 25/90  train 0.5790  val 0.8523 (41s)
+  t2v0 ep 26/90  train 0.5764  val 0.7378 (41s)
+  t2v0 ep 27/90  train 0.5731  val 0.7584 (40s)
+  t2v0 ep 28/90  train 0.5656  val 0.7316 (41s)
+  t2v0 ep 29/90  train 0.5442  val 0.7633 (41s)
+  t2v0 ep 30/90  train 0.5395  val 0.7479 (41s)
+  t2v0 ep 31/90  train 0.5127  val 0.7432 (40s)
+  t2v0 ep 32/90  train 0.5021  val 0.7638 (40s)
+  t2v0 ep 33/90  train 0.5180  val 0.7540 (41s)
+  t2v0 ep 34/90  train 0.5069  val 0.8614 (41s)
+  t2v0 ep 35/90  train 0.5150  val 0.7301 (40s)
+  t2v0 ep 36/90  train 0.4783  val 0.7495 (41s)
+  t2v0 ep 37/90  train 0.4679  val 0.7776 (40s)
+  t2v0 ep 38/90  train 0.4675  val 0.7392 (40s)
+  t2v0 ep 39/90  train 0.4882  val 0.8212 (41s)
+  t2v0 ep 40/90  train 0.4589  val 0.7511 (41s)
+  t2v0 ep 41/90  train 0.4355  val 0.7382 (41s)
+  t2v0 ep 42/90  train 0.4319  val 0.7158 (41s)
+  t2v0 ep 43/90  train 0.4340  val 0.7557 (41s)
+  t2v0 ep 44/90  train 0.4344  val 0.9020 (41s)
+  t2v0 ep 45/90  train 0.4173  val 0.6923 (40s)
+  t2v0 ep 46/90  train 0.3971  val 0.7785 (40s)
+  t2v0 ep 47/90  train 0.3884  val 0.7772 (40s)
+  t2v0 ep 48/90  train 0.3972  val 0.7397 (40s)
+  t2v0 ep 49/90  train 0.3957  val 0.7222 (40s)
+  t2v0 ep 50/90  train 0.3965  val 0.8034 (41s)
+  t2v0 ep 51/90  train 0.3829  val 0.7940 (41s)
+  t2v0 ep 52/90  train 0.3820  val 0.7446 (41s)
+  t2v0 ep 53/90  train 0.3768  val 0.7879 (41s)
+  t2v0 ep 54/90  train 0.3668  val 0.7898 (40s)
+  t2v0 ep 55/90  train 0.3656  val 0.8375 (42s)
+  early stop at epoch 55 (best val 0.6923)
+t2v0: cached 150 cal + 364 test (115 MB, 12s)
+
+t2v1: training
+  t2v1 ep 1/90  train 1.2206  val 1.1428 (42s)
+  t2v1 ep 2/90  train 1.1179  val 1.0998 (41s)
+  t2v1 ep 3/90  train 1.0489  val 1.2296 (41s)
+  t2v1 ep 4/90  train 0.9935  val 1.1407 (40s)
+  t2v1 ep 5/90  train 0.9548  val 0.9855 (40s)
+  t2v1 ep 6/90  train 0.9206  val 1.0040 (41s)
+  t2v1 ep 7/90  train 0.9388  val 0.9558 (40s)
+  t2v1 ep 8/90  train 0.9221  val 1.1381 (41s)
+  t2v1 ep 9/90  train 0.8783  val 0.9235 (40s)
+  t2v1 ep 10/90  train 0.8125  val 0.8450 (40s)
+  t2v1 ep 11/90  train 0.7787  val 0.7836 (40s)
+  t2v1 ep 12/90  train 0.7479  val 0.7370 (41s)
+  t2v1 ep 13/90  train 0.7292  val 0.7593 (40s)
+  t2v1 ep 14/90  train 0.6986  val 0.7297 (41s)
+  t2v1 ep 15/90  train 0.6783  val 0.7076 (41s)
+  t2v1 ep 16/90  train 0.6699  val 0.7109 (41s)
+  t2v1 ep 17/90  train 0.6806  val 0.6714 (42s)
+  t2v1 ep 18/90  train 0.6523  val 0.6555 (40s)
+  t2v1 ep 19/90  train 0.6354  val 0.6395 (42s)
+  t2v1 ep 20/90  train 0.6217  val 0.6926 (40s)
+  t2v1 ep 21/90  train 0.6065  val 0.6638 (41s)
+  t2v1 ep 22/90  train 0.5909  val 0.6669 (40s)
+  t2v1 ep 23/90  train 0.5748  val 0.6174 (41s)
+  t2v1 ep 24/90  train 0.5702  val 0.6795 (40s)
+  t2v1 ep 25/90  train 0.5614  val 0.5985 (41s)
+  t2v1 ep 26/90  train 0.5579  val 0.6876 (40s)
+  t2v1 ep 27/90  train 0.5485  val 0.6520 (41s)
+  t2v1 ep 28/90  train 0.5176  val 0.6064 (41s)
+  t2v1 ep 29/90  train 0.5270  val 0.6439 (40s)
+  t2v1 ep 30/90  train 0.5154  val 0.6044 (40s)
+  t2v1 ep 31/90  train 0.4997  val 0.5864 (41s)
+  t2v1 ep 32/90  train 0.4826  val 0.5839 (41s)
+  t2v1 ep 33/90  train 0.4862  val 0.5698 (40s)
+  t2v1 ep 34/90  train 0.4676  val 0.5687 (41s)
+  t2v1 ep 35/90  train 0.4607  val 0.5657 (40s)
+  t2v1 ep 36/90  train 0.4576  val 0.5703 (41s)
+  t2v1 ep 37/90  train 0.4460  val 0.5592 (40s)
+  t2v1 ep 38/90  train 0.4467  val 0.5709 (40s)
+  t2v1 ep 39/90  train 0.4551  val 0.5940 (40s)
+  t2v1 ep 40/90  train 0.4564  val 0.6220 (40s)
+  t2v1 ep 41/90  train 0.4564  val 0.6001 (41s)
+  t2v1 ep 42/90  train 0.4390  val 0.6003 (40s)
+  t2v1 ep 43/90  train 0.4380  val 0.5989 (40s)
+  t2v1 ep 44/90  train 0.4194  val 0.5849 (40s)
+  t2v1 ep 45/90  train 0.4143  val 0.6075 (41s)
+  t2v1 ep 46/90  train 0.3997  val 0.5925 (40s)
+  t2v1 ep 47/90  train 0.3962  val 0.5517 (40s)
+  t2v1 ep 48/90  train 0.3906  val 0.6012 (40s)
+  t2v1 ep 49/90  train 0.3841  val 0.5915 (42s)
+  t2v1 ep 50/90  train 0.3812  val 0.5721 (41s)
+  t2v1 ep 51/90  train 0.3678  val 0.5554 (41s)
+  t2v1 ep 52/90  train 0.3676  val 0.6131 (41s)
+  t2v1 ep 53/90  train 0.3692  val 0.5697 (40s)
+  t2v1 ep 54/90  train 0.3671  val 0.6028 (40s)
+  t2v1 ep 55/90  train 0.3649  val 0.5774 (40s)
+  t2v1 ep 56/90  train 0.3636  val 0.5530 (40s)
+  t2v1 ep 57/90  train 0.3508  val 0.5340 (40s)
+  t2v1 ep 58/90  train 0.3463  val 0.5547 (41s)
+  t2v1 ep 59/90  train 0.3391  val 0.5442 (41s)
+  t2v1 ep 60/90  train 0.3308  val 0.5812 (41s)
+  t2v1 ep 61/90  train 0.3368  val 0.5758 (40s)
+  t2v1 ep 62/90  train 0.3228  val 0.5625 (41s)
+  t2v1 ep 63/90  train 0.3337  val 0.5244 (41s)
+  t2v1 ep 64/90  train 0.3263  val 0.5662 (41s)
+  t2v1 ep 65/90  train 0.3204  val 0.5700 (41s)
+  t2v1 ep 66/90  train 0.3267  val 0.5674 (41s)
+  t2v1 ep 67/90  train 0.3184  val 0.5614 (41s)
+  t2v1 ep 68/90  train 0.3095  val 0.5564 (40s)
+  t2v1 ep 69/90  train 0.3095  val 0.5785 (40s)
+  t2v1 ep 70/90  train 0.3071  val 0.5687 (40s)
+  t2v1 ep 71/90  train 0.3093  val 0.5493 (41s)
+  t2v1 ep 72/90  train 0.3033  val 0.5460 (40s)
+  t2v1 ep 73/90  train 0.3062  val 0.5403 (41s)
+  early stop at epoch 73 (best val 0.5244)
+t2v1: cached 150 cal + 364 test (116 MB, 13s)
+
+t2v3: training
+  t2v3 ep 1/90  train 1.1948  val 1.2646 (40s)
+  t2v3 ep 2/90  train 1.1464  val 1.2430 (40s)
+  t2v3 ep 3/90  train 1.0909  val 1.0765 (40s)
+  t2v3 ep 4/90  train 1.0458  val 1.0256 (40s)
+  t2v3 ep 5/90  train 0.9824  val 1.0051 (41s)
+  t2v3 ep 6/90  train 0.9247  val 0.9081 (41s)
+  t2v3 ep 7/90  train 0.8858  val 1.1639 (41s)
+  t2v3 ep 8/90  train 0.8314  val 0.8506 (41s)
+  t2v3 ep 9/90  train 0.8046  val 0.8609 (40s)
+  t2v3 ep 10/90  train 0.7668  val 0.8424 (40s)
+  t2v3 ep 11/90  train 0.7377  val 0.9313 (42s)
+  t2v3 ep 12/90  train 0.7086  val 0.7484 (41s)
+  t2v3 ep 13/90  train 0.6795  val 0.7276 (41s)
+  t2v3 ep 14/90  train 0.6639  val 0.7831 (40s)
+  t2v3 ep 15/90  train 0.6470  val 0.7480 (40s)
+  t2v3 ep 16/90  train 0.6293  val 0.7038 (40s)
+  t2v3 ep 17/90  train 0.6179  val 0.7195 (41s)
+  t2v3 ep 18/90  train 0.6147  val 0.6975 (41s)
+  t2v3 ep 19/90  train 0.5813  val 0.6910 (41s)
+  t2v3 ep 20/90  train 0.5647  val 0.7399 (40s)
+  t2v3 ep 21/90  train 0.5603  val 0.6727 (41s)
+  t2v3 ep 22/90  train 0.5492  val 0.7127 (41s)
+  t2v3 ep 23/90  train 0.5325  val 0.7223 (40s)
+  t2v3 ep 24/90  train 0.5282  val 0.6658 (41s)
+  t2v3 ep 25/90  train 0.5097  val 0.6697 (40s)
+  t2v3 ep 26/90  train 0.5197  val 0.7230 (41s)
+  t2v3 ep 27/90  train 0.4894  val 0.7048 (41s)
+  t2v3 ep 28/90  train 0.4732  val 0.7151 (42s)
+  t2v3 ep 29/90  train 0.4613  val 0.6962 (40s)
+  t2v3 ep 30/90  train 0.4528  val 0.6419 (40s)
+  t2v3 ep 31/90  train 0.4394  val 0.6150 (41s)
+  t2v3 ep 32/90  train 0.4357  val 0.6331 (40s)
+  t2v3 ep 33/90  train 0.4216  val 0.6289 (41s)
+  t2v3 ep 34/90  train 0.4190  val 0.6443 (40s)
+  t2v3 ep 35/90  train 0.4071  val 0.6472 (40s)
+  t2v3 ep 36/90  train 0.4058  val 0.6510 (41s)
+  t2v3 ep 37/90  train 0.3915  val 0.6458 (42s)
+  t2v3 ep 38/90  train 0.3816  val 0.7069 (41s)
+  t2v3 ep 39/90  train 0.3724  val 0.7011 (40s)
+  t2v3 ep 40/90  train 0.3689  val 0.6456 (40s)
+  t2v3 ep 41/90  train 0.3665  val 0.6409 (40s)
+  early stop at epoch 41 (best val 0.6150)
+t2v3: cached 150 cal + 364 test (117 MB, 11s)
+
+t2v4: training
+  t2v4 ep 1/90  train 1.2193  val 1.1917 (39s)
+  t2v4 ep 2/90  train 1.1489  val 1.1319 (40s)
+  t2v4 ep 3/90  train 1.0746  val 1.0848 (41s)
+  t2v4 ep 4/90  train 1.0364  val 1.0755 (40s)
+  t2v4 ep 5/90  train 1.0214  val 1.1939 (41s)
+  t2v4 ep 6/90  train 0.9609  val 1.0089 (40s)
+  t2v4 ep 7/90  train 0.9215  val 0.9003 (41s)
+  t2v4 ep 8/90  train 0.8814  val 0.9461 (42s)
+  t2v4 ep 9/90  train 0.8493  val 0.8907 (41s)
+  t2v4 ep 10/90  train 0.8343  val 0.9213 (42s)
+  t2v4 ep 11/90  train 0.7974  val 0.8723 (40s)
+  t2v4 ep 12/90  train 0.7822  val 0.7905 (41s)
+  t2v4 ep 13/90  train 0.7546  val 0.7683 (40s)
+  t2v4 ep 14/90  train 0.7465  val 0.7929 (41s)
+  t2v4 ep 15/90  train 0.7535  val 0.7937 (40s)
+  t2v4 ep 16/90  train 0.7268  val 0.8025 (41s)
+  t2v4 ep 17/90  train 0.7126  val 0.8483 (41s)
+  t2v4 ep 18/90  train 0.7224  val 0.8412 (41s)
+  t2v4 ep 19/90  train 0.7320  val 0.7725 (40s)
+  t2v4 ep 20/90  train 0.7117  val 0.8968 (39s)
+  t2v4 ep 21/90  train 0.7234  val 0.9724 (40s)
+  t2v4 ep 22/90  train 0.7256  val 0.8557 (41s)
+  t2v4 ep 23/90  train 0.6611  val 0.8227 (40s)
+  early stop at epoch 23 (best val 0.7683)
+t2v4: cached 150 cal + 364 test (110 MB, 13s)
+
+t3v0: training
+  t3v0 ep 1/90  train 1.2080  val 1.1931 (39s)
+  t3v0 ep 2/90  train 1.1208  val 1.3153 (41s)
+  t3v0 ep 3/90  train 1.0504  val 1.0374 (40s)
+  t3v0 ep 4/90  train 0.9955  val 1.0312 (40s)
+  t3v0 ep 5/90  train 0.9604  val 0.9570 (40s)
+  t3v0 ep 6/90  train 0.9348  val 0.9416 (41s)
+  t3v0 ep 7/90  train 0.9037  val 0.9238 (41s)
+  t3v0 ep 8/90  train 0.8864  val 0.9951 (41s)
+  t3v0 ep 9/90  train 0.8574  val 0.9185 (41s)
+  t3v0 ep 10/90  train 0.8310  val 0.8988 (40s)
+  t3v0 ep 11/90  train 0.8253  val 0.8954 (41s)
+  t3v0 ep 12/90  train 0.7965  val 0.8548 (41s)
+  t3v0 ep 13/90  train 0.7805  val 0.9232 (40s)
+  t3v0 ep 14/90  train 0.7902  val 1.1218 (40s)
+  t3v0 ep 15/90  train 0.7328  val 0.7721 (41s)
+  t3v0 ep 16/90  train 0.6755  val 0.7633 (41s)
+  t3v0 ep 17/90  train 0.6739  val 0.8502 (40s)
+  t3v0 ep 18/90  train 0.6414  val 0.7769 (41s)
+  t3v0 ep 19/90  train 0.6084  val 0.7300 (40s)
+  t3v0 ep 20/90  train 0.5854  val 0.7657 (40s)
+  t3v0 ep 21/90  train 0.5690  val 0.6862 (41s)
+  t3v0 ep 22/90  train 0.5529  val 0.7678 (41s)
+  t3v0 ep 23/90  train 0.5449  val 0.7427 (40s)
+  t3v0 ep 24/90  train 0.5297  val 0.6923 (40s)
+  t3v0 ep 25/90  train 0.5127  val 0.6800 (41s)
+  t3v0 ep 26/90  train 0.4957  val 0.7135 (40s)
+  t3v0 ep 27/90  train 0.4892  val 0.6567 (40s)
+  t3v0 ep 28/90  train 0.4716  val 0.6601 (41s)
+  t3v0 ep 29/90  train 0.4664  val 0.7478 (41s)
+  t3v0 ep 30/90  train 0.4553  val 0.6422 (41s)
+  t3v0 ep 31/90  train 0.4516  val 0.6698 (41s)
+  t3v0 ep 32/90  train 0.4466  val 0.6338 (40s)
+  t3v0 ep 33/90  train 0.4277  val 0.6553 (40s)
+  t3v0 ep 34/90  train 0.4274  val 0.6534 (40s)
+  t3v0 ep 35/90  train 0.4134  val 0.6305 (41s)
+  t3v0 ep 36/90  train 0.4047  val 0.6750 (41s)
+  t3v0 ep 37/90  train 0.3936  val 0.6642 (42s)
+  t3v0 ep 38/90  train 0.3904  val 0.6269 (41s)
+  t3v0 ep 39/90  train 0.3789  val 0.6295 (41s)
+  t3v0 ep 40/90  train 0.3792  val 0.6691 (41s)
+  t3v0 ep 41/90  train 0.3630  val 0.6347 (41s)
+  t3v0 ep 42/90  train 0.3602  val 0.6693 (41s)
+  t3v0 ep 43/90  train 0.3496  val 0.6457 (40s)
+  t3v0 ep 44/90  train 0.3490  val 0.6085 (41s)
+  t3v0 ep 45/90  train 0.3406  val 0.6520 (40s)
+  t3v0 ep 46/90  train 0.3281  val 0.6465 (41s)
+  t3v0 ep 47/90  train 0.3258  val 0.6488 (41s)
+  t3v0 ep 48/90  train 0.3252  val 0.6225 (41s)
+  t3v0 ep 49/90  train 0.3141  val 0.6293 (40s)
+  t3v0 ep 50/90  train 0.3156  val 0.6717 (41s)
+  t3v0 ep 51/90  train 0.3074  val 0.6203 (41s)
+  t3v0 ep 52/90  train 0.3048  val 0.6302 (41s)
+  t3v0 ep 53/90  train 0.3009  val 0.6338 (41s)
+  t3v0 ep 54/90  train 0.2919  val 0.6005 (41s)
+  t3v0 ep 55/90  train 0.2887  val 0.6216 (40s)
+  t3v0 ep 56/90  train 0.2882  val 0.6671 (41s)
+  t3v0 ep 57/90  train 0.2817  val 0.6191 (41s)
+  t3v0 ep 58/90  train 0.2803  val 0.6639 (41s)
+  t3v0 ep 59/90  train 0.2696  val 0.6787 (40s)
+  t3v0 ep 60/90  train 0.2723  val 0.6385 (41s)
+  t3v0 ep 61/90  train 0.2659  val 0.6338 (40s)
+  t3v0 ep 62/90  train 0.2595  val 0.6327 (41s)
+  t3v0 ep 63/90  train 0.2587  val 0.6297 (41s)
+  t3v0 ep 64/90  train 0.2502  val 0.6135 (42s)
+  early stop at epoch 64 (best val 0.6005)
+t3v0: cached 150 cal + 365 test (129 MB, 12s)
+
+t3v1: training
+  t3v1 ep 1/90  train 1.2080  val 1.1984 (41s)
+  t3v1 ep 2/90  train 1.1163  val 1.1058 (41s)
+  t3v1 ep 3/90  train 1.0531  val 1.0380 (40s)
+  t3v1 ep 4/90  train 1.0047  val 0.9850 (41s)
+  t3v1 ep 5/90  train 0.9724  val 1.1844 (40s)
+  t3v1 ep 6/90  train 0.9461  val 1.0101 (40s)
+  t3v1 ep 7/90  train 0.9104  val 0.9243 (41s)
+  t3v1 ep 8/90  train 0.8565  val 0.8702 (41s)
+  t3v1 ep 9/90  train 0.8300  val 0.8042 (40s)
+  t3v1 ep 10/90  train 0.7992  val 0.7958 (40s)
+  t3v1 ep 11/90  train 0.7781  val 0.8402 (41s)
+  t3v1 ep 12/90  train 0.7708  val 0.7924 (40s)
+  t3v1 ep 13/90  train 0.9035  val 1.0885 (41s)
+  t3v1 ep 14/90  train 0.9836  val 1.0212 (43s)
+  t3v1 ep 15/90  train 0.8805  val 0.8725 (41s)
+  t3v1 ep 16/90  train 0.9109  val 0.8960 (40s)
+  t3v1 ep 17/90  train 0.8784  val 0.9153 (41s)
+  t3v1 ep 18/90  train 0.8463  val 0.8729 (40s)
+  t3v1 ep 19/90  train 0.8222  val 0.8656 (41s)
+  t3v1 ep 20/90  train 0.8001  val 0.8366 (41s)
+  t3v1 ep 21/90  train 0.7829  val 0.8324 (40s)
+  t3v1 ep 22/90  train 0.7637  val 0.8359 (41s)
+  early stop at epoch 22 (best val 0.7924)
+t3v1: cached 150 cal + 365 test (119 MB, 14s)
+
+t3v2: training
+  t3v2 ep 1/90  train 1.2230  val 1.3238 (40s)
+  t3v2 ep 2/90  train 1.1633  val 1.1233 (41s)
+  t3v2 ep 3/90  train 1.0983  val 1.0923 (41s)
+  t3v2 ep 4/90  train 1.0223  val 1.0088 (40s)
+  t3v2 ep 5/90  train 0.9625  val 0.9186 (40s)
+  t3v2 ep 6/90  train 0.9149  val 0.8565 (40s)
+  t3v2 ep 7/90  train 0.8719  val 1.1569 (40s)
+  t3v2 ep 8/90  train 0.8930  val 1.0749 (40s)
+  t3v2 ep 9/90  train 0.8998  val 0.8819 (41s)
+  t3v2 ep 10/90  train 0.8595  val 0.8883 (41s)
+  t3v2 ep 11/90  train 0.8210  val 0.8394 (41s)
+  t3v2 ep 12/90  train 0.8002  val 0.8453 (41s)
+  t3v2 ep 13/90  train 0.8199  val 0.9193 (40s)
+  t3v2 ep 14/90  train 0.7835  val 0.8728 (41s)
+  t3v2 ep 15/90  train 0.7440  val 0.7961 (40s)
+  t3v2 ep 16/90  train 0.7252  val 0.8185 (40s)
+  t3v2 ep 17/90  train 0.7028  val 0.7544 (41s)
+  t3v2 ep 18/90  train 0.6929  val 0.7822 (40s)
+  t3v2 ep 19/90  train 0.6969  val 0.8408 (40s)
+  t3v2 ep 20/90  train 0.6787  val 0.7520 (40s)
+  t3v2 ep 21/90  train 0.6782  val 0.8922 (40s)
+  t3v2 ep 22/90  train 0.6465  val 0.8802 (40s)
+  t3v2 ep 23/90  train 0.6400  val 0.7507 (40s)
+  t3v2 ep 24/90  train 0.7028  val 0.7363 (41s)
+  t3v2 ep 25/90  train 0.6827  val 0.7363 (41s)
+  t3v2 ep 26/90  train 0.6423  val 0.7988 (40s)
+  t3v2 ep 27/90  train 0.6142  val 0.6960 (40s)
+  t3v2 ep 28/90  train 0.5970  val 0.7035 (41s)
+  t3v2 ep 29/90  train 0.5644  val 0.7028 (40s)
+  t3v2 ep 30/90  train 0.5586  val 0.6443 (41s)
+  t3v2 ep 31/90  train 0.5415  val 0.6461 (41s)
+  t3v2 ep 32/90  train 0.5346  val 0.6361 (40s)
+  t3v2 ep 33/90  train 0.5139  val 0.6751 (41s)
+  t3v2 ep 34/90  train 0.5026  val 0.6361 (41s)
+  t3v2 ep 35/90  train 0.4943  val 0.6192 (40s)
+  t3v2 ep 36/90  train 0.4891  val 0.6152 (40s)
+  t3v2 ep 37/90  train 0.4723  val 0.6166 (40s)
+  t3v2 ep 38/90  train 0.4666  val 0.6990 (41s)
+  t3v2 ep 39/90  train 0.4526  val 0.6222 (40s)
+  t3v2 ep 40/90  train 0.4428  val 0.6453 (41s)
+  t3v2 ep 41/90  train 0.4346  val 0.5826 (41s)
+  t3v2 ep 42/90  train 0.4364  val 0.5666 (40s)
+  t3v2 ep 43/90  train 0.4188  val 0.6463 (41s)
+  t3v2 ep 44/90  train 0.4152  val 0.5725 (40s)
+  t3v2 ep 45/90  train 0.4090  val 0.5778 (41s)
+  t3v2 ep 46/90  train 0.3967  val 0.5755 (41s)
+  t3v2 ep 47/90  train 0.3954  val 0.6364 (40s)
+  t3v2 ep 48/90  train 0.3853  val 0.5555 (41s)
+  t3v2 ep 49/90  train 0.3844  val 0.5981 (41s)
+  t3v2 ep 50/90  train 0.3752  val 0.6502 (41s)
+  t3v2 ep 51/90  train 0.3721  val 0.5625 (40s)
+  t3v2 ep 52/90  train 0.3649  val 0.5577 (41s)
+  t3v2 ep 53/90  train 0.3541  val 0.6740 (40s)
+  t3v2 ep 54/90  train 0.3532  val 0.5890 (41s)
+  t3v2 ep 55/90  train 0.3484  val 0.5643 (41s)
+  t3v2 ep 56/90  train 0.3452  val 0.5760 (41s)
+  t3v2 ep 57/90  train 0.3419  val 0.5745 (41s)
+  t3v2 ep 58/90  train 0.3339  val 0.5477 (41s)
+  t3v2 ep 59/90  train 0.3304  val 0.5519 (40s)
+  t3v2 ep 60/90  train 0.3290  val 0.5490 (41s)
+  t3v2 ep 61/90  train 0.3231  val 0.5626 (41s)
+  t3v2 ep 62/90  train 0.3180  val 0.5984 (41s)
+  t3v2 ep 63/90  train 0.3150  val 0.5586 (41s)
+  t3v2 ep 64/90  train 0.3106  val 0.5547 (41s)
+  t3v2 ep 65/90  train 0.3152  val 0.5807 (41s)
+  t3v2 ep 66/90  train 0.3053  val 0.5701 (41s)
+  t3v2 ep 67/90  train 0.2985  val 0.5610 (40s)
+  t3v2 ep 68/90  train 0.2975  val 0.5527 (42s)
+  early stop at epoch 68 (best val 0.5477)
+t3v2: cached 150 cal + 365 test (126 MB, 13s)
+
+t3v4: training
+  t3v4 ep 1/90  train 1.2241  val 1.2825 (40s)
+  t3v4 ep 2/90  train 1.1637  val 1.1699 (40s)
+  t3v4 ep 3/90  train 1.1124  val 1.0690 (41s)
+  t3v4 ep 4/90  train 1.0663  val 1.0558 (40s)
+  t3v4 ep 5/90  train 1.0293  val 1.0051 (40s)
+  t3v4 ep 6/90  train 1.0088  val 0.9889 (41s)
+  t3v4 ep 7/90  train 0.9605  val 0.9259 (40s)
+  t3v4 ep 8/90  train 0.8988  val 0.9207 (41s)
+  t3v4 ep 9/90  train 0.8508  val 0.9485 (41s)
+  t3v4 ep 10/90  train 0.8395  val 0.8332 (41s)
+  t3v4 ep 11/90  train 0.7934  val 0.9749 (40s)
+  t3v4 ep 12/90  train 0.7715  val 0.8465 (41s)
+  t3v4 ep 13/90  train 0.7491  val 0.8595 (41s)
+  t3v4 ep 14/90  train 0.7259  val 0.8864 (42s)
+  t3v4 ep 15/90  train 0.7129  val 0.7884 (41s)
+  t3v4 ep 16/90  train 0.6868  val 0.8907 (41s)
+  t3v4 ep 17/90  train 0.6683  val 0.7408 (41s)
+  t3v4 ep 18/90  train 0.6596  val 0.7656 (42s)
+  t3v4 ep 19/90  train 0.6419  val 0.7788 (40s)
+  t3v4 ep 20/90  train 0.6359  val 0.8306 (41s)
+  t3v4 ep 21/90  train 0.6040  val 0.7330 (40s)
+  t3v4 ep 22/90  train 0.5933  val 0.7142 (41s)
+  t3v4 ep 23/90  train 0.5742  val 0.7186 (41s)
+  t3v4 ep 24/90  train 0.5603  val 0.6851 (41s)
+  t3v4 ep 25/90  train 0.5595  val 0.6768 (41s)
+  t3v4 ep 26/90  train 0.5624  val 0.7360 (41s)
+  t3v4 ep 27/90  train 0.5428  val 0.7733 (40s)
+  t3v4 ep 28/90  train 0.5184  val 0.7009 (40s)
+  t3v4 ep 29/90  train 0.5119  val 0.6748 (41s)
+  t3v4 ep 30/90  train 0.5051  val 0.7180 (40s)
+  t3v4 ep 31/90  train 0.4893  val 0.6496 (41s)
+  t3v4 ep 32/90  train 0.4793  val 0.6679 (40s)
+  t3v4 ep 33/90  train 0.4704  val 0.7377 (41s)
+  t3v4 ep 34/90  train 0.4666  val 0.7315 (41s)
+  t3v4 ep 35/90  train 0.4546  val 0.6636 (40s)
+  t3v4 ep 36/90  train 0.4472  val 0.6445 (40s)
+  t3v4 ep 37/90  train 0.4435  val 0.7408 (40s)
+  t3v4 ep 38/90  train 0.4436  val 0.6979 (40s)
+  t3v4 ep 39/90  train 0.4318  val 0.6530 (40s)
+  t3v4 ep 40/90  train 0.4701  val 0.7041 (40s)
+  t3v4 ep 41/90  train 0.4887  val 0.6813 (40s)
+  t3v4 ep 42/90  train 0.4762  val 0.7886 (41s)
+  t3v4 ep 43/90  train 0.4672  val 0.6730 (42s)
+  t3v4 ep 44/90  train 0.4439  val 0.6586 (40s)
+  t3v4 ep 45/90  train 0.4394  val 0.6477 (40s)
+  t3v4 ep 46/90  train 0.4307  val 0.6285 (40s)
+  t3v4 ep 47/90  train 0.4193  val 0.6581 (41s)
+  t3v4 ep 48/90  train 0.4076  val 0.6541 (41s)
+  t3v4 ep 49/90  train 0.4028  val 0.6162 (40s)
+  t3v4 ep 50/90  train 0.3967  val 0.6326 (41s)
+  t3v4 ep 51/90  train 0.3922  val 0.6494 (40s)
+  t3v4 ep 52/90  train 0.3819  val 0.6579 (41s)
+  t3v4 ep 53/90  train 0.3767  val 0.6375 (40s)
+  t3v4 ep 54/90  train 0.3728  val 0.7227 (41s)
+  t3v4 ep 55/90  train 0.3595  val 0.6310 (40s)
+  t3v4 ep 56/90  train 0.3545  val 0.6152 (41s)
+  t3v4 ep 57/90  train 0.3454  val 0.6354 (40s)
+  t3v4 ep 58/90  train 0.3445  val 0.6227 (41s)
+  t3v4 ep 59/90  train 0.3439  val 0.6006 (40s)
+  t3v4 ep 60/90  train 0.3363  val 0.6207 (40s)
+  t3v4 ep 61/90  train 0.3314  val 0.6505 (40s)
+  t3v4 ep 62/90  train 0.3284  val 0.6298 (41s)
+  t3v4 ep 63/90  train 0.3257  val 0.6529 (40s)
+  t3v4 ep 64/90  train 0.3184  val 0.6942 (40s)
+  t3v4 ep 65/90  train 0.3223  val 0.5953 (40s)
+  t3v4 ep 66/90  train 0.3252  val 0.6481 (40s)
+  t3v4 ep 67/90  train 0.3183  val 0.6292 (40s)
+  t3v4 ep 68/90  train 0.3168  val 0.6306 (40s)
+  t3v4 ep 69/90  train 0.3097  val 0.6434 (41s)
+  t3v4 ep 70/90  train 0.3065  val 0.6376 (40s)
+  t3v4 ep 71/90  train 0.3029  val 0.6457 (41s)
+  t3v4 ep 72/90  train 0.2980  val 0.6460 (41s)
+  t3v4 ep 73/90  train 0.2924  val 0.6078 (40s)
+  t3v4 ep 74/90  train 0.2919  val 0.6178 (41s)
+  t3v4 ep 75/90  train 0.2880  val 0.6360 (41s)
+  early stop at epoch 75 (best val 0.5953)
+t3v4: cached 150 cal + 365 test (123 MB, 13s)
+
+t4v0: training
+  t4v0 ep 1/90  train 1.2237  val 1.2571 (40s)
+  t4v0 ep 2/90  train 1.1482  val 1.3520 (40s)
+  t4v0 ep 3/90  train 1.1012  val 1.0978 (41s)
+  t4v0 ep 4/90  train 1.0466  val 1.0562 (41s)
+  t4v0 ep 5/90  train 0.9948  val 1.0947 (41s)
+  t4v0 ep 6/90  train 0.9423  val 1.0554 (40s)
+  t4v0 ep 7/90  train 0.9090  val 1.0782 (40s)
+  t4v0 ep 8/90  train 0.8498  val 1.3130 (40s)
+  t4v0 ep 9/90  train 0.7878  val 0.8265 (40s)
+  t4v0 ep 10/90  train 0.7469  val 0.7590 (40s)
+  t4v0 ep 11/90  train 0.7179  val 0.8461 (41s)
+  t4v0 ep 12/90  train 0.6978  val 0.7726 (41s)
+  t4v0 ep 13/90  train 0.6719  val 0.7409 (41s)
+  t4v0 ep 14/90  train 0.6470  val 0.7073 (41s)
+  t4v0 ep 15/90  train 0.6281  val 0.7845 (42s)
+  t4v0 ep 16/90  train 0.6045  val 0.7627 (41s)
+  t4v0 ep 17/90  train 0.5933  val 0.8025 (40s)
+  t4v0 ep 18/90  train 0.5846  val 0.7300 (41s)
+  t4v0 ep 19/90  train 0.5779  val 0.8476 (41s)
+  t4v0 ep 20/90  train 0.5621  val 0.7069 (40s)
+  t4v0 ep 21/90  train 0.5615  val 0.9681 (41s)
+  t4v0 ep 22/90  train 0.5538  val 0.7787 (41s)
+  t4v0 ep 23/90  train 0.5362  val 0.7200 (41s)
+  t4v0 ep 24/90  train 0.5230  val 0.6951 (40s)
+  t4v0 ep 25/90  train 0.5316  val 0.7606 (40s)
+  t4v0 ep 26/90  train 0.5256  val 0.7779 (41s)
+  t4v0 ep 27/90  train 0.5083  val 0.6913 (41s)
+  t4v0 ep 28/90  train 0.4817  val 0.6877 (40s)
+  t4v0 ep 29/90  train 0.4812  val 0.6727 (41s)
+  t4v0 ep 30/90  train 0.4798  val 0.6737 (41s)
+  t4v0 ep 31/90  train 0.4935  val 0.6573 (40s)
+  t4v0 ep 32/90  train 0.4791  val 0.6910 (40s)
+  t4v0 ep 33/90  train 0.4711  val 0.6735 (40s)
+  t4v0 ep 34/90  train 0.4733  val 0.8856 (41s)
+  t4v0 ep 35/90  train 0.5131  val 0.7504 (41s)
+  t4v0 ep 36/90  train 0.5055  val 0.7140 (40s)
+  t4v0 ep 37/90  train 0.4904  val 0.7040 (41s)
+  t4v0 ep 38/90  train 0.4690  val 0.6962 (41s)
+  t4v0 ep 39/90  train 0.4559  val 0.9350 (41s)
+  t4v0 ep 40/90  train 0.4531  val 0.6748 (41s)
+  t4v0 ep 41/90  train 0.4395  val 0.6303 (41s)
+  t4v0 ep 42/90  train 0.4289  val 0.6614 (40s)
+  t4v0 ep 43/90  train 0.4166  val 0.6821 (41s)
+  t4v0 ep 44/90  train 0.4130  val 0.6975 (42s)
+  t4v0 ep 45/90  train 0.4060  val 0.6702 (40s)
+  t4v0 ep 46/90  train 0.3920  val 0.6721 (40s)
+  t4v0 ep 47/90  train 0.3858  val 0.6540 (40s)
+  t4v0 ep 48/90  train 0.3835  val 0.6698 (40s)
+  t4v0 ep 49/90  train 0.3750  val 0.8016 (40s)
+  t4v0 ep 50/90  train 0.3682  val 0.7803 (41s)
+  t4v0 ep 51/90  train 0.3683  val 0.6618 (40s)
+  early stop at epoch 51 (best val 0.6303)
+t4v0: cached 150 cal + 365 test (119 MB, 11s)
+
+t4v1: training
+  t4v1 ep 1/90  train 1.2142  val 1.2388 (40s)
+  t4v1 ep 2/90  train 1.1426  val 1.0959 (40s)
+  t4v1 ep 3/90  train 1.0867  val 1.0324 (42s)
+  t4v1 ep 4/90  train 1.0420  val 0.9984 (41s)
+  t4v1 ep 5/90  train 1.0016  val 0.9473 (41s)
+  t4v1 ep 6/90  train 0.9632  val 0.9134 (40s)
+  t4v1 ep 7/90  train 0.9380  val 0.8693 (41s)
+  t4v1 ep 8/90  train 0.9125  val 0.8931 (41s)
+  t4v1 ep 9/90  train 0.9102  val 1.0996 (41s)
+  t4v1 ep 10/90  train 0.9545  val 0.9775 (40s)
+  t4v1 ep 11/90  train 0.9118  val 0.8723 (41s)
+  t4v1 ep 12/90  train 0.8727  val 0.8936 (40s)
+  t4v1 ep 13/90  train 0.8609  val 0.8483 (41s)
+  t4v1 ep 14/90  train 0.8381  val 0.7898 (40s)
+  t4v1 ep 15/90  train 0.7989  val 0.8505 (40s)
+  t4v1 ep 16/90  train 0.8128  val 0.8770 (41s)
+  t4v1 ep 17/90  train 0.7774  val 0.8879 (40s)
+  t4v1 ep 18/90  train 0.7411  val 0.8460 (41s)
+  t4v1 ep 19/90  train 0.7223  val 0.7241 (40s)
+  t4v1 ep 20/90  train 0.7066  val 0.8090 (41s)
+  t4v1 ep 21/90  train 0.7024  val 0.7561 (41s)
+  t4v1 ep 22/90  train 0.7011  val 0.7727 (41s)
+  t4v1 ep 23/90  train 0.6788  val 0.8368 (41s)
+  t4v1 ep 24/90  train 0.6959  val 0.7410 (41s)
+  t4v1 ep 25/90  train 0.7206  val 0.7967 (41s)
+  t4v1 ep 26/90  train 0.7169  val 0.7431 (41s)
+  t4v1 ep 27/90  train 0.6727  val 0.7555 (42s)
+  t4v1 ep 28/90  train 0.6665  val 0.9295 (41s)
+  t4v1 ep 29/90  train 0.6617  val 0.7596 (40s)
+  early stop at epoch 29 (best val 0.7241)
+t4v1: cached 150 cal + 365 test (111 MB, 11s)
+
+t4v2: training
+  t4v2 ep 1/90  train 1.2242  val 1.2313 (40s)
+  t4v2 ep 2/90  train 1.1377  val 1.1569 (40s)
+  t4v2 ep 3/90  train 1.0797  val 1.1074 (40s)
+  t4v2 ep 4/90  train 1.0388  val 1.4844 (41s)
+  t4v2 ep 5/90  train 0.9948  val 0.9666 (41s)
+  t4v2 ep 6/90  train 0.9595  val 0.9593 (41s)
+  t4v2 ep 7/90  train 0.9687  val 1.0128 (41s)
+  t4v2 ep 8/90  train 0.9772  val 0.9765 (41s)
+  t4v2 ep 9/90  train 0.8999  val 0.9560 (41s)
+  t4v2 ep 10/90  train 0.8506  val 1.0424 (41s)
+  t4v2 ep 11/90  train 0.8286  val 0.8873 (40s)
+  t4v2 ep 12/90  train 0.8934  val 1.0642 (41s)
+  t4v2 ep 13/90  train 0.8992  val 0.9412 (40s)
+  t4v2 ep 14/90  train 0.8804  val 0.9500 (41s)
+  t4v2 ep 15/90  train 0.8809  val 0.8990 (40s)
+  t4v2 ep 16/90  train 0.9182  val 0.9386 (41s)
+  t4v2 ep 17/90  train 0.8498  val 0.8433 (41s)
+  t4v2 ep 18/90  train 0.7650  val 0.8404 (42s)
+  t4v2 ep 19/90  train 0.7507  val 0.8328 (40s)
+  t4v2 ep 20/90  train 0.7095  val 0.9086 (41s)
+  t4v2 ep 21/90  train 0.6704  val 0.8255 (41s)
+  t4v2 ep 22/90  train 0.6622  val 0.7855 (41s)
+  t4v2 ep 23/90  train 0.6419  val 0.7654 (41s)
+  t4v2 ep 24/90  train 0.6296  val 0.7228 (41s)
+  t4v2 ep 25/90  train 0.6199  val 0.7426 (40s)
+  t4v2 ep 26/90  train 0.6040  val 0.7478 (41s)
+  t4v2 ep 27/90  train 0.5856  val 0.7476 (41s)
+  t4v2 ep 28/90  train 0.5703  val 0.6944 (42s)
+  t4v2 ep 29/90  train 0.5644  val 0.6924 (41s)
+  t4v2 ep 30/90  train 0.5479  val 0.6505 (41s)
+  t4v2 ep 31/90  train 0.5446  val 0.7341 (41s)
+  t4v2 ep 32/90  train 0.5404  val 0.7142 (41s)
+  t4v2 ep 33/90  train 0.5105  val 0.7295 (41s)
+  t4v2 ep 34/90  train 0.4993  val 0.6991 (41s)
+  t4v2 ep 35/90  train 0.4989  val 0.6526 (41s)
+  t4v2 ep 36/90  train 0.4814  val 0.6427 (41s)
+  t4v2 ep 37/90  train 0.4768  val 0.6982 (40s)
+  t4v2 ep 38/90  train 0.4598  val 0.6516 (40s)
+  t4v2 ep 39/90  train 0.4541  val 0.6397 (41s)
+  t4v2 ep 40/90  train 0.4413  val 0.6848 (41s)
+  t4v2 ep 41/90  train 0.4405  val 0.6290 (41s)
+  t4v2 ep 42/90  train 0.4286  val 0.7046 (41s)
+  t4v2 ep 43/90  train 0.4255  val 0.6194 (41s)
+  t4v2 ep 44/90  train 0.4161  val 0.6306 (41s)
+  t4v2 ep 45/90  train 0.4106  val 0.6445 (40s)
+  t4v2 ep 46/90  train 0.4003  val 0.7005 (40s)
+  t4v2 ep 47/90  train 0.3989  val 0.6200 (40s)
+  t4v2 ep 48/90  train 0.3897  val 0.6387 (40s)
+  t4v2 ep 49/90  train 0.3927  val 0.8018 (42s)
+  t4v2 ep 50/90  train 0.3792  val 0.6988 (40s)
+  t4v2 ep 51/90  train 0.3875  val 0.6343 (41s)
+  t4v2 ep 52/90  train 0.3730  val 0.6328 (40s)
+  t4v2 ep 53/90  train 0.3719  val 0.6173 (41s)
+  t4v2 ep 54/90  train 0.3567  val 0.6097 (41s)
+  t4v2 ep 55/90  train 0.3481  val 0.6302 (40s)
+  t4v2 ep 56/90  train 0.3507  val 0.5999 (41s)
+  t4v2 ep 57/90  train 0.3471  val 0.6259 (41s)
+  t4v2 ep 58/90  train 0.3408  val 0.6027 (41s)
+  t4v2 ep 59/90  train 0.3422  val 0.5973 (41s)
+  t4v2 ep 60/90  train 0.3366  val 0.5885 (41s)
+  t4v2 ep 61/90  train 0.3346  val 0.6055 (40s)
+  t4v2 ep 62/90  train 0.3225  val 0.6041 (41s)
+  t4v2 ep 63/90  train 0.3248  val 0.6010 (40s)
+  t4v2 ep 64/90  train 0.3133  val 0.5975 (40s)
+  t4v2 ep 65/90  train 0.3131  val 0.6211 (40s)
+  t4v2 ep 66/90  train 0.3217  val 0.5983 (40s)
+  t4v2 ep 67/90  train 0.3103  val 0.5922 (40s)
+  t4v2 ep 68/90  train 0.3028  val 0.5752 (40s)
+  t4v2 ep 69/90  train 0.3010  val 0.6001 (40s)
+  t4v2 ep 70/90  train 0.3020  val 0.5859 (40s)
+  t4v2 ep 71/90  train 0.3013  val 0.6277 (41s)
+  t4v2 ep 72/90  train 0.2948  val 0.6093 (40s)
+  t4v2 ep 73/90  train 0.2924  val 0.6181 (40s)
+  t4v2 ep 74/90  train 0.2870  val 0.6055 (41s)
+  t4v2 ep 75/90  train 0.2864  val 0.5922 (41s)
+  t4v2 ep 76/90  train 0.2809  val 0.6057 (40s)
+  t4v2 ep 77/90  train 0.2862  val 0.5821 (41s)
+  t4v2 ep 78/90  train 0.2819  val 0.5881 (39s)
+  early stop at epoch 78 (best val 0.5752)
+t4v2: cached 150 cal + 365 test (116 MB, 11s)
+
+t4v3: training
+  t4v3 ep 1/90  train 1.2034  val 1.1824 (41s)
+  t4v3 ep 2/90  train 1.1117  val 1.1403 (41s)
+  t4v3 ep 3/90  train 1.0822  val 1.0664 (41s)
+  t4v3 ep 4/90  train 0.9933  val 1.1474 (40s)
+  t4v3 ep 5/90  train 0.9335  val 0.9399 (40s)
+  t4v3 ep 6/90  train 0.8716  val 0.8630 (41s)
+  t4v3 ep 7/90  train 0.8207  val 0.8313 (42s)
+  t4v3 ep 8/90  train 0.7904  val 0.8454 (40s)
+  t4v3 ep 9/90  train 0.7800  val 0.8204 (39s)
+  t4v3 ep 10/90  train 0.7455  val 0.7488 (40s)
+  t4v3 ep 11/90  train 0.7303  val 0.7551 (41s)
+  t4v3 ep 12/90  train 0.7081  val 0.7687 (41s)
+  t4v3 ep 13/90  train 0.7853  val 0.9206 (41s)
+  t4v3 ep 14/90  train 0.8010  val 0.7770 (41s)
+  t4v3 ep 15/90  train 0.7072  val 0.7735 (41s)
+  t4v3 ep 16/90  train 0.7096  val 0.8983 (40s)
+  t4v3 ep 17/90  train 0.7119  val 0.8309 (41s)
+  t4v3 ep 18/90  train 0.6556  val 0.7402 (41s)
+  t4v3 ep 19/90  train 0.6259  val 0.7016 (40s)
+  t4v3 ep 20/90  train 0.6191  val 0.6940 (40s)
+  t4v3 ep 21/90  train 0.5827  val 0.7231 (40s)
+  t4v3 ep 22/90  train 0.5518  val 0.7521 (41s)
+  t4v3 ep 23/90  train 0.5336  val 0.7113 (41s)
+  t4v3 ep 24/90  train 0.5241  val 0.7472 (40s)
+  t4v3 ep 25/90  train 0.5104  val 0.7017 (41s)
+  t4v3 ep 26/90  train 0.5038  val 0.6548 (41s)
+  t4v3 ep 27/90  train 0.4971  val 0.6716 (41s)
+  t4v3 ep 28/90  train 0.4908  val 0.6497 (40s)
+  t4v3 ep 29/90  train 0.4690  val 0.6659 (39s)
+  t4v3 ep 30/90  train 0.5058  val 0.7491 (41s)
+  t4v3 ep 31/90  train 0.5097  val 0.7125 (41s)
+  t4v3 ep 32/90  train 0.5076  val 0.8565 (39s)
+  t4v3 ep 33/90  train 0.4926  val 0.6821 (41s)
+  t4v3 ep 34/90  train 0.4841  val 0.7242 (42s)
+  t4v3 ep 35/90  train 0.4797  val 0.7017 (41s)
+  t4v3 ep 36/90  train 0.4786  val 0.6906 (40s)
+  t4v3 ep 37/90  train 0.4633  val 0.6882 (41s)
+  t4v3 ep 38/90  train 0.4430  val 0.7445 (40s)
+  early stop at epoch 38 (best val 0.6497)
+t4v3: cached 150 cal + 365 test (116 MB, 13s)
+
+phase 1 done. now run: python3 src/methods/sweep_cached.py
+20 cached pairs | 49 (tau, beta) points | 12 workers | CPU only
+    t0v1 cal 100/150 (75s)
+    t0v1 test 100/364 (93s)
+    t0v1 test 200/364 (169s)
+    t0v1 test 300/364 (207s)
+t0v1: tau -1.0 beta 32.0  F1 0.7507 (beta=0: 0.6907, gain +0.0600)  IoU 0.6009  [308s]
+
+    t0v2 cal 100/150 (70s)
+    t0v2 test 100/364 (92s)
+    t0v2 test 200/364 (162s)
+    t0v2 test 300/364 (162s)
+t0v2: tau -0.5 beta 64.0  F1 0.7472 (beta=0: 0.7216, gain +0.0255)  IoU 0.5964  [308s]
+
+    t0v3 cal 100/150 (110s)
+    t0v3 test 100/364 (97s)
+    t0v3 test 200/364 (208s)
+    t0v3 test 300/364 (208s)
+t0v3: tau -2.0 beta 32.0  F1 0.7436 (beta=0: 0.7009, gain +0.0427)  IoU 0.5918  [361s]
+
+    t0v4 cal 100/150 (105s)
+    t0v4 test 100/364 (98s)
+    t0v4 test 200/364 (201s)
+    t0v4 test 300/364 (201s)
+t0v4: tau 0.5 beta 32.0  F1 0.7409 (beta=0: 0.7191, gain +0.0218)  IoU 0.5885  [312s]
+
+    t1v0 cal 100/150 (59s)
+    t1v0 test 100/364 (92s)
+    t1v0 test 200/364 (122s)
+    t1v0 test 300/364 (174s)
+t1v0: tau -1.0 beta 32.0  F1 0.7844 (beta=0: 0.7350, gain +0.0494)  IoU 0.6453  [293s]
+
+    t1v2 cal 100/150 (95s)
+    t1v2 test 100/364 (95s)
+    t1v2 test 200/364 (146s)
+    t1v2 test 300/364 (227s)
+t1v2: tau -0.5 beta 32.0  F1 0.7477 (beta=0: 0.6935, gain +0.0542)  IoU 0.5970  [378s]
+
+    t1v3 cal 100/150 (62s)
+    t1v3 test 100/364 (82s)
+    t1v3 test 200/364 (113s)
+    t1v3 test 300/364 (137s)
+t1v3: tau -1.0 beta 64.0  F1 0.8089 (beta=0: 0.7727, gain +0.0362)  IoU 0.6792  [242s]
+
+    t1v4 cal 100/150 (70s)
+    t1v4 test 100/364 (61s)
+    t1v4 test 200/364 (101s)
+    t1v4 test 300/364 (136s)
+t1v4: tau -1.0 beta 32.0  F1 0.7835 (beta=0: 0.7486, gain +0.0350)  IoU 0.6441  [245s]
+
+    t2v0 cal 100/150 (48s)
+    t2v0 test 100/364 (90s)
+    t2v0 test 200/364 (93s)
+    t2v0 test 300/364 (169s)
+t2v0: tau -2.0 beta 64.0  F1 0.7536 (beta=0: 0.7177, gain +0.0359)  IoU 0.6047  [268s]
+
+    t2v1 cal 100/150 (63s)
+    t2v1 test 100/364 (70s)
+    t2v1 test 200/364 (124s)
+    t2v1 test 300/364 (198s)
+t2v1: tau 0.5 beta 32.0  F1 0.7967 (beta=0: 0.7714, gain +0.0254)  IoU 0.6622  [263s]
+
+    t2v3 cal 100/150 (64s)
+    t2v3 test 100/364 (83s)
+    t2v3 test 200/364 (126s)
+    t2v3 test 300/364 (195s)
+t2v3: tau -1.0 beta 64.0  F1 0.7651 (beta=0: 0.7300, gain +0.0351)  IoU 0.6195  [303s]
+
+    t2v4 cal 100/150 (107s)
+    t2v4 test 100/364 (74s)
+    t2v4 test 200/364 (159s)
+    t2v4 test 300/364 (250s)
+t2v4: tau -2.0 beta 32.0  F1 0.6166 (beta=0: 0.6094, gain +0.0071)  IoU 0.4457  [359s]
+
+    t3v0 cal 100/150 (41s)
+    t3v0 test 100/365 (100s)
+    t3v0 test 200/365 (107s)
+    t3v0 test 300/365 (195s)
+t3v0: tau -0.5 beta 64.0  F1 0.8040 (beta=0: 0.7571, gain +0.0469)  IoU 0.6722  [281s]
+
+    t3v1 cal 100/150 (90s)
+    t3v1 test 100/365 (147s)
+    t3v1 test 200/365 (203s)
+    t3v1 test 300/365 (289s)
+t3v1: tau 0.0 beta 32.0  F1 0.6683 (beta=0: 0.6285, gain +0.0398)  IoU 0.5019  [399s]
+
+    t3v2 cal 100/150 (57s)
+    t3v2 test 100/365 (97s)
+    t3v2 test 200/365 (166s)
+    t3v2 test 300/365 (183s)
+t3v2: tau -1.0 beta 64.0  F1 0.7250 (beta=0: 0.7073, gain +0.0177)  IoU 0.5687  [297s]
+
+    t3v4 cal 100/150 (89s)
+    t3v4 test 100/365 (105s)
+    t3v4 test 200/365 (110s)
+    t3v4 test 300/365 (206s)
+t3v4: tau -0.5 beta 32.0  F1 0.7665 (beta=0: 0.7301, gain +0.0364)  IoU 0.6215  [297s]
+
+    t4v0 cal 100/150 (98s)
+    t4v0 test 100/365 (89s)
+    t4v0 test 200/365 (137s)
+    t4v0 test 300/365 (158s)
+t4v0: tau -1.0 beta 64.0  F1 0.7862 (beta=0: 0.7380, gain +0.0482)  IoU 0.6477  [271s]
+
+    t4v1 cal 100/150 (77s)
+    t4v1 test 100/365 (117s)
+    t4v1 test 200/365 (166s)
+    t4v1 test 300/365 (185s)
+t4v1: tau -1.0 beta 32.0  F1 0.6922 (beta=0: 0.6358, gain +0.0565)  IoU 0.5293  [295s]
+
+    t4v2 cal 100/150 (103s)
+    t4v2 test 100/365 (99s)
+    t4v2 test 200/365 (113s)
+    t4v2 test 300/365 (137s)
+t4v2: tau 0.5 beta 32.0  F1 0.7833 (beta=0: 0.7550, gain +0.0283)  IoU 0.6438  [256s]
+
+    t4v3 cal 100/150 (100s)
+    t4v3 test 100/365 (105s)
+    t4v3 test 200/365 (148s)
+    t4v3 test 300/365 (148s)
+t4v3: tau -1.0 beta 64.0  F1 0.6676 (beta=0: 0.6703, gain -0.0026)  IoU 0.5011  [277s]
+
+summarise: python3 src/methods/merge_refine.py
+ test  val    tau   beta       F1   F1(b=0)     gain
+    0    1  -1.00  32.00   0.7507    0.6907  +0.0600
+    0    2  -0.50  64.00   0.7472    0.7216  +0.0255
+    0    3  -2.00  32.00   0.7436    0.7009  +0.0427
+    0    4   0.50  32.00   0.7409    0.7191  +0.0218
+    1    0  -1.00  32.00   0.7844    0.7350  +0.0494
+    1    2  -0.50  32.00   0.7477    0.6935  +0.0542
+    1    3  -1.00  64.00   0.8089    0.7727  +0.0362
+    1    4  -1.00  32.00   0.7835    0.7486  +0.0350
+    2    0  -2.00  64.00   0.7536    0.7177  +0.0359
+    2    1   0.50  32.00   0.7967    0.7714  +0.0254
+    2    3  -1.00  64.00   0.7651    0.7300  +0.0351
+    2    4  -2.00  32.00   0.6166    0.6094  +0.0071
+    3    0  -0.50  64.00   0.8040    0.7571  +0.0469
+    3    1   0.00  32.00   0.6683    0.6285  +0.0398
+    3    2  -1.00  64.00   0.7250    0.7073  +0.0177
+    3    4  -0.50  32.00   0.7665    0.7301  +0.0364
+    4    0  -1.00  64.00   0.7862    0.7380  +0.0482
+    4    1  -1.00  32.00   0.6922    0.6358  +0.0565
+    4    2   0.50  32.00   0.7833    0.7550  +0.0283
+    4    3  -1.00  64.00   0.6676    0.6703  -0.0026
+
+pairs: 20
+MRF over U-Net logits   F1 0.7466 +/- 0.0180
+beta = 0 (raw U-Net)    F1 0.7116 +/- 0.0132
+prior contributes       +0.0350
+
+beta = 0 selected in 0/20 pairs
+beta > 0 median        32.0
+
+for the same comparison over ELA, see results/tables/main.csv (build_tables.py)
+wrote results/rung5_mrf_refine.csv
+loaded results/models/refine_t0v1.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (3s)
+  500/2000 (6s)
+  750/2000 (8s)
+  1000/2000 (11s)
+  1250/2000 (13s)
+  1500/2000 (16s)
+  1750/2000 (18s)
+  2000/2000 (20s)
+
+cached 2000 authentic maps -> results/logits/auth_t0v1.npz (377 MB, 40s)
+t0v1: 364 tampered (test fold), 2000 authentic
+tau=-1.0, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/364 (2s)
+  tampered 200/364 (6s)
+  tampered 300/364 (6s)
+  authentic 100/2000 (4s)
+  authentic 200/2000 (4s)
+  authentic 300/2000 (4s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (6s)
+  authentic 700/2000 (7s)
+  authentic 800/2000 (7s)
+  authentic 900/2000 (10s)
+  authentic 1000/2000 (10s)
+  authentic 1100/2000 (10s)
+  authentic 1200/2000 (12s)
+  authentic 1300/2000 (15s)
+  authentic 1400/2000 (15s)
+  authentic 1500/2000 (15s)
+  authentic 1600/2000 (16s)
+  authentic 1700/2000 (16s)
+  authentic 1800/2000 (18s)
+  authentic 1900/2000 (18s)
+  authentic 2000/2000 (18s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6675   [0.6420, 0.6923]
+mrf_area         5  0.7385   [0.7150, 0.7630]
+prob_mean       4*  0.6867   [0.6612, 0.7112]
+prob_max        4*  0.9422   [0.9296, 0.9539]
+prob_p99        4*  0.8700   [0.8466, 0.8930]
+
+prior contributes +0.0710 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t0v1.csv
+t0v1: tau=-1.0, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6978      0.6494   [0.6206, 0.6789]  (pre-registered)
+mrf_area         0.7778      0.7239   [0.6967, 0.7504]  (pre-registered)
+prob_mean        0.7174      0.6692   [0.6407, 0.6989]
+prob_max         0.9549      0.9403   [0.9264, 0.9533]  <- selected
+prob_p99         0.8979      0.8641   [0.8400, 0.8876]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t0v1.csv
+loaded results/models/refine_t0v2.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (6s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (11s)
+  1750/2000 (13s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t0v2.npz (384 MB, 34s)
+t0v2: 364 tampered (test fold), 2000 authentic
+tau=-0.5, beta=64.0 (selected on this pair's validation split)
+
+  tampered 100/364 (2s)
+  tampered 200/364 (4s)
+  tampered 300/364 (4s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (3s)
+  authentic 400/2000 (5s)
+  authentic 500/2000 (5s)
+  authentic 600/2000 (5s)
+  authentic 700/2000 (7s)
+  authentic 800/2000 (7s)
+  authentic 900/2000 (11s)
+  authentic 1000/2000 (11s)
+  authentic 1100/2000 (11s)
+  authentic 1200/2000 (14s)
+  authentic 1300/2000 (14s)
+  authentic 1400/2000 (14s)
+  authentic 1500/2000 (14s)
+  authentic 1600/2000 (16s)
+  authentic 1700/2000 (16s)
+  authentic 1800/2000 (18s)
+  authentic 1900/2000 (18s)
+  authentic 2000/2000 (18s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.7095   [0.6861, 0.7327]
+mrf_area         5  0.7275   [0.7018, 0.7529]
+prob_mean       4*  0.7024   [0.6784, 0.7270]
+prob_max        4*  0.9611   [0.9495, 0.9717]
+prob_p99        4*  0.8858   [0.8634, 0.9075]
+
+prior contributes +0.0180 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t0v2.csv
+t0v2: tau=-0.5, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.7085      0.6963   [0.6690, 0.7241]  (pre-registered)
+mrf_area         0.7174      0.7209   [0.6943, 0.7490]  (pre-registered)
+prob_mean        0.7009      0.6888   [0.6615, 0.7172]
+prob_max         0.9567      0.9597   [0.9471, 0.9711]  <- selected
+prob_p99         0.8651      0.8824   [0.8596, 0.9050]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t0v2.csv
+loaded results/models/refine_t0v3.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (11s)
+  1750/2000 (12s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t0v3.npz (389 MB, 33s)
+t0v3: 364 tampered (test fold), 2000 authentic
+tau=-2.0, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/364 (2s)
+  tampered 200/364 (3s)
+  tampered 300/364 (4s)
+  authentic 100/2000 (2s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (4s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (7s)
+  authentic 700/2000 (8s)
+  authentic 800/2000 (9s)
+  authentic 900/2000 (13s)
+  authentic 1000/2000 (13s)
+  authentic 1100/2000 (13s)
+  authentic 1200/2000 (15s)
+  authentic 1300/2000 (18s)
+  authentic 1400/2000 (18s)
+  authentic 1500/2000 (19s)
+  authentic 1600/2000 (19s)
+  authentic 1700/2000 (20s)
+  authentic 1800/2000 (23s)
+  authentic 1900/2000 (23s)
+  authentic 2000/2000 (23s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.4982   [0.4696, 0.5255]
+mrf_area         5  0.5464   [0.5194, 0.5726]
+prob_mean       4*  0.5467   [0.5188, 0.5738]
+prob_max        4*  0.9460   [0.9303, 0.9606]
+prob_p99        4*  0.8390   [0.8094, 0.8662]
+
+prior contributes +0.0482 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t0v3.csv
+t0v3: tau=-2.0, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.5367      0.4768   [0.4462, 0.5083]  (pre-registered)
+mrf_area         0.5746      0.5244   [0.4927, 0.5548]  (pre-registered)
+prob_mean        0.5775      0.5255   [0.4950, 0.5576]
+prob_max         0.9318      0.9424   [0.9248, 0.9573]  <- selected
+prob_p99         0.8429      0.8301   [0.7998, 0.8587]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t0v3.csv
+loaded results/models/refine_t0v4.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (8s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t0v4.npz (390 MB, 33s)
+t0v4: 364 tampered (test fold), 2000 authentic
+tau=0.5, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/364 (1s)
+  tampered 200/364 (3s)
+  tampered 300/364 (3s)
+  authentic 100/2000 (2s)
+  authentic 200/2000 (2s)
+  authentic 300/2000 (3s)
+  authentic 400/2000 (5s)
+  authentic 500/2000 (5s)
+  authentic 600/2000 (5s)
+  authentic 700/2000 (6s)
+  authentic 800/2000 (6s)
+  authentic 900/2000 (8s)
+  authentic 1000/2000 (8s)
+  authentic 1100/2000 (8s)
+  authentic 1200/2000 (10s)
+  authentic 1300/2000 (12s)
+  authentic 1400/2000 (12s)
+  authentic 1500/2000 (13s)
+  authentic 1600/2000 (13s)
+  authentic 1700/2000 (14s)
+  authentic 1800/2000 (15s)
+  authentic 1900/2000 (15s)
+  authentic 2000/2000 (15s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6417   [0.6158, 0.6685]
+mrf_area         5  0.6989   [0.6740, 0.7245]
+prob_mean       4*  0.6050   [0.5775, 0.6322]
+prob_max        4*  0.9480   [0.9331, 0.9619]
+prob_p99        4*  0.8480   [0.8203, 0.8739]
+
+prior contributes +0.0572 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t0v4.csv
+t0v4: tau=0.5, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6774      0.6248   [0.5953, 0.6554]  (pre-registered)
+mrf_area         0.7217      0.6842   [0.6553, 0.7119]  (pre-registered)
+prob_mean        0.6425      0.5885   [0.5579, 0.6203]
+prob_max         0.9444      0.9450   [0.9288, 0.9596]  <- selected
+prob_p99         0.8537      0.8422   [0.8144, 0.8680]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t0v4.csv
+loaded results/models/refine_t1v0.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (11s)
+  1750/2000 (13s)
+  2000/2000 (15s)
+
+cached 2000 authentic maps -> results/logits/auth_t1v0.npz (392 MB, 34s)
+t1v0: 364 tampered (test fold), 2000 authentic
+tau=-1.0, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/364 (2s)
+  tampered 200/364 (3s)
+  tampered 300/364 (4s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (4s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (8s)
+  authentic 700/2000 (9s)
+  authentic 800/2000 (9s)
+  authentic 900/2000 (13s)
+  authentic 1000/2000 (13s)
+  authentic 1100/2000 (13s)
+  authentic 1200/2000 (14s)
+  authentic 1300/2000 (16s)
+  authentic 1400/2000 (16s)
+  authentic 1500/2000 (19s)
+  authentic 1600/2000 (19s)
+  authentic 1700/2000 (20s)
+  authentic 1800/2000 (22s)
+  authentic 1900/2000 (22s)
+  authentic 2000/2000 (22s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.5392   [0.5115, 0.5672]
+mrf_area         5  0.6246   [0.5994, 0.6485]
+prob_mean       4*  0.5521   [0.5234, 0.5799]
+prob_max        4*  0.9204   [0.9016, 0.9370]
+prob_p99        4*  0.8290   [0.8002, 0.8561]
+
+prior contributes +0.0854 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t1v0.csv
+t1v0: tau=-1.0, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.5366      0.5254   [0.4930, 0.5579]  (pre-registered)
+mrf_area         0.6131      0.6080   [0.5771, 0.6384]  (pre-registered)
+prob_mean        0.5486      0.5373   [0.5049, 0.5705]
+prob_max         0.9164      0.9182   [0.8975, 0.9361]  <- selected
+prob_p99         0.8058      0.8230   [0.7936, 0.8518]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t1v0.csv
+loaded results/models/refine_t1v2.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (6s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (11s)
+  1750/2000 (12s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t1v2.npz (378 MB, 33s)
+t1v2: 364 tampered (test fold), 2000 authentic
+tau=-0.5, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/364 (2s)
+  tampered 200/364 (3s)
+  tampered 300/364 (4s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (3s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (8s)
+  authentic 700/2000 (8s)
+  authentic 800/2000 (8s)
+  authentic 900/2000 (12s)
+  authentic 1000/2000 (12s)
+  authentic 1100/2000 (12s)
+  authentic 1200/2000 (14s)
+  authentic 1300/2000 (17s)
+  authentic 1400/2000 (17s)
+  authentic 1500/2000 (19s)
+  authentic 1600/2000 (19s)
+  authentic 1700/2000 (19s)
+  authentic 1800/2000 (21s)
+  authentic 1900/2000 (21s)
+  authentic 2000/2000 (21s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6601   [0.6341, 0.6865]
+mrf_area         5  0.7439   [0.7204, 0.7675]
+prob_mean       4*  0.6515   [0.6244, 0.6786]
+prob_max        4*  0.9297   [0.9123, 0.9440]
+prob_p99        4*  0.8666   [0.8411, 0.8900]
+
+prior contributes +0.0839 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t1v2.csv
+t1v2: tau=-0.5, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6657      0.6487   [0.6194, 0.6788]  (pre-registered)
+mrf_area         0.7332      0.7373   [0.7119, 0.7636]  (pre-registered)
+prob_mean        0.6544      0.6394   [0.6092, 0.6711]
+prob_max         0.9338      0.9294   [0.9110, 0.9461]  <- selected
+prob_p99         0.8616      0.8630   [0.8372, 0.8871]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t1v2.csv
+loaded results/models/refine_t1v3.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t1v3.npz (382 MB, 34s)
+t1v3: 364 tampered (test fold), 2000 authentic
+tau=-1.0, beta=64.0 (selected on this pair's validation split)
+
+  tampered 100/364 (2s)
+  tampered 200/364 (3s)
+  tampered 300/364 (4s)
+  authentic 100/2000 (6s)
+  authentic 200/2000 (6s)
+  authentic 300/2000 (6s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (6s)
+  authentic 700/2000 (7s)
+  authentic 800/2000 (7s)
+  authentic 900/2000 (9s)
+  authentic 1000/2000 (9s)
+  authentic 1100/2000 (10s)
+  authentic 1200/2000 (12s)
+  authentic 1300/2000 (13s)
+  authentic 1400/2000 (13s)
+  authentic 1500/2000 (14s)
+  authentic 1600/2000 (15s)
+  authentic 1700/2000 (16s)
+  authentic 1800/2000 (18s)
+  authentic 1900/2000 (18s)
+  authentic 2000/2000 (18s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6664   [0.6404, 0.6922]
+mrf_area         5  0.7195   [0.6928, 0.7463]
+prob_mean       4*  0.6808   [0.6549, 0.7069]
+prob_max        4*  0.9641   [0.9513, 0.9750]
+prob_p99        4*  0.8700   [0.8441, 0.8950]
+
+prior contributes +0.0531 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t1v3.csv
+t1v3: tau=-1.0, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6835      0.6511   [0.6211, 0.6801]  (pre-registered)
+mrf_area         0.7506      0.7082   [0.6807, 0.7366]  (pre-registered)
+prob_mean        0.6971      0.6664   [0.6368, 0.6958]
+prob_max         0.9540      0.9605   [0.9471, 0.9719]  <- selected
+prob_p99         0.8887      0.8644   [0.8369, 0.8901]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t1v3.csv
+loaded results/models/refine_t1v4.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (8s)
+  1500/2000 (10s)
+  1750/2000 (11s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t1v4.npz (380 MB, 33s)
+t1v4: 364 tampered (test fold), 2000 authentic
+tau=-1.0, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/364 (2s)
+  tampered 200/364 (2s)
+  tampered 300/364 (3s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (3s)
+  authentic 400/2000 (3s)
+  authentic 500/2000 (3s)
+  authentic 600/2000 (4s)
+  authentic 700/2000 (5s)
+  authentic 800/2000 (5s)
+  authentic 900/2000 (7s)
+  authentic 1000/2000 (7s)
+  authentic 1100/2000 (7s)
+  authentic 1200/2000 (9s)
+  authentic 1300/2000 (10s)
+  authentic 1400/2000 (10s)
+  authentic 1500/2000 (11s)
+  authentic 1600/2000 (11s)
+  authentic 1700/2000 (12s)
+  authentic 1800/2000 (13s)
+  authentic 1900/2000 (13s)
+  authentic 2000/2000 (13s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.7349   [0.7111, 0.7585]
+mrf_area         5  0.7975   [0.7761, 0.8191]
+prob_mean       4*  0.7458   [0.7215, 0.7701]
+prob_max        4*  0.9616   [0.9493, 0.9724]
+prob_p99        4*  0.8944   [0.8720, 0.9159]
+
+prior contributes +0.0627 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t1v4.csv
+t1v4: tau=-1.0, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.7501      0.7205   [0.6925, 0.7484]  (pre-registered)
+mrf_area         0.8225      0.7854   [0.7601, 0.8107]  (pre-registered)
+prob_mean        0.7602      0.7322   [0.7048, 0.7597]
+prob_max         0.9486      0.9589   [0.9464, 0.9703]  <- selected
+prob_p99         0.8896      0.8899   [0.8657, 0.9127]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t1v4.csv
+loaded results/models/refine_t2v0.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t2v0.npz (387 MB, 33s)
+t2v0: 364 tampered (test fold), 2000 authentic
+tau=-2.0, beta=64.0 (selected on this pair's validation split)
+
+  tampered 100/364 (3s)
+  tampered 200/364 (4s)
+  tampered 300/364 (5s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (4s)
+  authentic 300/2000 (6s)
+  authentic 400/2000 (7s)
+  authentic 500/2000 (7s)
+  authentic 600/2000 (8s)
+  authentic 700/2000 (11s)
+  authentic 800/2000 (11s)
+  authentic 900/2000 (16s)
+  authentic 1000/2000 (16s)
+  authentic 1100/2000 (18s)
+  authentic 1200/2000 (22s)
+  authentic 1300/2000 (23s)
+  authentic 1400/2000 (23s)
+  authentic 1500/2000 (25s)
+  authentic 1600/2000 (27s)
+  authentic 1700/2000 (29s)
+  authentic 1800/2000 (32s)
+  authentic 1900/2000 (32s)
+  authentic 2000/2000 (32s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.4993   [0.4736, 0.5269]
+mrf_area         5  0.5753   [0.5498, 0.6014]
+prob_mean       4*  0.5454   [0.5189, 0.5731]
+prob_max        4*  0.9022   [0.8812, 0.9219]
+prob_p99        4*  0.8133   [0.7856, 0.8413]
+
+prior contributes +0.0760 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t2v0.csv
+t2v0: tau=-2.0, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.5023      0.4847   [0.4525, 0.5176]  (pre-registered)
+mrf_area         0.5746      0.5583   [0.5270, 0.5900]  (pre-registered)
+prob_mean        0.5481      0.5300   [0.4970, 0.5633]
+prob_max         0.9220      0.8981   [0.8760, 0.9182]  <- selected
+prob_p99         0.7994      0.8061   [0.7755, 0.8355]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t2v0.csv
+loaded results/models/refine_t2v1.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (11s)
+  1750/2000 (13s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t2v1.npz (394 MB, 34s)
+t2v1: 364 tampered (test fold), 2000 authentic
+tau=0.5, beta=32.0 (selected on this pair's validation split)
+
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  tampered 100/364 (1s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  tampered 200/364 (3s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  tampered 300/364 (3s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 100/2000 (4s)
+  authentic 200/2000 (4s)
+  authentic 300/2000 (4s)
+  authentic 400/2000 (4s)
+  authentic 500/2000 (4s)
+  authentic 600/2000 (4s)
+  authentic 700/2000 (5s)
+  authentic 800/2000 (5s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 900/2000 (8s)
+  authentic 1000/2000 (8s)
+  authentic 1100/2000 (8s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 1200/2000 (10s)
+  authentic 1300/2000 (11s)
+  authentic 1400/2000 (11s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 1500/2000 (12s)
+  authentic 1600/2000 (12s)
+  authentic 1700/2000 (13s)
+  authentic 1800/2000 (15s)
+  authentic 1900/2000 (15s)
+  authentic 2000/2000 (15s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6683   [0.6434, 0.6938]
+mrf_area         5  0.7277   [0.7032, 0.7524]
+prob_mean       4*  0.6268   [0.6000, 0.6545]
+prob_max        4*  0.9322   [0.9148, 0.9481]
+prob_p99        4*  0.8570   [0.8309, 0.8823]
+
+prior contributes +0.0594 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t2v1.csv
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+t2v1: tau=0.5, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6886      0.6593   [0.6294, 0.6899]  (pre-registered)
+mrf_area         0.7478      0.7207   [0.6930, 0.7494]  (pre-registered)
+prob_mean        0.6511      0.6164   [0.5849, 0.6475]
+prob_max         0.9568      0.9307   [0.9129, 0.9476]  <- selected
+prob_p99         0.8722      0.8543   [0.8264, 0.8810]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t2v1.csv
+loaded results/models/refine_t2v3.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t2v3.npz (378 MB, 33s)
+t2v3: 364 tampered (test fold), 2000 authentic
+tau=-1.0, beta=64.0 (selected on this pair's validation split)
+
+  tampered 100/364 (4s)
+  tampered 200/364 (7s)
+  tampered 300/364 (7s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (3s)
+  authentic 400/2000 (7s)
+  authentic 500/2000 (7s)
+  authentic 600/2000 (7s)
+  authentic 700/2000 (8s)
+  authentic 800/2000 (8s)
+  authentic 900/2000 (12s)
+  authentic 1000/2000 (12s)
+  authentic 1100/2000 (12s)
+  authentic 1200/2000 (16s)
+  authentic 1300/2000 (16s)
+  authentic 1400/2000 (16s)
+  authentic 1500/2000 (20s)
+  authentic 1600/2000 (20s)
+  authentic 1700/2000 (20s)
+  authentic 1800/2000 (24s)
+  authentic 1900/2000 (24s)
+  authentic 2000/2000 (24s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.7469   [0.7252, 0.7698]
+mrf_area         5  0.7456   [0.7193, 0.7709]
+prob_mean       4*  0.7495   [0.7266, 0.7736]
+prob_max        4*  0.9612   [0.9494, 0.9713]
+prob_p99        4*  0.9047   [0.8832, 0.9267]
+
+prior contributes -0.0013 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t2v3.csv
+t2v3: tau=-1.0, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.7626      0.7289   [0.7004, 0.7569]  (pre-registered)
+mrf_area         0.7655      0.7363   [0.7077, 0.7634]  (pre-registered)
+prob_mean        0.7700      0.7320   [0.7028, 0.7601]
+prob_max         0.9516      0.9591   [0.9471, 0.9700]  <- selected
+prob_p99         0.9045      0.8988   [0.8761, 0.9208]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t2v3.csv
+loaded results/models/refine_t2v4.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (8s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t2v4.npz (378 MB, 34s)
+t2v4: 364 tampered (test fold), 2000 authentic
+tau=-2.0, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/364 (3s)
+  tampered 200/364 (4s)
+  tampered 300/364 (4s)
+  authentic 100/2000 (2s)
+  authentic 200/2000 (4s)
+  authentic 300/2000 (4s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (8s)
+  authentic 700/2000 (9s)
+  authentic 800/2000 (10s)
+  authentic 900/2000 (14s)
+  authentic 1000/2000 (14s)
+  authentic 1100/2000 (16s)
+  authentic 1200/2000 (18s)
+  authentic 1300/2000 (20s)
+  authentic 1400/2000 (20s)
+  authentic 1500/2000 (21s)
+  authentic 1600/2000 (23s)
+  authentic 1700/2000 (24s)
+  authentic 1800/2000 (27s)
+  authentic 1900/2000 (27s)
+  authentic 2000/2000 (27s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.5755   [0.5485, 0.6045]
+mrf_area         5  0.6172   [0.5920, 0.6445]
+prob_mean       4*  0.6231   [0.5961, 0.6519]
+prob_max        4*  0.9022   [0.8824, 0.9215]
+prob_p99        4*  0.8464   [0.8211, 0.8736]
+
+prior contributes +0.0417 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t2v4.csv
+t2v4: tau=-2.0, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 364 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.5948      0.5609   [0.5286, 0.5932]  (pre-registered)
+mrf_area         0.6307      0.6013   [0.5710, 0.6322]  (pre-registered)
+prob_mean        0.6420      0.6092   [0.5765, 0.6415]
+prob_max         0.8888      0.8991   [0.8774, 0.9179]  <- selected
+prob_p99         0.8377      0.8403   [0.8120, 0.8664]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t2v4.csv
+loaded results/models/refine_t3v0.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (5s)
+  1000/2000 (8s)
+  1250/2000 (10s)
+  1500/2000 (11s)
+  1750/2000 (13s)
+  2000/2000 (15s)
+
+cached 2000 authentic maps -> results/logits/auth_t3v0.npz (399 MB, 34s)
+t3v0: 365 tampered (test fold), 2000 authentic
+tau=-0.5, beta=64.0 (selected on this pair's validation split)
+
+  tampered 100/365 (3s)
+  tampered 200/365 (4s)
+  tampered 300/365 (5s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (3s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (6s)
+  authentic 700/2000 (7s)
+  authentic 800/2000 (7s)
+  authentic 900/2000 (11s)
+  authentic 1000/2000 (11s)
+  authentic 1100/2000 (11s)
+  authentic 1200/2000 (12s)
+  authentic 1300/2000 (15s)
+  authentic 1400/2000 (15s)
+  authentic 1500/2000 (17s)
+  authentic 1600/2000 (17s)
+  authentic 1700/2000 (17s)
+  authentic 1800/2000 (20s)
+  authentic 1900/2000 (20s)
+  authentic 2000/2000 (20s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6966   [0.6710, 0.7217]
+mrf_area         5  0.7520   [0.7264, 0.7776]
+prob_mean       4*  0.6904   [0.6641, 0.7159]
+prob_max        4*  0.9589   [0.9448, 0.9706]
+prob_p99        4*  0.8755   [0.8496, 0.8993]
+
+prior contributes +0.0554 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t3v0.csv
+t3v0: tau=-0.5, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.7092      0.6856   [0.6561, 0.7161]  (pre-registered)
+mrf_area         0.7463      0.7436   [0.7153, 0.7723]  (pre-registered)
+prob_mean        0.7009      0.6796   [0.6488, 0.7100]
+prob_max         0.9720      0.9559   [0.9415, 0.9691]  <- selected
+prob_p99         0.8895      0.8698   [0.8420, 0.8949]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t3v0.csv
+loaded results/models/refine_t3v1.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t3v1.npz (386 MB, 33s)
+t3v1: 365 tampered (test fold), 2000 authentic
+tau=0.0, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/365 (3s)
+  tampered 200/365 (4s)
+  tampered 300/365 (6s)
+  authentic 100/2000 (2s)
+  authentic 200/2000 (4s)
+  authentic 300/2000 (5s)
+  authentic 400/2000 (7s)
+  authentic 500/2000 (7s)
+  authentic 600/2000 (9s)
+  authentic 700/2000 (9s)
+  authentic 800/2000 (10s)
+  authentic 900/2000 (14s)
+  authentic 1000/2000 (15s)
+  authentic 1100/2000 (16s)
+  authentic 1200/2000 (17s)
+  authentic 1300/2000 (19s)
+  authentic 1400/2000 (20s)
+  authentic 1500/2000 (22s)
+  authentic 1600/2000 (23s)
+  authentic 1700/2000 (24s)
+  authentic 1800/2000 (26s)
+  authentic 1900/2000 (26s)
+  authentic 2000/2000 (27s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.4869   [0.4585, 0.5148]
+mrf_area         5  0.5479   [0.5213, 0.5739]
+prob_mean       4*  0.4761   [0.4474, 0.5039]
+prob_max        4*  0.8298   [0.8008, 0.8558]
+prob_p99        4*  0.7320   [0.6969, 0.7652]
+
+prior contributes +0.0610 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t3v1.csv
+t3v1: tau=0.0, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.4836      0.4727   [0.4398, 0.5047]  (pre-registered)
+mrf_area         0.5502      0.5272   [0.4970, 0.5584]  (pre-registered)
+prob_mean        0.4700      0.4625   [0.4294, 0.4953]
+prob_max         0.8531      0.8233   [0.7946, 0.8519]  <- selected
+prob_p99         0.7577      0.7242   [0.6915, 0.7594]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t3v1.csv
+loaded results/models/refine_t3v2.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (8s)
+  1250/2000 (9s)
+  1500/2000 (11s)
+  1750/2000 (13s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t3v2.npz (398 MB, 34s)
+t3v2: 365 tampered (test fold), 2000 authentic
+tau=-1.0, beta=64.0 (selected on this pair's validation split)
+
+  tampered 100/365 (3s)
+  tampered 200/365 (5s)
+  tampered 300/365 (6s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (4s)
+  authentic 300/2000 (5s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (7s)
+  authentic 700/2000 (10s)
+  authentic 800/2000 (10s)
+  authentic 900/2000 (14s)
+  authentic 1000/2000 (14s)
+  authentic 1100/2000 (15s)
+  authentic 1200/2000 (18s)
+  authentic 1300/2000 (19s)
+  authentic 1400/2000 (19s)
+  authentic 1500/2000 (20s)
+  authentic 1600/2000 (22s)
+  authentic 1700/2000 (23s)
+  authentic 1800/2000 (26s)
+  authentic 1900/2000 (26s)
+  authentic 2000/2000 (26s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.5155   [0.4887, 0.5419]
+mrf_area         5  0.5908   [0.5638, 0.6165]
+prob_mean       4*  0.5286   [0.5016, 0.5557]
+prob_max        4*  0.8931   [0.8698, 0.9139]
+prob_p99        4*  0.7778   [0.7461, 0.8080]
+
+prior contributes +0.0754 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t3v2.csv
+t3v2: tau=-1.0, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.5180      0.5033   [0.4713, 0.5360]  (pre-registered)
+mrf_area         0.6059      0.5796   [0.5485, 0.6115]  (pre-registered)
+prob_mean        0.5311      0.5166   [0.4845, 0.5499]
+prob_max         0.8976      0.8889   [0.8649, 0.9115]  <- selected
+prob_p99         0.7867      0.7708   [0.7380, 0.8018]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t3v2.csv
+loaded results/models/refine_t3v4.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t3v4.npz (387 MB, 33s)
+t3v4: 365 tampered (test fold), 2000 authentic
+tau=-0.5, beta=32.0 (selected on this pair's validation split)
+
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  tampered 100/365 (2s)
+  tampered 200/365 (2s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  tampered 300/365 (4s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 100/2000 (2s)
+  authentic 200/2000 (2s)
+  authentic 300/2000 (2s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 400/2000 (3s)
+  authentic 500/2000 (3s)
+  authentic 600/2000 (3s)
+  authentic 700/2000 (5s)
+  authentic 800/2000 (5s)
+  authentic 900/2000 (7s)
+  authentic 1000/2000 (7s)
+  authentic 1100/2000 (7s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 1200/2000 (8s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 1300/2000 (9s)
+  authentic 1400/2000 (9s)
+  authentic 1500/2000 (10s)
+  authentic 1600/2000 (11s)
+  authentic 1700/2000 (11s)
+  authentic 1800/2000 (12s)
+  authentic 1900/2000 (12s)
+  authentic 2000/2000 (12s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.7857   [0.7626, 0.8077]
+mrf_area         5  0.8323   [0.8096, 0.8537]
+prob_mean       4*  0.7828   [0.7592, 0.8049]
+prob_max        4*  0.9465   [0.9309, 0.9608]
+prob_p99        4*  0.8934   [0.8693, 0.9156]
+
+prior contributes +0.0465 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t3v4.csv
+t3v4: tau=-0.5, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.8049      0.7765   [0.7488, 0.8011]  (pre-registered)
+mrf_area         0.8538      0.8262   [0.8015, 0.8489]  (pre-registered)
+prob_mean        0.8002      0.7736   [0.7458, 0.7982]
+prob_max         0.9647      0.9462   [0.9294, 0.9607]  <- selected
+prob_p99         0.9006      0.8905   [0.8656, 0.9132]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t3v4.csv
+loaded results/models/refine_t4v0.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t4v0.npz (389 MB, 33s)
+t4v0: 365 tampered (test fold), 2000 authentic
+tau=-1.0, beta=64.0 (selected on this pair's validation split)
+
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  tampered 100/365 (4s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  tampered 200/365 (5s)
+  tampered 300/365 (5s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (3s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 400/2000 (5s)
+  authentic 500/2000 (5s)
+  authentic 600/2000 (5s)
+  authentic 700/2000 (9s)
+  authentic 800/2000 (9s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 900/2000 (14s)
+  authentic 1000/2000 (14s)
+  authentic 1100/2000 (14s)
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+  authentic 1200/2000 (15s)
+  authentic 1300/2000 (18s)
+  authentic 1400/2000 (18s)
+  authentic 1500/2000 (18s)
+  authentic 1600/2000 (21s)
+  authentic 1700/2000 (21s)
+  authentic 1800/2000 (22s)
+  authentic 1900/2000 (22s)
+  authentic 2000/2000 (22s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.7107   [0.6833, 0.7354]
+mrf_area         5  0.7648   [0.7392, 0.7892]
+prob_mean       4*  0.7178   [0.6904, 0.7434]
+prob_max        4*  0.9653   [0.9537, 0.9751]
+prob_p99        4*  0.9028   [0.8802, 0.9226]
+
+prior contributes +0.0541 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t4v0.csv
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+/home-mscluster/nmahomed/cv-project/src/methods/image_auc_unet.py:69: RuntimeWarning: overflow encountered in exp
+  p = 1.0 / (1.0 + np.exp(-lg))
+t4v0: tau=-1.0, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.7090      0.6940   [0.6656, 0.7236]  (pre-registered)
+mrf_area         0.7656      0.7556   [0.7276, 0.7832]  (pre-registered)
+prob_mean        0.7127      0.7013   [0.6726, 0.7317]
+prob_max         0.9689      0.9636   [0.9517, 0.9743]  <- selected
+prob_p99         0.8906      0.8977   [0.8746, 0.9190]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t4v0.csv
+loaded results/models/refine_t4v1.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (8s)
+  1500/2000 (10s)
+  1750/2000 (12s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t4v1.npz (380 MB, 33s)
+t4v1: 365 tampered (test fold), 2000 authentic
+tau=-1.0, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/365 (3s)
+  tampered 200/365 (4s)
+  tampered 300/365 (5s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (4s)
+  authentic 300/2000 (4s)
+  authentic 400/2000 (6s)
+  authentic 500/2000 (6s)
+  authentic 600/2000 (8s)
+  authentic 700/2000 (9s)
+  authentic 800/2000 (9s)
+  authentic 900/2000 (13s)
+  authentic 1000/2000 (13s)
+  authentic 1100/2000 (14s)
+  authentic 1200/2000 (17s)
+  authentic 1300/2000 (17s)
+  authentic 1400/2000 (17s)
+  authentic 1500/2000 (19s)
+  authentic 1600/2000 (21s)
+  authentic 1700/2000 (21s)
+  authentic 1800/2000 (23s)
+  authentic 1900/2000 (23s)
+  authentic 2000/2000 (24s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6095   [0.5807, 0.6361]
+mrf_area         5  0.6968   [0.6719, 0.7210]
+prob_mean       4*  0.6263   [0.5978, 0.6535]
+prob_max        4*  0.9058   [0.8863, 0.9236]
+prob_p99        4*  0.8560   [0.8304, 0.8805]
+
+prior contributes +0.0874 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t4v1.csv
+t4v1: tau=-1.0, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6224      0.6003   [0.5685, 0.6312]  (pre-registered)
+mrf_area         0.7146      0.6844   [0.6561, 0.7124]  (pre-registered)
+prob_mean        0.6367      0.6176   [0.5858, 0.6487]
+prob_max         0.9161      0.9051   [0.8851, 0.9245]  <- selected
+prob_p99         0.8619      0.8535   [0.8266, 0.8776]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t4v1.csv
+loaded results/models/refine_t4v2.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (4s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (9s)
+  1500/2000 (11s)
+  1750/2000 (12s)
+  2000/2000 (14s)
+
+cached 2000 authentic maps -> results/logits/auth_t4v2.npz (390 MB, 34s)
+t4v2: 365 tampered (test fold), 2000 authentic
+tau=0.5, beta=32.0 (selected on this pair's validation split)
+
+  tampered 100/365 (2s)
+  tampered 200/365 (3s)
+  tampered 300/365 (3s)
+  authentic 100/2000 (3s)
+  authentic 200/2000 (3s)
+  authentic 300/2000 (3s)
+  authentic 400/2000 (3s)
+  authentic 500/2000 (3s)
+  authentic 600/2000 (3s)
+  authentic 700/2000 (5s)
+  authentic 800/2000 (5s)
+  authentic 900/2000 (7s)
+  authentic 1000/2000 (7s)
+  authentic 1100/2000 (7s)
+  authentic 1200/2000 (9s)
+  authentic 1300/2000 (9s)
+  authentic 1400/2000 (9s)
+  authentic 1500/2000 (10s)
+  authentic 1600/2000 (11s)
+  authentic 1700/2000 (11s)
+  authentic 1800/2000 (12s)
+  authentic 1900/2000 (12s)
+  authentic 2000/2000 (13s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6916   [0.6656, 0.7154]
+mrf_area         5  0.7500   [0.7247, 0.7737]
+prob_mean       4*  0.6576   [0.6302, 0.6833]
+prob_max        4*  0.9455   [0.9303, 0.9595]
+prob_p99        4*  0.8595   [0.8340, 0.8828]
+
+prior contributes +0.0584 AUC (rung 5 - rung 4, same tau, beta 0 vs 32.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t4v2.csv
+t4v2: tau=0.5, beta=32.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6894      0.6799   [0.6507, 0.7111]  (pre-registered)
+mrf_area         0.7374      0.7360   [0.7075, 0.7629]  (pre-registered)
+prob_mean        0.6538      0.6456   [0.6143, 0.6781]
+prob_max         0.9443      0.9414   [0.9254, 0.9568]  <- selected
+prob_p99         0.8347      0.8522   [0.8256, 0.8765]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t4v2.csv
+loaded results/models/refine_t4v3.pt on cuda
+2000 authentic images from /datasets/nmahomed/casia2/images/CASIA2.0_revised/Au
+
+  250/2000 (2s)
+  500/2000 (3s)
+  750/2000 (5s)
+  1000/2000 (7s)
+  1250/2000 (8s)
+  1500/2000 (10s)
+  1750/2000 (11s)
+  2000/2000 (13s)
+
+cached 2000 authentic maps -> results/logits/auth_t4v3.npz (382 MB, 33s)
+t4v3: 365 tampered (test fold), 2000 authentic
+tau=-1.0, beta=64.0 (selected on this pair's validation split)
+
+  tampered 100/365 (8s)
+  tampered 200/365 (8s)
+  tampered 300/365 (8s)
+  authentic 100/2000 (7s)
+  authentic 200/2000 (7s)
+  authentic 300/2000 (7s)
+  authentic 400/2000 (7s)
+  authentic 500/2000 (7s)
+  authentic 600/2000 (7s)
+  authentic 700/2000 (11s)
+  authentic 800/2000 (11s)
+  authentic 900/2000 (14s)
+  authentic 1000/2000 (14s)
+  authentic 1100/2000 (15s)
+  authentic 1200/2000 (19s)
+  authentic 1300/2000 (19s)
+  authentic 1400/2000 (20s)
+  authentic 1500/2000 (21s)
+  authentic 1600/2000 (23s)
+  authentic 1700/2000 (24s)
+  authentic 1800/2000 (27s)
+  authentic 1900/2000 (27s)
+  authentic 2000/2000 (28s)
+
+summary       rung     AUC            95% CI
+--------------------------------------------
+unet_area        4  0.6450   [0.6190, 0.6689]
+mrf_area         5  0.6937   [0.6682, 0.7178]
+prob_mean       4*  0.6475   [0.6211, 0.6725]
+prob_max        4*  0.9400   [0.9252, 0.9534]
+prob_p99        4*  0.8602   [0.8353, 0.8828]
+
+prior contributes +0.0487 AUC (rung 5 - rung 4, same tau, beta 0 vs 64.0)
+* alternative summaries of the raw logit map, for transparency.
+wrote results/image_auc_unet_t4v3.csv
+t4v3: tau=-1.0, beta=64.0
+select: 150 val-fold tampered vs 1000 authentic (half A)
+report: 365 test-fold tampered vs 1000 authentic (half B)
+
+summary      select AUC  report AUC              95% CI
+---------------------------------------------------------
+unet_area        0.6610      0.6250   [0.5948, 0.6562]  (pre-registered)
+mrf_area         0.7206      0.6844   [0.6557, 0.7122]  (pre-registered)
+prob_mean        0.6634      0.6280   [0.5975, 0.6597]
+prob_max         0.9289      0.9346   [0.9186, 0.9492]  <- selected
+prob_p99         0.8657      0.8508   [0.8241, 0.8759]
+
+quote 'prob_max' at its REPORT AUC: it was chosen without seeing the test fold.
+wrote results/image_auc_select_t4v3.csv
+t0v1: 364 test images, tau=-1.0, beta=32.0
+t0v2: 364 test images, tau=-0.5, beta=64.0
+t0v3: 364 test images, tau=-2.0, beta=32.0
+t0v4: 364 test images, tau=0.5, beta=32.0
+t1v0: 364 test images, tau=-1.0, beta=32.0
+t1v2: 364 test images, tau=-0.5, beta=32.0
+t1v3: 364 test images, tau=-1.0, beta=64.0
+t1v4: 364 test images, tau=-1.0, beta=32.0
+t2v0: 364 test images, tau=-2.0, beta=64.0
+t2v1: 364 test images, tau=0.5, beta=32.0
+t2v3: 364 test images, tau=-1.0, beta=64.0
+t2v4: 364 test images, tau=-2.0, beta=32.0
+t3v0: 365 test images, tau=-0.5, beta=64.0
+t3v1: 365 test images, tau=0.0, beta=32.0
+t3v2: 365 test images, tau=-1.0, beta=64.0
+t3v4: 365 test images, tau=-0.5, beta=32.0
+t4v0: 365 test images, tau=-1.0, beta=64.0
+t4v1: 365 test images, tau=-1.0, beta=32.0
+t4v2: 365 test images, tau=0.5, beta=32.0
+t4v3: 365 test images, tau=-1.0, beta=64.0
+
+boundary bands: distance to the nearest ground-truth boundary pixel
+band          FP removed  FN filled   TP lost  FP added        net   share
+--------------------------------------------------------------------------
+<= 3 px          894,145    793,755 2,861,210   641,453 -1,814,763  -10.7%
+3-15 px        1,191,066  1,572,575 3,240,866 1,058,945 -1,536,170   -9.0%
+> 15 px       22,723,596  4,374,426 2,295,772 4,457,307 20,344,943  119.7%
+total         24,808,807  6,740,756 8,397,848 6,157,705 16,994,010
+
+far band (> 15 px): 22,723,596 background FPs removed, 4,374,426 interior holes filled
+
+predicted components per image: 37.21 -> 0.96
+spurious (no GT overlap):       27.97 -> 0.14
+
+per-image F1 rung 4 / rung 5: mean 0.685 / 0.588, median 0.818 / 0.806
+images with F1 < 0.1:          7.9% / 27.7%
+images the prior improves:     40.0%, worsens: 58.2%
+
+wrote results/tables/mechanism.csv, mechanism_summary.csv, perimage_f1.csv
+wrote results/fig_qualitative_splice.png
+wrote results/fig_qualitative_splice.pdf
+rung 5 per-image F1 on fold 0: mean 0.6223, median 0.7972, min 0.0000, max 0.9990
+rung 4/5 rerun complete. Next: bash scripts/rerun_cpu.sh, then build_tables.py

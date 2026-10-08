@@ -1,0 +1,5 @@
+model,f1_fixed_pairing,f1_all_pairs,fixed_minus_all,val_range_min,val_range_max
+MRF (rung 2),0.290068,0.284548,0.00552,0.003495,0.02382
+"U-Net, run_unet.py",0.714635,0.697913,0.016723,0.054268,0.125636
+"U-Net, cache_logits.py (rung 4)",0.716448,0.711631,0.004817,0.030926,0.161919
+U-Net + MRF (rung 5),0.76324,0.746613,0.016627,0.009816,0.180154

@@ -1,0 +1,83 @@
+commit: 2f9aa71+uncommitted
+all metric tests pass
+all MRF tests pass
+all 8 collision types caught; clean figure passes
+oracle (blurred GT): 0.9999   expect ~1.0
+random:              0.4993   expect ~0.5
+pixel AUC over 400 images (0.5 = no signal)
+
+variant               mean   median    >0.5
+A_median            0.5592   0.5460   56.0%
+B_highpass          0.5698   0.5646   58.2%
+C_ratio             0.5332   0.5121   52.2%
+D_ratio_colour      0.5338   0.5156   51.7%
+E_ela               0.7652   0.8384   83.0%
+
+wrote results/cue_auc.csv, results/cue_auc_per_image.csv
+ quality  window   mean AUC   median
+      70       8     0.6563   0.6510
+      70      16     0.6569   0.6650
+      70      32     0.6467   0.6635
+      80       8     0.7389   0.7965
+      80      16     0.7450   0.8231
+      80      32     0.7476   0.8340
+      90       8     0.7521   0.8062
+      90      16     0.7600   0.8269
+      90      32     0.7611   0.8227
+      95       8     0.7469   0.7816
+      95      16     0.7573   0.8193
+      95      32     0.7607   0.8223
+      98       8     0.7066   0.7145
+      98      16     0.7208   0.7434
+      98      32     0.7251   0.7688
+
+best: quality=90, window=32  (AUC 0.7611)
+wrote results/ela_tuning.csv
+corr(score, local texture energy): mean +0.243, median +0.240
+|corr| > 0.3 in 60.0% of images
+wrote results/texture_corr.csv
+  200/1822  (50s)
+  400/1822  (87s)
+  600/1822  (126s)
+  800/1822  (166s)
+  1000/1822  (204s)
+  1200/1822  (240s)
+  1400/1822  (279s)
+  1600/1822  (316s)
+  1800/1822  (355s)
+wrote results/rung2_grid_icm.npz (357s)
+building tables
+  rung 2 reproduces rung2_nested_pairs.csv on all 20 pairs (max diff 0.0e+00)
+  rung 3: results/rung3_sam2.csv not present - marked pending
+  wrote results/tables/main.csv (5 rows)
+  wrote results/tables/gains.csv (40 rows)
+  wrote results/tables/datasize.csv (5 rows)
+  wrote results/tables/category.csv (10 rows)
+  wrote results/tables/auc.csv (67 rows)
+  fixed operating point tau=0.75, beta=8.0 (train-selected in 4/5 folds)
+  wrote results/tables/copymove.csv (4 rows)
+  wrote results/tables/splits.csv (4 rows)
+  wrote results/tables/icm.csv (2 rows)
+  wrote results/tables/icm_energy.csv (5 rows)
+  wrote results/tables/unet_families.csv (20 rows)
+  wrote results/tables/cues.csv (10 rows)
+  stabiliser baseline: 90 epochs from wandb/run-20260909_222214-tg4ifizd
+  stabiliser clip: 90 epochs from wandb/run-20260909_225650-cbctuqlh
+  stabiliser wd1e-3: 90 epochs from wandb/run-20260909_233407-pglyu5d6
+  wrote results/tables/stabiliser.csv (270 rows)
+done
+  fig0_method: NOT SAVED
+  fig1_main_f1: ok
+  fig2_prior_gain: ok
+  fig3_datasize: ok
+  fig4_per_category: ok
+  fig5_image_auc: ok
+  fig6_copymove: ok
+  fig7_stabiliser: ok
+  fig8_mechanism: ok
+  fig9_perimage_f1: ok
+
+results/figures/fig0_method: 1 collision(s)
+  text "MRF (τ, β)
+exact graph cut" overlaps FancyBboxPatch(box)
+1 figure(s) have collisions

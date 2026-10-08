@@ -1,0 +1,11 @@
+item,value,n
+auc A_median,0.559159,400
+auc B_highpass,0.569759,400
+auc C_ratio,0.533215,400
+auc D_ratio_colour,0.533768,400
+auc E_ela,0.765157,400
+ela best quality,90.0,300
+ela best window,32.0,300
+ela best auc,0.761148,300
+texture corr mean,0.243028,200
+texture |corr|>0.3 frac,0.6,200

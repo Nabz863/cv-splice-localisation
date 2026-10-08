@@ -1,0 +1,6 @@
+key,rung,label,f1,f1_sd,iou,n_pairs,beta0_selected,source
+chance,,Chance (predict all tampered),0.242067,,0.1377,,,per_category.csv pooled rate
+rung1,1,ELA,0.264619,0.01212,0.152546,20,,"rung2_grid.npz, beta=0 only"
+rung2,2,ELA + MRF,0.284548,0.020005,0.166052,20,0,rung2_grid.npz
+rung4,4,U-Net,0.711631,0.013232,0.554195,20,,rung5_mrf_refine.csv f1_beta0
+rung5,5,U-Net + MRF,0.746613,0.017969,0.59807,20,0,rung5_mrf_refine.csv
