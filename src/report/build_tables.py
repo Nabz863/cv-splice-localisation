@@ -30,6 +30,8 @@ Inputs
   results/ela_tuning.csv                ELA quality/window sweep (tune_ela.py)
   results/texture_corr.csv              noise cue vs texture (diagnose_texture.py)
   results/rung4_unet.csv                also used for the fixed-pairing bias
+  results/rung5_counts/{tag}.npz        per-image counts at every (tau, beta) for
+                                        rungs 4-5 (sweep_perimage.py), OPTIONAL
   results/rung5_training.csv            per-pair stopping epoch of the rung 4/5 models
                                         and their training config (cache_logits.py)
   wandb/run-*/run-*.wandb               stabiliser training histories
@@ -48,6 +50,8 @@ Outputs (results/tables/)
   cues.csv        rung 1 cue AUCs, the chosen ELA setting, texture correlation
   perimage_summary.csv  per-image F1 with and without the prior, from
                   results/tables/perimage_f1.csv (written by mechanism.py)
+  selection.csv   the prior's effect when (tau, beta) is selected by pooled F1 vs
+                  by mean per-image F1, for both unaries (needs rung5_counts/)
   unet_families.csv  per pair: run_unet.py's model vs cache_logits.py's model
                   (stopping epoch, best val loss, test F1), to show whether Table 1's
                   rung 4 and the data-size curve's full-data point are the same model
@@ -283,6 +287,89 @@ def unet_families(r45):
     return out
 
 
+# ------------------------------------------- selection criterion: pooled vs per image
+def _img_f1(c):
+    """Per-image F1 from (..., 3) counts; an image with nothing to find and
+    nothing predicted scores 1."""
+    tp, fp, fn = (c[..., k].astype(float) for k in range(3))
+    d = 2 * tp + fp + fn
+    return np.where(d > 0, 2 * tp / np.where(d > 0, d, 1), 1.0)
+
+
+def _pooled_f1(c):
+    tp, fp, fn = (c[..., k].sum(0).astype(float) for k in range(3))
+    d = 2 * tp + fp + fn
+    return np.where(d > 0, 2 * tp / np.where(d > 0, d, 1), 0.0)
+
+
+def _select_eval(cal, test, grid, criterion):
+    """cal/test: (images, grid, 3). Choose a grid point on cal by `criterion`
+    over the whole grid and over beta = 0 only (first index wins ties, as in
+    sweep_cached.py), then score both on test."""
+    score = _pooled_f1(cal) if criterion == "pooled" else _img_f1(cal).mean(0)
+    zero = [g for g, (t, b) in enumerate(grid) if b == 0.0]
+    g1 = int(np.argmax(score))
+    g0 = zero[int(np.argmax(score[zero]))]
+    out = {}
+    for name, g in (("beta0", g0), ("prior", g1)):
+        f = _img_f1(test[:, g])
+        out[f"pooled_{name}"] = float(_pooled_f1(test[:, g]))
+        out[f"img_{name}"] = float(f.mean())
+        out[f"zero_{name}"] = float((test[:, g, 0] == 0).mean())
+    out["tau"], out["beta"] = grid[g1]
+    out["tau0"] = grid[g0][0]
+    return out
+
+
+def selection_table(folds, ela_counts, ela_grid):
+    paths = sorted(glob.glob(os.path.join(RES, "rung5_counts", "t*v*.npz")))
+    if len(paths) != len(ALL_TAGS):
+        print(f"  selection: {len(paths)}/20 pairs in results/rung5_counts - run "
+              f"sweep_perimage.py")
+        return None
+    per = []
+    for k, v in itertools.product(range(N_FOLDS), repeat=2):        # ELA, rungs 1-2
+        if k == v:
+            continue
+        cal, te = ela_counts[folds == v], ela_counts[folds == k]
+        for crit in ("pooled", "per-image"):
+            per.append(dict(unary="ELA", criterion=crit, test_fold=k, val_fold=v,
+                            **_select_eval(cal, te, ela_grid, crit)))
+    ref = {(int(r["test_fold"]), int(r["val_fold"])): r
+           for r in read_csv(os.path.join(RES, "rung5_mrf_refine.csv"))}
+    for p in paths:                                                  # U-Net, rungs 4-5
+        tag = os.path.basename(p)[:-4]
+        k, v = int(tag[1]), int(tag[3])
+        z = np.load(p)
+        grid = [tuple(map(float, g)) for g in z["grid"]]
+        for crit in ("pooled", "per-image"):
+            r = _select_eval(z["cal"], z["test"], grid, crit)
+            if crit == "pooled":         # must reproduce sweep_cached.py's choice exactly
+                a = ref[(k, v)]
+                same = (r["tau"], r["beta"]) == (float(a["tau"]), float(a["beta"]))
+                if not same or abs(r["pooled_prior"] - float(a["f1"])) > 1e-5:
+                    raise SystemExit(f"{tag}: per-image counts do not reproduce "
+                                     f"rung5_mrf_refine.csv")
+            per.append(dict(unary="U-Net", criterion=crit, test_fold=k, val_fold=v, **r))
+    print("  selection: pooled selection from per-image counts reproduces "
+          "rung5_mrf_refine.csv on all 20 pairs")
+    rows = []
+    for unary in ("ELA", "U-Net"):
+        for crit in ("pooled", "per-image"):
+            recs = [r for r in per if r["unary"] == unary and r["criterion"] == crit]
+            row = dict(unary=unary, criterion=crit)
+            for key in ("pooled_beta0", "pooled_prior", "img_beta0", "img_prior",
+                        "zero_beta0", "zero_prior"):
+                row[key], row[key + "_sd"] = fold_mean(recs, key)
+            row["img_gain"] = row["img_prior"] - row["img_beta0"]
+            row["pooled_gain"] = row["pooled_prior"] - row["pooled_beta0"]
+            row["pairs_img_improved"] = sum(r["img_prior"] > r["img_beta0"] for r in recs)
+            row["beta_counts"] = " ".join(f"{b:g}:{n}" for b, n in
+                                          sorted(Counter(r["beta"] for r in recs).items()))
+            rows.append(row)
+    return rows
+
+
 # ------------------------------------------------------ per-image effect of prior
 def perimage_summary():
     """The prior's effect image by image, which pooled F1 hides: how often it
@@ -483,6 +570,11 @@ def main():
     fam = unet_families(r45)
     if fam:
         write_csv("unet_families.csv", fam)
+
+    # ---- selection.csv
+    sel = selection_table(folds, counts, grid)
+    if sel:
+        write_csv("selection.csv", sel)
 
     # ---- perimage_summary.csv
     pis = perimage_summary()
