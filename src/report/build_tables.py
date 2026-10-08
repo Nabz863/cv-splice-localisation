@@ -46,6 +46,8 @@ Outputs (results/tables/)
   icm.csv         ICM vs graph cuts: selected F1 and beta under the 20-pair protocol
   icm_energy.csv  ICM vs graph-cut energy on identical problems, per beta
   cues.csv        rung 1 cue AUCs, the chosen ELA setting, texture correlation
+  perimage_summary.csv  per-image F1 with and without the prior, from
+                  results/tables/perimage_f1.csv (written by mechanism.py)
   unet_families.csv  per pair: run_unet.py's model vs cache_logits.py's model
                   (stopping epoch, best val loss, test F1), to show whether Table 1's
                   rung 4 and the data-size curve's full-data point are the same model
@@ -281,6 +283,27 @@ def unet_families(r45):
     return out
 
 
+# ------------------------------------------------------ per-image effect of prior
+def perimage_summary():
+    """The prior's effect image by image, which pooled F1 hides: how often it
+    leaves no true positive, and what happens to the remaining images."""
+    path = os.path.join(OUT, "perimage_f1.csv")
+    if not os.path.exists(path):
+        print("  perimage_summary: tables/perimage_f1.csv not present - run mechanism.py")
+        return None
+    r = read_csv(path)
+    a = np.array([float(x["f1_rung4"]) for x in r]); b = np.array([float(x["f1_rung5"]) for x in r])
+    lost = (b == 0) & (a > 0); kept = b > 0
+    rows = [("evaluations", len(r)),
+            ("mean f1 beta0", a.mean()), ("mean f1 prior", b.mean()),
+            ("frac f1 zero beta0", (a == 0).mean()), ("frac f1 zero prior", (b == 0).mean()),
+            ("mean f1 beta0 where prior zeroes it", a[lost].mean() if lost.any() else float("nan")),
+            ("mean f1 beta0 where prior keeps a tp", a[kept].mean()),
+            ("mean f1 prior where prior keeps a tp", b[kept].mean()),
+            ("frac improved", (b > a).mean()), ("frac worsened", (b < a).mean())]
+    return [dict(metric=k, value=float(v)) for k, v in rows]
+
+
 # ------------------------------------------------------------------- rung 1 cues
 def cue_table():
     need = [os.path.join(RES, f) for f in ("cue_auc.csv", "ela_tuning.csv", "texture_corr.csv")]
@@ -460,6 +483,11 @@ def main():
     fam = unet_families(r45)
     if fam:
         write_csv("unet_families.csv", fam)
+
+    # ---- perimage_summary.csv
+    pis = perimage_summary()
+    if pis:
+        write_csv("perimage_summary.csv", pis)
 
     # ---- cues.csv
     cues = cue_table()
