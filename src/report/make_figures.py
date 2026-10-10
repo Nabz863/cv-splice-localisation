@@ -192,34 +192,41 @@ def fig_gain():
 
 # ----------------------------------------------------------------- 3. data size
 def fig_datasize():
-    d = table("datasize.csv"); t = {r["key"]: r for r in table("main.csv")}
-    n = np.array([int(r["n_train"]) for r in d]); f = np.array([float(r["f1"]) for r in d])
-    sd = np.array([float(r["f1_sd"]) for r in d])
+    d = table("datasize.csv", required=False); t = {r["key"]: r for r in table("main.csv")}
+    if not d:
+        return None
+    n = np.array([int(r["n_train"]) for r in d])
     fig, ax = plt.subplots(figsize=(COL, 2.6))
-    ax.fill_between(n, f - sd, f + sd, color=BLUE, alpha=0.12, lw=0)
-    ax.plot(n, f, color=BLUE, lw=2, marker="o", ms=5, mec="white", mew=1.2, zorder=3)
-    for i, (x, v) in enumerate(zip(n[:-1], f[:-1])):  # value labels sit under the band
-        ax.text(x, v - sd[i] - 0.012, f"{v:.3f}", ha="center", va="top", fontsize=7)
-    ax.text(n[-1] * 1.08, f[-1], f"{f[-1]:.3f}", ha="left", va="center", fontsize=7)
-    r4 = num(t["rung4"], "f1")
-    ax.plot([n[-1]], [r4], "D", ms=6, color=BLUE, mec="white", mew=1.2, zorder=4)
-    ax.text(n[-1] * 0.9, r4 + 0.02, f"{r4:.3f}: Table 1 rung 4\n(separate models)",
-            ha="right", va="bottom", fontsize=7, color=INK2)
+    for key, sdk, c, lab, below in (("f1", "f1_sd", BLUE, "U-Net", True),
+                                    ("f1_prior", "f1_prior_sd", ORANGE, "U-Net + MRF", False)):
+        f = np.array([float(r[key]) for r in d]); sd = np.array([float(r[sdk]) for r in d])
+        ax.fill_between(n, f - sd, f + sd, color=c, alpha=0.12, lw=0)
+        ax.plot(n, f, color=c, lw=2, marker="o", ms=4.5, mec="white", mew=1.0, zorder=3,
+                label=lab)
+        for i, (x, v) in enumerate(zip(n, f)):     # label the ends only: the right-hand
+            if i not in (0, len(n) - 1):           # points sit too close on a log axis
+                continue
+            if below:                              # below the lower line, above the upper
+                ax.text(x, v - sd[i] - 0.012, f"{v:.3f}", ha="center", va="top", fontsize=7,
+                        color=c)
+            else:
+                ax.text(x, v + sd[i] + 0.012, f"{v:.3f}", ha="center", va="bottom", fontsize=7,
+                        color=c)
     for key, lab, ls in (("rung2", "ELA + MRF", (0, (3, 2))), ("chance", "chance", (0, (1, 2)))):
         v = num(t[key], "f1")
         ax.axhline(v, color=MUTED, ls=ls, lw=1)
-        ax.text(n[0], v + 0.008, f"{lab} {v:.3f}", fontsize=7, color=INK2, va="bottom")
+        ax.text(n[-1] * 1.4, v + 0.008, f"{lab} {v:.3f}", fontsize=7, color=INK2, va="bottom",
+                ha="right")
     ax.set_xscale("log"); ax.set_xticks(n, [str(v) for v in n]); ax.minorticks_off()
     ax.tick_params(axis="x", labelsize=7)
     lab = ax.get_xticklabels()                   # the last two ticks are close on a
     lab[-2].set_ha("right"); lab[-1].set_ha("left")   # log axis: push them apart
-    ax.set_xlim(n[0] * 0.8, n[-1] * 1.55); ax.set_ylim(0.18, max(f + sd) + 0.12)
+    hi = max(float(r["f1_prior"]) + float(r["f1_prior_sd"]) for r in d)
+    ax.set_xlim(n[0] * 0.8, n[-1] * 1.5); ax.set_ylim(0.18, hi + 0.12)
     ax.set_xlabel("Labelled training masks (log scale)")
-    ax.set_ylabel("U-Net pixel F1 (±1 SD across folds)")
+    ax.set_ylabel("Pixel F1 (±1 SD across folds)")
+    ax.legend(loc="upper left", fontsize=7)
     grid_y(ax)
-    gap = f[-1] - f[-2]
-    ax.text(n[-1] * 1.5, 0.47, f"last {n[-1]-n[-2]} masks:\n{gap:+.3f} F1",
-            ha="right", va="top", fontsize=7, color=INK2)
     return fig
 
 

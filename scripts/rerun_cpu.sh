@@ -1,7 +1,8 @@
 #!/bin/bash
 # CPU-only reruns that make every rung 1-2 number in the report come from a file:
 #   rung 1 cue comparison      compare_variants.py  -> results/cue_auc*.csv
-#   ELA quality/window sweep   tune_ela.py          -> results/ela_tuning.csv
+#   ELA quality/window sweep   tune_ela.py          -> results/ela_tuning*.csv
+#     (both run five times, each with a different test fold held out)
 #   noise cue vs texture       diagnose_texture.py  -> results/texture_corr.csv
 #   ICM vs graph cuts          icm_vs_graphcut.py   -> results/rung2_grid_icm.npz
 # then the unit tests, every table, and every figure. Roughly 20-40 minutes on
@@ -22,13 +23,16 @@ python3 src/methods/test_mrf.py
 python3 src/report/test_overlap.py
 
 python3 src/methods/sanity_auc.py
-python3 src/methods/compare_variants.py
-python3 src/methods/tune_ela.py
+for k in 0 1 2 3 4; do             # cue choice with each test fold held out in turn
+  HOLDOUT=$k python3 src/methods/compare_variants.py
+  HOLDOUT=$k python3 src/methods/tune_ela.py
+done
 python3 src/methods/diagnose_texture.py
 python3 src/methods/icm_vs_graphcut.py
 
-if [ -e results/.rerun_unet_started ] || [ ! -e results/rung5_training.csv ]; then
-  echo "rerun_unet.sbatch has not finished - skipping build_tables.py and make_figures.py"
+if [ -e results/.rerun_unet_started ] || [ -e results/.rerun_datasize_started ] \
+   || [ ! -e results/rung5_training.csv ]; then
+  echo "a rerun job has not finished - skipping build_tables.py and make_figures.py"
   exit 0
 fi
 python3 src/report/build_tables.py

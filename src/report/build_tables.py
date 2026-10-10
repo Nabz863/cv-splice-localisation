@@ -11,10 +11,9 @@ Inputs
   results/rung2_grid.npz                rungs 1-2: per-image (tp, fp, fn) at every
                                         (tau, beta), written by run_mrf.py
   results/rung2_nested_pairs.csv        cross-check for the rung 2 recomputation
-  results/rung2_mrf.csv                 train-selected (tau, beta) -> the fixed
-                                        operating point used for transfer tests
   results/rung5_mrf_refine.csv          rungs 4-5, all 20 pairs (merge_refine.py)
-  results/rung4_unet{,_n50,...}.csv     data-size curve (merge_nested.py)
+  results/rung5_mrf_refine_n{50,..}.csv data-size curve: the same pipeline trained
+                                        on 50/150/400/800 masks (merge_refine.py)
   results/per_category.csv              per-category results (per_category.py)
   results/copymove_counts.npz           copy-move per-image counts (copymove_matched.py)
   results/image_auc_classical.csv       per-image scores, rungs 1-2
@@ -29,17 +28,14 @@ Inputs
   results/cue_auc.csv                   rung 1 cue comparison (compare_variants.py)
   results/ela_tuning.csv                ELA quality/window sweep (tune_ela.py)
   results/texture_corr.csv              noise cue vs texture (diagnose_texture.py)
-  results/rung4_unet.csv                also used for the fixed-pairing bias
   results/rung5_counts/{tag}.npz        per-image counts at every (tau, beta) for
                                         rungs 4-5 (sweep_perimage.py), OPTIONAL
-  results/rung5_training.csv            per-pair stopping epoch of the rung 4/5 models
-                                        and their training config (cache_logits.py)
   wandb/run-*/run-*.wandb               stabiliser training histories
 
 Outputs (results/tables/)
   main.csv        Table 1: every rung under the same 20-pair protocol, + chance
   gains.csv       per-pair F1 added by the prior, over each unary
-  datasize.csv    U-Net F1 against training-set size
+  datasize.csv    rungs 4 and 5 F1 against training-set size
   category.csv    per-category F1, each against its own chance line
   auc.csv         image-level AUC with bootstrap CIs (Table 2)
   copymove.csv    margin over chance, splicing vs copy-move, with CIs
@@ -48,13 +44,9 @@ Outputs (results/tables/)
   icm.csv         ICM vs graph cuts: selected F1 and beta under the 20-pair protocol
   icm_energy.csv  ICM vs graph-cut energy on identical problems, per beta
   cues.csv        rung 1 cue AUCs, the chosen ELA setting, texture correlation
-  perimage_summary.csv  per-image F1 with and without the prior, from
-                  results/tables/perimage_f1.csv (written by mechanism.py)
   selection.csv   the prior's effect when (tau, beta) is selected by pooled F1 vs
                   by mean per-image F1, for both unaries (needs rung5_counts/)
-  unet_families.csv  per pair: run_unet.py's model vs cache_logits.py's model
-                  (stopping epoch, best val loss, test F1), to show whether Table 1's
-                  rung 4 and the data-size curve's full-data point are the same model
+  selection_detail.csv  per-image detail behind selection.csv, over all 20 pairs
 
 Usage (from the repo root, CPU only, about a minute):
     python src/report/build_tables.py
@@ -104,7 +96,7 @@ def iou_from_f1(f):
 
 def fold_mean(records, key):
     """Mean over test folds of the per-fold mean over val folds, and its spread.
-    Every test fold weighs equally -- the convention of merge_nested/merge_refine."""
+    Every test fold weighs equally -- the convention of merge_refine."""
     by = defaultdict(list)
     for r in records:
         by[int(r["test_fold"])].append(float(r[key]))
@@ -172,14 +164,19 @@ def rung12(folds):
     return pairs, counts, grid, z["energies"][:, solvers.index("graphcut")]
 
 
-def fixed_operating_point():
-    """The (tau, beta) used for transfer tests: the modal choice when each test
-    fold's parameters are selected on its four training folds (rung2_mrf.csv).
-    The 20-pair validation selections split evenly between tau 0.75 and 1.0, so
-    the train-selected mode is the unambiguous one."""
-    rows = [r for r in read_csv(os.path.join(RES, "rung2_mrf.csv")) if r["solver"] == "graphcut"]
-    (tau, beta), n = Counter((float(r["tau"]), float(r["beta"])) for r in rows).most_common(1)[0]
-    print(f"  fixed operating point tau={tau}, beta={beta} (train-selected in {n}/{len(rows)} folds)")
+def fixed_operating_point(counts, grid):
+    """The single (tau, beta) applied unchanged to other data (copy-move, the
+    authentic images, the per-category split): the grid point with the highest
+    pooled F1 over all 1,822 splicing images. Those other sets share no image with
+    the splicing set, so selecting on all of it leaks nothing into them.
+    per_category.py, copymove_matched.py and image_auc_classical.py take the
+    operating point as TAU/BETA (default 0.75, 8.0); this stops if they disagree."""
+    f = [f1_of(counts[:, g].sum(0)) for g in range(len(grid))]
+    tau, beta = grid[int(np.argmax(f))]
+    if (tau, beta) != (0.75, 8.0):
+        raise SystemExit(f"operating point is now tau={tau}, beta={beta}: rerun per_category.py, "
+                         f"copymove_matched.py and image_auc_classical.py with TAU/BETA set to it")
+    print(f"  fixed operating point tau={tau}, beta={beta} (best pooled F1 on all splicing images)")
     return tau, beta
 
 
@@ -208,9 +205,7 @@ def splits_table(pairs, r45):
     """How much would the usual single pairing (val = test + 1 mod 5) have
     misstated each result, relative to averaging over all four val folds?"""
     fams = [("MRF (rung 2)", {(p["test_fold"], p["val_fold"]): p["f1_rung2"] for p in pairs}),
-            ("U-Net, run_unet.py", {(int(r["test_fold"]), int(r["val_fold"])): float(r["f1"])
-                                    for r in read_csv(os.path.join(RES, "rung4_unet.csv"))}),
-            ("U-Net, cache_logits.py (rung 4)", {(int(r["test_fold"]), int(r["val_fold"])):
+            ("U-Net (rung 4)", {(int(r["test_fold"]), int(r["val_fold"])):
                                                  float(r["f1_beta0"]) for r in r45}),
             ("U-Net + MRF (rung 5)", {(int(r["test_fold"]), int(r["val_fold"])): float(r["f1"])
                                       for r in r45})]
@@ -260,33 +255,6 @@ def icm_tables(folds, grid, gc_counts, gc_energy, tau_fixed):
     return rows, erows
 
 
-# ---------------------------------------------------- the two U-Net model families
-def unet_families(r45):
-    path = os.path.join(RES, "rung5_training.csv")
-    if not os.path.exists(path):
-        print("  unet_families: results/rung5_training.csv not present - rerun cache_logits.py")
-        return None
-    a = {(int(r["test_fold"]), int(r["val_fold"])): r
-         for r in read_csv(os.path.join(RES, "rung4_unet.csv"))}
-    b = {(int(r["test_fold"]), int(r["val_fold"])): r for r in read_csv(path)}
-    c = {(int(r["test_fold"]), int(r["val_fold"])): r for r in r45}
-    if len(b) != len(c) or set(b) != set(c):
-        raise SystemExit("rung5_training.csv and rung5_mrf_refine.csv cover different pairs")
-    cfgs = {tuple((k, r[k]) for k in r if k not in ("test_fold", "val_fold", "stopped_at",
-                                                    "best_val")) for r in b.values()}
-    if len(cfgs) != 1:
-        raise SystemExit(f"rung 4/5 models were trained under {len(cfgs)} configs: {cfgs}")
-    out = []
-    for key in sorted(b):
-        out.append(dict(test_fold=key[0], val_fold=key[1],
-                        stopped_run_unet=int(a[key]["stopped_at"]),
-                        stopped_cache_logits=int(b[key]["stopped_at"]),
-                        best_val_run_unet=float(a[key]["best_val"]),
-                        best_val_cache_logits=float(b[key]["best_val"]),
-                        f1_run_unet=float(a[key]["f1"]), f1_cache_logits_beta0=float(c[key]["f1_beta0"])))
-    return out
-
-
 # ------------------------------------------- selection criterion: pooled vs per image
 def _img_f1(c):
     """Per-image F1 from (..., 3) counts; an image with nothing to find and
@@ -316,6 +284,7 @@ def _select_eval(cal, test, grid, criterion):
         out[f"pooled_{name}"] = float(_pooled_f1(test[:, g]))
         out[f"img_{name}"] = float(f.mean())
         out[f"zero_{name}"] = float((test[:, g, 0] == 0).mean())
+        out[f"_f_{name}"] = f                       # per-image F1s, for selection_detail
     out["tau"], out["beta"] = grid[g1]
     out["tau0"] = grid[g0][0]
     return out
@@ -367,28 +336,21 @@ def selection_table(folds, ela_counts, ela_grid):
             row["beta_counts"] = " ".join(f"{b:g}:{n}" for b, n in
                                           sorted(Counter(r["beta"] for r in recs).items()))
             rows.append(row)
-    return rows
-
-
-# ------------------------------------------------------ per-image effect of prior
-def perimage_summary():
-    """The prior's effect image by image, which pooled F1 hides: how often it
-    leaves no true positive, and what happens to the remaining images."""
-    path = os.path.join(OUT, "perimage_f1.csv")
-    if not os.path.exists(path):
-        print("  perimage_summary: tables/perimage_f1.csv not present - run mechanism.py")
-        return None
-    r = read_csv(path)
-    a = np.array([float(x["f1_rung4"]) for x in r]); b = np.array([float(x["f1_rung5"]) for x in r])
-    lost = (b == 0) & (a > 0); kept = b > 0
-    rows = [("evaluations", len(r)),
-            ("mean f1 beta0", a.mean()), ("mean f1 prior", b.mean()),
-            ("frac f1 zero beta0", (a == 0).mean()), ("frac f1 zero prior", (b == 0).mean()),
-            ("mean f1 beta0 where prior zeroes it", a[lost].mean() if lost.any() else float("nan")),
-            ("mean f1 beta0 where prior keeps a tp", a[kept].mean()),
-            ("mean f1 prior where prior keeps a tp", b[kept].mean()),
-            ("frac improved", (b > a).mean()), ("frac worsened", (b < a).mean())]
-    return [dict(metric=k, value=float(v)) for k, v in rows]
+    detail = []
+    for unary in ("ELA", "U-Net"):
+        for crit in ("pooled", "per-image"):
+            recs = [r for r in per if r["unary"] == unary and r["criterion"] == crit]
+            a = np.concatenate([r["_f_beta0"] for r in recs])
+            b = np.concatenate([r["_f_prior"] for r in recs])
+            lost, kept = (b == 0) & (a > 0), b > 0
+            detail.append(dict(unary=unary, criterion=crit, evaluations=len(a),
+                               frac_lost=float(lost.mean()),
+                               f1_beta0_where_lost=float(a[lost].mean()) if lost.any() else "",
+                               f1_beta0_where_kept=float(a[kept].mean()),
+                               f1_prior_where_kept=float(b[kept].mean()),
+                               frac_improved=float((b > a).mean()),
+                               frac_worsened=float((b < a).mean())))
+    return rows, detail
 
 
 # ------------------------------------------------------------------- rung 1 cues
@@ -406,6 +368,23 @@ def cue_table():
     rows += [dict(item="ela best quality", value=float(best["quality"]), n=int(best["n_images"])),
              dict(item="ela best window", value=float(best["window"]), n=int(best["n_images"])),
              dict(item="ela best auc", value=float(best["mean_auc"]), n=int(best["n_images"]))]
+    # the same choice with each other test fold held out instead of fold 0
+    for k in range(1, N_FOLDS):
+        pa = os.path.join(RES, f"cue_auc_holdout{k}.csv")
+        pb = os.path.join(RES, f"ela_tuning_holdout{k}.csv")
+        if not (os.path.exists(pa) and os.path.exists(pb)):
+            print(f"  cues: holdout {k} files missing - run HOLDOUT={k} compare_variants.py "
+                  f"and tune_ela.py")
+            continue
+        cue = max(read_csv(pa), key=lambda r: float(r["mean_auc"]))
+        tb = max(read_csv(pb), key=lambda r: float(r["mean_auc"]))
+        same = (cue["variant"] == "E_ela" and (float(tb["quality"]), float(tb["window"]))
+                == (float(best["quality"]), float(best["window"])))
+        rows.append(dict(item=f"holdout {k}: same cue and settings", value=float(same),
+                         n=int(cue["n_images"])))
+        if not same:
+            print(f"  WARNING: holdout {k} chose {cue['variant']} q={tb['quality']} "
+                  f"w={tb['window']}")
     c = np.array([float(r["corr_score_texture"]) for r in read_csv(need[2])])
     c = c[np.isfinite(c)]
     rows += [dict(item="texture corr mean", value=float(c.mean()), n=len(c)),
@@ -453,16 +432,23 @@ def main():
                    gain=float(r["prior_gain"]), beta=float(r["beta"])) for r in r45]
     write_csv("gains.csv", gains)
 
-    # ---- datasize.csv
+    # ---- datasize.csv: the rung 4/5 pipeline trained on subsets, full data = Table 1
     tr_sizes = [int((folds != k).sum() - (folds == v).sum())
                 for k in range(N_FOLDS) for v in range(N_FOLDS) if k != v]
     n_full = int(round(np.mean(tr_sizes)))
     ds = []
     for suffix, n in (("_n50", 50), ("_n150", 150), ("_n400", 400), ("_n800", 800), ("", n_full)):
-        recs = read_csv(os.path.join(RES, f"rung4_unet{suffix}.csv"))
-        f, fs = fold_mean(recs, "f1")
-        ds.append(dict(n_train=n, f1=f, f1_sd=fs, n_pairs=len(recs), protocol="run_unet.py"))
-    write_csv("datasize.csv", ds)
+        path = os.path.join(RES, f"rung5_mrf_refine{suffix}.csv")
+        if not os.path.exists(path):
+            print(f"  datasize: {path} not present - run slurm/rerun_datasize.sbatch")
+            continue
+        recs = read_csv(path)
+        f0, f0s = fold_mean(recs, "f1_beta0")
+        f1, f1s = fold_mean(recs, "f1")
+        ds.append(dict(n_train=n, f1=f0, f1_sd=f0s, f1_prior=f1, f1_prior_sd=f1s,
+                       gain=f1 - f0, n_pairs=len(recs)))
+    if ds:
+        write_csv("datasize.csv", ds)
 
     # ---- category.csv
     write_csv("category.csv", [dict(category=r["category"], n=int(r["n"]),
@@ -533,7 +519,7 @@ def main():
     write_csv("auc.csv", auc_rows)
 
     # ---- copymove.csv: margin over each dataset's own pooled chance line
-    tau, beta = fixed_operating_point()
+    tau, beta = fixed_operating_point(counts, grid)
     gi = grid.index((tau, beta)); gi0 = grid.index((tau, 0.0))
     cm = np.load(os.path.join(RES, "copymove_counts.npz"))
     sets = {"splicing": (counts[:, gi0], counts[:, gi], area),
@@ -566,20 +552,11 @@ def main():
         write_csv("icm.csv", icm_rows)
         write_csv("icm_energy.csv", icm_e)
 
-    # ---- unet_families.csv
-    fam = unet_families(r45)
-    if fam:
-        write_csv("unet_families.csv", fam)
-
     # ---- selection.csv
     sel = selection_table(folds, counts, grid)
     if sel:
-        write_csv("selection.csv", sel)
-
-    # ---- perimage_summary.csv
-    pis = perimage_summary()
-    if pis:
-        write_csv("perimage_summary.csv", pis)
+        write_csv("selection.csv", sel[0])
+        write_csv("selection_detail.csv", sel[1])
 
     # ---- cues.csv
     cues = cue_table()
