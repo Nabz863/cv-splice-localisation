@@ -12,7 +12,11 @@ logits for one (test, val) pair, as float16 to keep the files small. Phase 2
 Every saved model and logits file gets a JSON sidecar with the training config;
 an existing file whose sidecar is missing or differs is refused, never silently
 reused (refine_meta.py). Per-pair stopping epochs and best validation losses are
-appended to results/rung5_training.csv, which is committed.
+appended to results/rung5_training{suffix}.csv, which is committed.
+
+N_TRAIN=n trains on a fixed random subset of n images of each pair's training
+folds (the data-size curve); every output then carries the suffix _n{n}, e.g.
+results/logits/t0v1_n50.npz. The default, N_TRAIN=0, uses all training images.
 
 Usage (from the repo root; slurm/cache_logits.sbatch is the canonical call):
     BATCH=8 WORKERS=2 python src/methods/cache_logits.py
@@ -27,7 +31,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(__file__))
 from utils.seed import set_seed
 from unet import UNet, dice_bce
-from patch_data import SpliceCrops, load_rows, PATCH
+from patch_data import SpliceCrops, load_rows, PATCH, CROP_RNG
 import refine_meta
 
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
@@ -44,11 +48,14 @@ WD = float(os.environ.get("WD", 1e-4))
 CLIP = float(os.environ.get("CLIP", 1.0))
 N_CAL = int(os.environ.get("N_CAL", 150))
 NESTED = bool(int(os.environ.get("NESTED", 1)))
+N_TRAIN = int(os.environ.get("N_TRAIN", 0))          # 0 = all training images
+SUFFIX = f"_n{N_TRAIN}" if N_TRAIN else ""
 AMP_DTYPE = torch.bfloat16
 CROPS = 8                                           # SpliceCrops default
 CONFIG = dict(epochs_max=EPOCHS, patience=PATIENCE, batch=BATCH, workers=WORKERS, lr=1e-3,
               weight_decay=WD, grad_clip=CLIP, constraint_norm=NORM, amp_dtype="bfloat16",
-              n_cal=N_CAL, crops_per_image=CROPS, patch=PATCH)
+              n_cal=N_CAL, crops_per_image=CROPS, patch=PATCH, n_train=N_TRAIN,
+              crop_rng=CROP_RNG)
 
 
 @torch.no_grad()
@@ -64,6 +71,8 @@ def logits_full(model, path):
 def train_one(test_fold, val_fold, rows, tag):
     set_seed(test_fold * 10 + val_fold)
     tr = [r for r in rows if int(r["fold"]) not in (test_fold, val_fold)]
+    if N_TRAIN:
+        tr = list(np.random.default_rng(0).permutation(tr))[:N_TRAIN]
     va = [r for r in rows if int(r["fold"]) == val_fold]
 
     os.makedirs("results/ckpt_refine", exist_ok=True)
@@ -153,7 +162,7 @@ def train_one(test_fold, val_fold, rows, tag):
     torch.save(model.state_dict(), saved)
     refine_meta.write(saved, CONFIG, stopped_at=stopped, best_val=best)
 
-    log = "results/rung5_training.csv"
+    log = f"results/rung5_training{SUFFIX}.csv"
     new = not os.path.exists(log)
     with open(log, "a", newline="") as f:
         w = csv.writer(f)
@@ -164,7 +173,7 @@ def train_one(test_fold, val_fold, rows, tag):
 
 
 def cache_pair(test_fold, val_fold, rows):
-    tag = f"t{test_fold}v{val_fold}"
+    tag = f"t{test_fold}v{val_fold}{SUFFIX}"
     out = f"results/logits/{tag}.npz"
     if os.path.exists(out):
         refine_meta.check(out, CONFIG)

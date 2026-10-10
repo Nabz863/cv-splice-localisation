@@ -50,7 +50,7 @@ def per_image(items, ex, label):
 
 
 if __name__ == "__main__":
-    paths = sorted(glob.glob("results/logits/t*v*.npz"))
+    paths = sorted(glob.glob("results/logits/t?v?.npz"))      # full-data pairs only
     if not paths:
         raise SystemExit("no cached logits - run cache_logits.py first")
     os.makedirs(OUT, exist_ok=True)

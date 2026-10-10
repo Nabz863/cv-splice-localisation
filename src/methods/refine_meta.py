@@ -12,7 +12,8 @@ No torch import, so CPU-only scripts can use it.
 import json, os
 
 KEYS = ("epochs_max", "patience", "batch", "workers", "lr", "weight_decay", "grad_clip",
-        "constraint_norm", "amp_dtype", "n_cal", "crops_per_image", "patch")
+        "constraint_norm", "amp_dtype", "n_cal", "crops_per_image", "patch", "n_train",
+        "crop_rng")
 
 
 def sidecar(path):

@@ -13,11 +13,36 @@ from torch.utils.data import Dataset
 PATCH = 256
 
 
+CROP_RNG = "per-worker"   # recorded in every model's config sidecar (refine_meta.py)
+
+
 class SpliceCrops(Dataset):
+    """Training crops, with their random choices drawn per data-loader worker.
+
+    An earlier version created one numpy generator in __init__. DataLoader
+    workers are forked copies of the dataset, so every worker, in every epoch,
+    replayed that same unadvanced stream. Now each worker seeds its own
+    generator from torch's per-worker seed, which differs between workers and
+    between epochs and is itself fixed by torch.manual_seed, so runs remain
+    reproducible. With num_workers=0 one generator advances across epochs."""
+
     def __init__(self, rows, patch=PATCH, train=True, crops_per_image=8, seed=0):
         self.rows, self.patch, self.train = rows, patch, train
         self.n = crops_per_image if train else 1
-        self.rng = np.random.default_rng(seed)
+        self.seed = seed
+        self._main, self._wseed, self._wrng = None, None, None
+
+    @property
+    def rng(self):
+        info = torch.utils.data.get_worker_info()
+        if info is None:
+            if self._main is None:
+                self._main = np.random.default_rng(self.seed)
+            return self._main
+        if self._wseed != info.seed:
+            self._wseed = info.seed
+            self._wrng = np.random.default_rng([self.seed, info.seed % (2 ** 63)])
+        return self._wrng
 
     def __len__(self):
         return len(self.rows) * self.n

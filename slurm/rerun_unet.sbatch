@@ -8,8 +8,9 @@
 # (GRES=null), so the scheduler cannot see these and will happily assign them.
 #SBATCH --exclude=mscluster44,mscluster50,mscluster65,mscluster46,mscluster47,mscluster48,mscluster51,mscluster63,mscluster64,mscluster69,mscluster70,mscluster74,mscluster75,mscluster76,mscluster82
 #
-# Regenerates every rung 4/5 result from scratch under ONE training config, the
-# one run_unet.py used for the data-size curve (batch 8, 2 loader workers):
+# Regenerates every full-data rung 4/5 result from scratch under one training
+# config (batch 8, 2 loader workers; the data-size runs use the same pipeline,
+# slurm/rerun_datasize.sbatch, and can run at the same time):
 #   train 20 models + cache logits   cache_logits.py          GPU, ~15-20 h
 #   (tau, beta) sweep, Table 1 rows  sweep_cached.py, merge_refine.py   CPU
 #   image-level AUC, all 20 pairs    cache_auth_logits.py (GPU), image_auc_unet.py,
@@ -49,16 +50,17 @@ for k in 0 1 2 3 4; do for v in 0 1 2 3 4; do
   [ "$k" != "$v" ] && TAGS="$TAGS t${k}v${v}"
 done; done
 
-# 1. First launch only: move every output of the OLD rung 4/5 models aside. They
-#    were trained under two different configs and have no record of which; the
-#    new code refuses them anyway. Nothing is deleted.
+# 1. First launch only: move every output of the previous full-data rung 4/5
+#    models aside (the data-size runs, *_n*, belong to rerun_datasize.sbatch and
+#    are left alone). The new code refuses old outputs anyway. Nothing is deleted.
 if [ ! -e results/.rerun_unet_started ]; then
   STALE=results/stale/$(date +%Y%m%d_%H%M%S)
   mkdir -p "$STALE"
   shopt -s nullglob
-  for f in results/models/refine_* results/logits/* results/ckpt_refine/* \
-           results/rung5_pair_*.csv results/rung5_mrf_refine.csv results/rung5_training.csv \
-           results/image_auc_unet_t*.csv results/image_auc_select_t*.csv; do
+  for f in results/models/refine_t?v?.* results/logits/t?v?.* results/logits/auth_* \
+           results/ckpt_refine/t?v?.* results/rung5_pair_t?v?.csv \
+           results/rung5_mrf_refine.csv results/rung5_training.csv results/rung5_counts/* \
+           results/image_auc_unet_t?v?.csv results/image_auc_select_t?v?.csv; do
     if [ -e "$f" ]; then mv "$f" "$STALE/"; fi
   done
   shopt -u nullglob
@@ -72,13 +74,15 @@ NESTED=1 BATCH=8 WORKERS=2 python3 src/methods/cache_logits.py
 # 3. (tau, beta) sweep over the cached logits and the 20-pair summary (CPU).
 CUT_WORKERS=12 python3 src/methods/sweep_cached.py
 python3 src/methods/merge_refine.py
+CUT_WORKERS=12 python3 src/methods/sweep_perimage.py      # per-image counts, ~1.5 h
 
-# 4. Image-level AUC for every pair. The authentic-image logits are large
-#    (~0.4 GB per pair), so each pair's are deleted once its AUC is written;
-#    set KEEP_AUTH=1 to keep them.
+# 4. Image-level AUC for every pair, against all 7,491 authentic images (half
+#    chooses the score summary, the other half reports it). Each pair's
+#    authentic-image logits are ~1.5 GB, so they are deleted once its AUC is
+#    written; set KEEP_AUTH=1 to keep them.
 for t in $TAGS; do
   if [ -e "results/image_auc_select_$t.csv" ]; then echo "$t: AUC done already"; continue; fi
-  TAG=$t N_AUTH=2000 python3 src/methods/cache_auth_logits.py          # GPU
+  TAG=$t N_AUTH=0 python3 src/methods/cache_auth_logits.py             # GPU
   TAG=$t WORKERS=12 python3 src/methods/image_auc_unet.py              # CPU
   TAG=$t WORKERS=12 python3 src/methods/select_summary_unet.py         # CPU
   [ "${KEEP_AUTH:-0}" = 1 ] || rm -f "results/logits/auth_$t.npz"
@@ -89,4 +93,4 @@ TAGS=$(echo $TAGS | tr ' ' ',') WORKERS=12 python3 src/methods/mechanism.py
 TAG=t0v1 python3 src/methods/fig_qualitative.py
 
 rm -f results/.rerun_unet_started
-echo "rung 4/5 rerun complete. Next: bash scripts/rerun_cpu.sh, then build_tables.py"
+echo "rung 4/5 rerun complete."
