@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=12
 # Nodes whose GPUs are dead. SLURM does no GPU accounting on this partition
 # (GRES=null), so the scheduler cannot see these and will happily assign them.
-#SBATCH --exclude=mscluster44,mscluster50,mscluster65,mscluster46,mscluster47,mscluster48,mscluster51,mscluster63,mscluster64,mscluster69,mscluster70,mscluster74,mscluster75,mscluster76,mscluster82
+#SBATCH --exclude=mscluster44,mscluster50,mscluster65,mscluster46,mscluster47,mscluster48,mscluster51,mscluster63,mscluster64,mscluster69,mscluster70,mscluster74,mscluster75,mscluster76,mscluster82,mscluster62
 #
 # Regenerates every full-data rung 4/5 result from scratch under one training
 # config (batch 8, 2 loader workers; the data-size runs use the same pipeline,
