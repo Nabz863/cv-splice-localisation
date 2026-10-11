@@ -1,11 +1,15 @@
-"""Summarise rung 5: does the spatial prior still help over a learned unary?"""
-import csv, glob
+"""Summarise rung 5: does the spatial prior still help over a learned unary?
+
+SUFFIX=_n50 (etc.) summarises a data-size run into rung5_mrf_refine_n50.csv.
+"""
+import csv, glob, os
 from collections import defaultdict
 import numpy as np
 
-paths = sorted(glob.glob("results/rung5_pair_t*v*.csv"))
+SUFFIX = os.environ.get("SUFFIX", "")
+paths = sorted(glob.glob(f"results/rung5_pair_t?v?{SUFFIX}.csv"))
 if not paths:
-    raise SystemExit("no results/rung5_pair_t*v*.csv found")
+    raise SystemExit(f"no results/rung5_pair_t?v?{SUFFIX}.csv found")
 
 rows = [list(csv.DictReader(open(p)))[0] for p in paths]
 rows.sort(key=lambda r: (int(r["test_fold"]), int(r["val_fold"])))
@@ -31,7 +35,8 @@ print(f"\nbeta = 0 selected in {(betas == 0).sum()}/{len(betas)} pairs")
 print(f"beta > 0 median        {np.median(betas[betas > 0]) if (betas > 0).any() else 0}")
 print("\nfor the same comparison over ELA, see results/tables/main.csv (build_tables.py)")
 
-with open("results/rung5_mrf_refine.csv", "w", newline="") as f:
+out = f"results/rung5_mrf_refine{SUFFIX}.csv"
+with open(out, "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=rows[0].keys())
     w.writeheader(); w.writerows(rows)
-print("wrote results/rung5_mrf_refine.csv")
+print(f"wrote {out}")

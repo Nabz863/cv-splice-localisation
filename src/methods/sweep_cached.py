@@ -9,6 +9,9 @@ configuration the same way. beta = 0 reduces exactly to thresholding the U-Net's
 logits, so the difference isolates the spatial prior.
 
 tau is in LOGIT space (0 = p 0.5), unlike rung 2's z-scored ELA map.
+
+SUFFIX=_n50 (etc.) sweeps the data-size runs' logits (results/logits/t0v1_n50.npz
+...); the default, empty, sweeps the full-data pairs only.
 """
 import csv, glob, os, sys, time
 import multiprocessing as mp
@@ -22,6 +25,7 @@ TAUS = [float(x) for x in os.environ.get("TAUS", "-2,-1,-0.5,0,0.5,1,2").split("
 BETAS = [float(x) for x in os.environ.get("BETAS", "0,4,16,32,64,128,256").split(",")]
 GRID = [(t, b) for t in TAUS for b in BETAS]
 WORKERS = int(os.environ.get("CUT_WORKERS", 10))
+SUFFIX = os.environ.get("SUFFIX", "")
 
 
 def load_split(z, split):
@@ -83,7 +87,7 @@ def run_pair(path, ex):
     f1_0 = f1_of(ct, gi0)
 
     os.makedirs("results", exist_ok=True)
-    k, v = tag[1:].split("v")
+    k, v = tag[1], tag[3]
     with open(out, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["test_fold", "val_fold", "tau", "beta", "f1", "iou",
@@ -95,7 +99,7 @@ def run_pair(path, ex):
 
 
 if __name__ == "__main__":
-    paths = sorted(glob.glob("results/logits/t*v*.npz"))
+    paths = sorted(glob.glob(f"results/logits/t?v?{SUFFIX}.npz"))
     if not paths:
         raise SystemExit("no cached logits - run cache_logits.py first")
     print(f"{len(paths)} cached pairs | {len(GRID)} (tau, beta) points | "
@@ -104,4 +108,4 @@ if __name__ == "__main__":
                              mp_context=mp.get_context("spawn")) as ex:
         for p in paths:
             run_pair(p, ex)
-    print("summarise: python3 src/methods/merge_refine.py", flush=True)
+    print(f"summarise: SUFFIX={SUFFIX} python3 src/methods/merge_refine.py", flush=True)

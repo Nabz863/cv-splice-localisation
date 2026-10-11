@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=12
 # Nodes whose GPUs are dead. SLURM does no GPU accounting on this partition
 # (GRES=null), so the scheduler cannot see these and will happily assign them.
-#SBATCH --exclude=mscluster44,mscluster50,mscluster65,mscluster46,mscluster47,mscluster48,mscluster51,mscluster63,mscluster64,mscluster69,mscluster70,mscluster74,mscluster75,mscluster76,mscluster82
+#SBATCH --exclude=mscluster44,mscluster50,mscluster65,mscluster46,mscluster47,mscluster48,mscluster51,mscluster63,mscluster64,mscluster69,mscluster70,mscluster74,mscluster75,mscluster76,mscluster82,mscluster62
 
 export PATH=/usr/local/cuda-12.0/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-12.0/lib64:$LD_LIBRARY_PATH
