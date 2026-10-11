@@ -66,3 +66,4 @@ rung,label,score,tag,subset,auc,ci_lo,ci_hi,n_tampered,n_authentic,selected_on_h
 4,U-Net,area,all20,all,0.623211,,,,,0,0.016838
 5,U-Net + MRF,area,all20,all,0.682293,,,,,0,0.02511
 4,U-Net,held-out choice: prob_max 20/20,all20,all,0.930017,,,,,1,0.015668
+3,"SAM2, zero-shot",area,all20,all,0.602091,,,,7491,0,0.014803
