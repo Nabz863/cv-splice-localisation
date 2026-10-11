@@ -22,8 +22,8 @@ Inputs
                                         data (select_summary_unet.py). TAGS=all (the
                                         default) reads all 20 pairs and adds the
                                         cross-validated rows; TAGS=t0v1,t0v2 reads two
-  results/rung3_sam2.csv                OPTIONAL. columns: variant,f1,iou with
-                                        variant in {automatic, oracle}
+  results/rung3_sam2_20pairs.csv        rung 3 localisation, all 20 ordered pairs
+  results/image_auc_sam2_summary.csv    rung 3 image-level AUC, all 20 ordered pairs
   results/rung2_grid_icm.npz            ICM on the same grid (icm_vs_graphcut.py)
   results/cue_auc.csv                   rung 1 cue comparison (compare_variants.py)
   results/ela_tuning.csv                ELA quality/window sweep (tune_ela.py)
@@ -193,11 +193,31 @@ def rung45():
 
 
 def rung3():
-    path = os.path.join(RES, "rung3_sam2.csv")
+    path = os.path.join(RES, "rung3_sam2_20pairs.csv")
     if not os.path.exists(path):
-        print("  rung 3: results/rung3_sam2.csv not present - marked pending")
-        return {}
-    return {r["variant"]: r for r in read_csv(path)}
+        print("  rung 3: results/rung3_sam2_20pairs.csv not present - marked pending")
+        return []
+
+    rows = read_csv(path)
+
+    if len(rows) != 20:
+        raise SystemExit(f"rung 3: expected 20 pairs, found {len(rows)}")
+
+    got = {
+        (int(r["test_fold"]), int(r["val_fold"]))
+        for r in rows
+    }
+    expected = {
+        (k, v)
+        for k in range(N_FOLDS)
+        for v in range(N_FOLDS)
+        if k != v
+    }
+
+    if got != expected:
+        raise SystemExit("rung 3 does not contain all 20 ordered (test, val) pairs")
+
+    return rows
 
 
 # ------------------------------------------------------- validation-pairing bias
@@ -418,11 +438,12 @@ def main():
         i, _ = fold_mean(recs, ik)
         main_rows.append(dict(key=key, rung=rung, label=label, f1=f, f1_sd=fs, iou=i,
                               n_pairs=len(recs), beta0_selected=b0, source=src))
-    if "automatic" in r3:
+    if r3:
+        f, fs = fold_mean(r3, "f1")
+        i, _ = fold_mean(r3, "iou")
         main_rows.insert(3, dict(key="rung3", rung=3, label="SAM2, zero-shot",
-                                 f1=float(r3["automatic"]["f1"]), f1_sd="",
-                                 iou=float(r3["automatic"]["iou"]), n_pairs="",
-                                 beta0_selected="", source="rung3_sam2.csv"))
+                                 f1=f, f1_sd=fs, iou=i, n_pairs=len(r3),
+                                 beta0_selected="", source="rung3_sam2_20pairs.csv"))
     write_csv("main.csv", main_rows)
 
     # ---- gains.csv (per pair)
@@ -514,8 +535,36 @@ def main():
             auc_rows.append(dict(rung=rung, label=label, score=score, tag="all20", subset="all",
                                  auc=m, ci_lo="", ci_hi="", n_tampered="", n_authentic="",
                                  selected_on_heldout=int(i == 2), auc_sd=sd))
-        for r in auc_rows:
-            r.setdefault("auc_sd", "")
+    sam_auc_path = os.path.join(RES, "image_auc_sam2_summary.csv")
+    if os.path.exists(sam_auc_path):
+        sam_auc = read_csv(sam_auc_path)
+
+        if len(sam_auc) != 20:
+            raise SystemExit(f"SAM2 AUC: expected 20 pairs, found {len(sam_auc)}")
+
+        if any(int(r["n_authentic"]) != 7491 for r in sam_auc):
+            raise SystemExit("SAM2 AUC does not use all 7,491 authentic images")
+
+        m, sd = fold_mean(sam_auc, "auc")
+
+        auc_rows.append(dict(
+            rung=3,
+            label="SAM2, zero-shot",
+            score="area",
+            tag="all20",
+            subset="all",
+            auc=m,
+            ci_lo="",
+            ci_hi="",
+            n_tampered="",
+            n_authentic=7491,
+            selected_on_heldout=0,
+            auc_sd=sd
+        ))
+
+    for r in auc_rows:
+        r.setdefault("auc_sd", "")
+
     write_csv("auc.csv", auc_rows)
 
     # ---- copymove.csv: margin over each dataset's own pooled chance line
