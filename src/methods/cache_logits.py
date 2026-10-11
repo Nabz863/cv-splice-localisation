@@ -9,6 +9,11 @@ Writes results/logits/{tag}.npz holding the validation-calibration and test
 logits for one (test, val) pair, as float16 to keep the files small. Phase 2
 (sweep_cached.py) consumes these and touches no GPU.
 
+A batch whose loss is not finite is skipped, as before, but now counted: per
+epoch in the log, and per model (training and validation separately) in
+results/rung5_training{suffix}.csv and the model's sidecar. Earlier versions
+skipped such batches without recording them.
+
 Every saved model and logits file gets a JSON sidecar with the training config;
 an existing file whose sidecar is missing or differs is refused, never silently
 reused (refine_meta.py). Per-pair stopping epochs and best validation losses are
@@ -55,7 +60,7 @@ CROPS = 8                                           # SpliceCrops default
 CONFIG = dict(epochs_max=EPOCHS, patience=PATIENCE, batch=BATCH, workers=WORKERS, lr=1e-3,
               weight_decay=WD, grad_clip=CLIP, constraint_norm=NORM, amp_dtype="bfloat16",
               n_cal=N_CAL, crops_per_image=CROPS, patch=PATCH, n_train=N_TRAIN,
-              crop_rng=CROP_RNG)
+              crop_rng=CROP_RNG, nonfinite_counted=1)
 
 
 @torch.no_grad()
@@ -91,24 +96,27 @@ def train_one(test_fold, val_fold, rows, tag):
     scaler = torch.amp.GradScaler(DEV, enabled=(DEV == "cuda"))
 
     best, best_state, bad, start_ep, stopped = float("inf"), None, 0, 0, EPOCHS
+    nf_train = nf_val = 0                         # non-finite batches skipped, whole run
     if os.path.exists(ck):
         refine_meta.check(ck, CONFIG)
         st = torch.load(ck, map_location=DEV, weights_only=False)
         model.load_state_dict(st["model"]); opt.load_state_dict(st["opt"])
         sched.load_state_dict(st["sched"]); scaler.load_state_dict(st["scaler"])
         best, best_state, bad, start_ep = st["best"], st["best_state"], st["bad"], st["epoch"]
+        nf_train, nf_val = st["nf_train"], st["nf_val"]
         print(f"  resumed {tag} from epoch {start_ep}", flush=True)
 
     model.constrain()
     for ep in range(start_ep, EPOCHS):
         model.train()
-        tot, n, t0 = 0.0, 0, time.time()
+        tot, n, t0, bad_tr, bad_va = 0.0, 0, time.time(), 0, 0
         for x, y in dl:
             x, y = x.to(DEV, non_blocking=True), y.to(DEV, non_blocking=True)
             opt.zero_grad()
             with torch.amp.autocast(DEV, dtype=AMP_DTYPE, enabled=(DEV == "cuda")):
                 loss = dice_bce(model(x), y)
             if not torch.isfinite(loss):
+                bad_tr += 1
                 continue
             scaler.scale(loss).backward()
             if CLIP > 0:
@@ -118,7 +126,9 @@ def train_one(test_fold, val_fold, rows, tag):
             model.constrain()
             tot += loss.item() * x.size(0); n += x.size(0)
         sched.step()
+        nf_train += bad_tr
         if n == 0:
+            print(f"  {tag} ep {ep+1}: every training batch non-finite - stopping", flush=True)
             break
 
         model.eval()
@@ -129,9 +139,14 @@ def train_one(test_fold, val_fold, rows, tag):
                 l = dice_bce(model(xv), yv)
                 if torch.isfinite(l):
                     vl += l.item() * xv.size(0); vn += xv.size(0)
+                else:
+                    bad_va += 1
+        nf_val += bad_va
         vl = vl / vn if vn else float("inf")
         print(f"  {tag} ep {ep+1}/{EPOCHS}  train {tot/n:.4f}  val {vl:.4f} "
-              f"({time.time()-t0:.0f}s)", flush=True)
+              f"({time.time()-t0:.0f}s)"
+              + (f"  NON-FINITE batches: train {bad_tr}, val {bad_va}" if bad_tr or bad_va
+                 else ""), flush=True)
 
         if vl < best - 1e-4:
             best, bad = vl, 0
@@ -146,7 +161,7 @@ def train_one(test_fold, val_fold, rows, tag):
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(),
                     "sched": sched.state_dict(), "scaler": scaler.state_dict(),
                     "best": best, "best_state": best_state, "bad": bad,
-                    "epoch": ep + 1}, ck + ".tmp")
+                    "epoch": ep + 1, "nf_train": nf_train, "nf_val": nf_val}, ck + ".tmp")
         os.replace(ck + ".tmp", ck)
         refine_meta.write(ck, CONFIG)
 
@@ -160,15 +175,18 @@ def train_one(test_fold, val_fold, rows, tag):
     os.makedirs("results/models", exist_ok=True)
     saved = f"results/models/refine_{tag}.pt"
     torch.save(model.state_dict(), saved)
-    refine_meta.write(saved, CONFIG, stopped_at=stopped, best_val=best)
+    refine_meta.write(saved, CONFIG, stopped_at=stopped, best_val=best,
+                      nonfinite_train=nf_train, nonfinite_val=nf_val)
 
     log = f"results/rung5_training{SUFFIX}.csv"
     new = not os.path.exists(log)
     with open(log, "a", newline="") as f:
         w = csv.writer(f)
         if new:
-            w.writerow(["test_fold", "val_fold", "stopped_at", "best_val"] + list(refine_meta.KEYS))
-        w.writerow([test_fold, val_fold, stopped, f"{best:.6f}"] + [CONFIG[k] for k in refine_meta.KEYS])
+            w.writerow(["test_fold", "val_fold", "stopped_at", "best_val", "nonfinite_train",
+                        "nonfinite_val"] + list(refine_meta.KEYS))
+        w.writerow([test_fold, val_fold, stopped, f"{best:.6f}", nf_train, nf_val]
+                   + [CONFIG[k] for k in refine_meta.KEYS])
     return model
 
 

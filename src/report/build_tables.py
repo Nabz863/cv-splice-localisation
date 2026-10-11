@@ -30,7 +30,9 @@ Inputs
   results/texture_corr.csv              noise cue vs texture (diagnose_texture.py)
   results/rung5_counts/{tag}.npz        per-image counts at every (tau, beta) for
                                         rungs 4-5 (sweep_perimage.py), OPTIONAL
-  wandb/run-*/run-*.wandb               stabiliser training histories
+  wandb/{,offline-}run-*/run-*.wandb    stabiliser training histories; the latest run
+                                        per candidate, checked against
+                                        results/stabiliser_comparison.csv
 
 Outputs (results/tables/)
   main.csv        Table 1: every rung under the same 20-pair protocol, + chance
@@ -47,6 +49,8 @@ Outputs (results/tables/)
   selection.csv   the prior's effect when (tau, beta) is selected by pooled F1 vs
                   by mean per-image F1, for both unaries (needs rung5_counts/)
   selection_detail.csv  per-image detail behind selection.csv, over all 20 pairs
+  training.csv    per training-set size: models, stopping epochs, and the number of
+                  non-finite training / validation batches skipped (rung5_training*.csv)
 
 Usage (from the repo root, CPU only, about a minute):
     python src/report/build_tables.py
@@ -471,6 +475,29 @@ def main():
     if ds:
         write_csv("datasize.csv", ds)
 
+    # ---- training.csv: every rung 4/5 model, including any non-finite batches it skipped
+    tr_rows = []
+    for suffix, n in (("_n50", 50), ("_n150", 150), ("_n400", 400), ("_n800", 800), ("", n_full)):
+        path = os.path.join(RES, f"rung5_training{suffix}.csv")
+        if not os.path.exists(path):
+            continue
+        recs = read_csv(path)
+        if "nonfinite_train" not in recs[0]:
+            raise SystemExit(f"{path} does not record non-finite batches - retrain with the "
+                             f"current cache_logits.py")
+        stop = np.array([int(r["stopped_at"]) for r in recs])
+        nt = np.array([int(r["nonfinite_train"]) for r in recs])
+        nv = np.array([int(r["nonfinite_val"]) for r in recs])
+        tr_rows.append(dict(n_train=n, models=len(recs), stopped_min=int(stop.min()),
+                            stopped_median=float(np.median(stop)), stopped_max=int(stop.max()),
+                            nonfinite_train=int(nt.sum()), nonfinite_val=int(nv.sum()),
+                            models_with_nonfinite=int(((nt + nv) > 0).sum())))
+        if nt.sum() or nv.sum():
+            print(f"  WARNING: {path}: {nt.sum()} training and {nv.sum()} validation "
+                  f"batches were non-finite and skipped")
+    if tr_rows:
+        write_csv("training.csv", tr_rows)
+
     # ---- category.csv
     write_csv("category.csv", [dict(category=r["category"], n=int(r["n"]),
                                     pooled_frac=float(r["pooled_frac"]),
@@ -653,7 +680,9 @@ def stabiliser_histories():
         print("  stabiliser: wandb not installed - skipped")
         return []
     runs = {}
-    for f in sorted(glob.glob("wandb/run-*/run-*.wandb")):
+    files = glob.glob("wandb/run-*/run-*.wandb") + glob.glob("wandb/offline-run-*/run-*.wandb")
+    stamp = lambda f: re.search(r"run-(\d{8}_\d{6})", os.path.dirname(f)).group(1)
+    for f in sorted(files, key=stamp):
         cfg, hist = {}, []
         for d in _wandb_records(f):
             r = pb.Record(); r.ParseFromString(d)
@@ -672,9 +701,23 @@ def stabiliser_histories():
         ep = [h for h in hist if "diag/weight_norm" in h and "epoch" in h]
         if not name or not ep:
             continue
-        # keep the longest run per candidate; ties go to the latest
-        if name not in runs or len(ep) >= len(runs[name][1]):
-            runs[name] = (f, ep)
+        runs[name] = (f, ep)            # files are in start order: the latest run wins
+    # The histories must be the runs that wrote stabiliser_comparison.csv (the rerun
+    # under the current loader), not an older run of the same candidate.
+    summ = os.path.join(RES, "stabiliser_comparison.csv")
+    if os.path.exists(summ):
+        listed = {r["candidate"] for r in read_csv(summ)}
+        runs = {k: v for k, v in runs.items() if k in listed}    # only the rerun's candidates
+        for r in read_csv(summ):
+            if r["candidate"] not in runs:
+                raise SystemExit(f"stabiliser: no W&B history for {r['candidate']}")
+            ep = runs[r["candidate"]][1]
+            first = next((int(h["epoch"]) for h in ep if h.get("non_finite_batches", 0)), None)
+            want = int(r["first_nan_epoch"]) if r["first_nan_epoch"] else None
+            if first != want or len(ep) != int(r["epochs_survived"]):
+                raise SystemExit(f"stabiliser {r['candidate']}: W&B history ({len(ep)} epochs, "
+                                 f"first non-finite {first}) does not match "
+                                 f"stabiliser_comparison.csv - commit the rerun's wandb runs")
     out = []
     for name, (f, ep) in sorted(runs.items()):
         print(f"  stabiliser {name}: {len(ep)} epochs from {os.path.dirname(f)}")
