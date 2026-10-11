@@ -1,0 +1,23 @@
+building tables
+  rung 2 reproduces rung2_nested_pairs.csv on all 20 pairs (max diff 0.0e+00)
+  rung 3: results/rung3_sam2.csv not present - marked pending
+  wrote results/tables/main.csv (5 rows)
+  wrote results/tables/gains.csv (40 rows)
+  wrote results/tables/datasize.csv (5 rows)
+  wrote results/tables/category.csv (10 rows)
+  wrote results/tables/auc.csv (67 rows)
+  fixed operating point tau=0.75, beta=8.0 (train-selected in 4/5 folds)
+  wrote results/tables/copymove.csv (4 rows)
+  wrote results/tables/splits.csv (4 rows)
+  wrote results/tables/icm.csv (2 rows)
+  wrote results/tables/icm_energy.csv (5 rows)
+  wrote results/tables/unet_families.csv (20 rows)
+  selection: pooled selection from per-image counts reproduces rung5_mrf_refine.csv on all 20 pairs
+  wrote results/tables/selection.csv (4 rows)
+  wrote results/tables/perimage_summary.csv (10 rows)
+  wrote results/tables/cues.csv (10 rows)
+  stabiliser baseline: 90 epochs from wandb/run-20260909_222214-tg4ifizd
+  stabiliser clip: 90 epochs from wandb/run-20260909_225650-cbctuqlh
+  stabiliser wd1e-3: 90 epochs from wandb/run-20260909_233407-pglyu5d6
+  wrote results/tables/stabiliser.csv (270 rows)
+done

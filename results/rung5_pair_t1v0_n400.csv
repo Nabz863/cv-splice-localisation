@@ -1,0 +1,2 @@
+test_fold,val_fold,tau,beta,f1,iou,tau_beta0,f1_beta0,prior_gain
+1,0,-2.0,64.0,0.710753,0.551294,-2.0,0.646003,0.064750

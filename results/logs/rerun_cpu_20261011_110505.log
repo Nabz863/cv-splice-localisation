@@ -1,0 +1,198 @@
+commit: 00a4efa+uncommitted
+all metric tests pass
+all MRF tests pass
+all 8 collision types caught; clean figure passes
+oracle (blurred GT): 0.9999   expect ~1.0
+random:              0.4993   expect ~0.5
+pixel AUC over 400 images (0.5 = no signal)
+
+variant               mean   median    >0.5
+A_median            0.5592   0.5460   56.0%
+B_highpass          0.5698   0.5646   58.2%
+C_ratio             0.5332   0.5121   52.2%
+D_ratio_colour      0.5338   0.5156   51.7%
+E_ela               0.7652   0.8384   83.0%
+
+wrote results/cue_auc.csv, results/cue_auc_per_image.csv
+ quality  window   mean AUC   median
+      70       8     0.6563   0.6510
+      70      16     0.6569   0.6650
+      70      32     0.6467   0.6635
+      80       8     0.7389   0.7965
+      80      16     0.7450   0.8231
+      80      32     0.7476   0.8340
+      90       8     0.7521   0.8062
+      90      16     0.7600   0.8269
+      90      32     0.7611   0.8227
+      95       8     0.7469   0.7816
+      95      16     0.7573   0.8193
+      95      32     0.7607   0.8223
+      98       8     0.7066   0.7145
+      98      16     0.7208   0.7434
+      98      32     0.7251   0.7688
+
+best: quality=90, window=32  (AUC 0.7611)
+wrote results/ela_tuning.csv
+pixel AUC over 400 images (0.5 = no signal)
+
+variant               mean   median    >0.5
+A_median            0.5619   0.5507   57.2%
+B_highpass          0.5585   0.5607   55.2%
+C_ratio             0.5434   0.5253   53.8%
+D_ratio_colour      0.5392   0.5201   52.8%
+E_ela               0.7429   0.8095   80.2%
+
+wrote results/cue_auc_holdout1.csv, results/cue_auc_per_image_holdout1.csv
+ quality  window   mean AUC   median
+      70       8     0.6438   0.6272
+      70      16     0.6470   0.6493
+      70      32     0.6404   0.6410
+      80       8     0.7341   0.7722
+      80      16     0.7394   0.7922
+      80      32     0.7404   0.8035
+      90       8     0.7331   0.7786
+      90      16     0.7407   0.8073
+      90      32     0.7433   0.8037
+      95       8     0.7310   0.7815
+      95      16     0.7417   0.8085
+      95      32     0.7436   0.8044
+      98       8     0.6873   0.6966
+      98      16     0.7017   0.7288
+      98      32     0.7058   0.7428
+
+best: quality=95, window=32  (AUC 0.7436)
+wrote results/ela_tuning_holdout1.csv
+pixel AUC over 400 images (0.5 = no signal)
+
+variant               mean   median    >0.5
+A_median            0.5318   0.5035   50.5%
+B_highpass          0.5380   0.5202   52.2%
+C_ratio             0.5092   0.4743   47.2%
+D_ratio_colour      0.5067   0.4715   45.8%
+E_ela               0.7504   0.8361   80.2%
+
+wrote results/cue_auc_holdout2.csv, results/cue_auc_per_image_holdout2.csv
+ quality  window   mean AUC   median
+      70       8     0.6505   0.6464
+      70      16     0.6519   0.6559
+      70      32     0.6396   0.6363
+      80       8     0.7249   0.7885
+      80      16     0.7305   0.8279
+      80      32     0.7317   0.8338
+      90       8     0.7426   0.8078
+      90      16     0.7515   0.8478
+      90      32     0.7545   0.8464
+      95       8     0.7381   0.7902
+      95      16     0.7500   0.8268
+      95      32     0.7535   0.8382
+      98       8     0.6951   0.7252
+      98      16     0.7104   0.7679
+      98      32     0.7165   0.7800
+
+best: quality=90, window=32  (AUC 0.7545)
+wrote results/ela_tuning_holdout2.csv
+pixel AUC over 400 images (0.5 = no signal)
+
+variant               mean   median    >0.5
+A_median            0.5576   0.5563   59.2%
+B_highpass          0.5591   0.5632   59.2%
+C_ratio             0.5273   0.5126   52.5%
+D_ratio_colour      0.5287   0.5064   52.5%
+E_ela               0.7660   0.8594   81.8%
+
+wrote results/cue_auc_holdout3.csv, results/cue_auc_per_image_holdout3.csv
+ quality  window   mean AUC   median
+      70       8     0.6737   0.6707
+      70      16     0.6833   0.6975
+      70      32     0.6774   0.6984
+      80       8     0.7395   0.7539
+      80      16     0.7472   0.7923
+      80      32     0.7449   0.7903
+      90       8     0.7570   0.8014
+      90      16     0.7682   0.8319
+      90      32     0.7716   0.8588
+      95       8     0.7489   0.7906
+      95      16     0.7622   0.8338
+      95      32     0.7652   0.8375
+      98       8     0.7127   0.7403
+      98      16     0.7304   0.7774
+      98      32     0.7352   0.8114
+
+best: quality=90, window=32  (AUC 0.7716)
+wrote results/ela_tuning_holdout3.csv
+pixel AUC over 400 images (0.5 = no signal)
+
+variant               mean   median    >0.5
+A_median            0.5576   0.5400   58.0%
+B_highpass          0.5595   0.5500   56.5%
+C_ratio             0.5070   0.4734   46.0%
+D_ratio_colour      0.5046   0.4729   45.2%
+E_ela               0.7866   0.8925   83.8%
+
+wrote results/cue_auc_holdout4.csv, results/cue_auc_per_image_holdout4.csv
+ quality  window   mean AUC   median
+      70       8     0.6827   0.6949
+      70      16     0.6840   0.7113
+      70      32     0.6742   0.7060
+      80       8     0.7673   0.8553
+      80      16     0.7728   0.8811
+      80      32     0.7717   0.8900
+      90       8     0.7827   0.8572
+      90      16     0.7933   0.8908
+      90      32     0.7957   0.9019
+      95       8     0.7654   0.8273
+      95      16     0.7786   0.8629
+      95      32     0.7805   0.8892
+      98       8     0.7135   0.7548
+      98      16     0.7320   0.8029
+      98      32     0.7380   0.8255
+
+best: quality=90, window=32  (AUC 0.7957)
+wrote results/ela_tuning_holdout4.csv
+corr(score, local texture energy): mean +0.243, median +0.240
+|corr| > 0.3 in 60.0% of images
+wrote results/texture_corr.csv
+  200/1822  (44s)
+  400/1822  (76s)
+  600/1822  (111s)
+  800/1822  (145s)
+  1000/1822  (178s)
+  1200/1822  (209s)
+  1400/1822  (244s)
+  1600/1822  (277s)
+  1800/1822  (311s)
+wrote results/rung2_grid_icm.npz (313s)
+building tables
+  rung 2 reproduces rung2_nested_pairs.csv on all 20 pairs (max diff 0.0e+00)
+  rung 3: results/rung3_sam2.csv not present - marked pending
+  wrote results/tables/main.csv (5 rows)
+  wrote results/tables/gains.csv (40 rows)
+  wrote results/tables/datasize.csv (5 rows)
+  wrote results/tables/category.csv (10 rows)
+  wrote results/tables/auc.csv (67 rows)
+  fixed operating point tau=0.75, beta=8.0 (best pooled F1 on all splicing images)
+  wrote results/tables/copymove.csv (4 rows)
+  wrote results/tables/splits.csv (3 rows)
+  wrote results/tables/icm.csv (2 rows)
+  wrote results/tables/icm_energy.csv (5 rows)
+  selection: pooled selection from per-image counts reproduces rung5_mrf_refine.csv on all 20 pairs
+  wrote results/tables/selection.csv (4 rows)
+  wrote results/tables/selection_detail.csv (4 rows)
+  WARNING: holdout 1 chose E_ela q=95 w=32
+  wrote results/tables/cues.csv (14 rows)
+  stabiliser baseline: 90 epochs from wandb/run-20260909_222214-tg4ifizd
+  stabiliser clip: 90 epochs from wandb/run-20260909_225650-cbctuqlh
+  stabiliser wd1e-3: 90 epochs from wandb/run-20260909_233407-pglyu5d6
+  wrote results/tables/stabiliser.csv (270 rows)
+done
+  fig0_method: ok
+  fig1_main_f1: ok
+  fig2_prior_gain: ok
+  fig3_datasize: ok
+  fig4_per_category: ok
+  fig5_image_auc: ok
+  fig6_copymove: ok
+  fig7_stabiliser: ok
+  fig8_mechanism: ok
+  fig9_perimage_f1: ok
+all figures written to results/figures/

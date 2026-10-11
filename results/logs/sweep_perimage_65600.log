@@ -1,0 +1,102 @@
+20 cached pairs | 49 (tau, beta) points | 12 workers | CPU only
+    t0v1 cal 100/150 (74s)
+    t0v1 test 100/364 (92s)
+    t0v1 test 200/364 (165s)
+    t0v1 test 300/364 (204s)
+t0v1: 150 cal + 364 test images [303s]
+    t0v2 cal 100/150 (69s)
+    t0v2 test 100/364 (91s)
+    t0v2 test 200/364 (161s)
+    t0v2 test 300/364 (161s)
+t0v2: 150 cal + 364 test images [306s]
+    t0v3 cal 100/150 (109s)
+    t0v3 test 100/364 (94s)
+    t0v3 test 200/364 (205s)
+    t0v3 test 300/364 (205s)
+t0v3: 150 cal + 364 test images [354s]
+    t0v4 cal 100/150 (104s)
+    t0v4 test 100/364 (97s)
+    t0v4 test 200/364 (198s)
+    t0v4 test 300/364 (198s)
+t0v4: 150 cal + 364 test images [307s]
+    t1v0 cal 100/150 (58s)
+    t1v0 test 100/364 (94s)
+    t1v0 test 200/364 (122s)
+    t1v0 test 300/364 (173s)
+t1v0: 150 cal + 364 test images [292s]
+    t1v2 cal 100/150 (94s)
+    t1v2 test 100/364 (93s)
+    t1v2 test 200/364 (143s)
+    t1v2 test 300/364 (223s)
+t1v2: 150 cal + 364 test images [373s]
+    t1v3 cal 100/150 (60s)
+    t1v3 test 100/364 (81s)
+    t1v3 test 200/364 (110s)
+    t1v3 test 300/364 (134s)
+t1v3: 150 cal + 364 test images [240s]
+    t1v4 cal 100/150 (68s)
+    t1v4 test 100/364 (60s)
+    t1v4 test 200/364 (99s)
+    t1v4 test 300/364 (134s)
+t1v4: 150 cal + 364 test images [242s]
+    t2v0 cal 100/150 (48s)
+    t2v0 test 100/364 (91s)
+    t2v0 test 200/364 (93s)
+    t2v0 test 300/364 (168s)
+t2v0: 150 cal + 364 test images [268s]
+    t2v1 cal 100/150 (63s)
+    t2v1 test 100/364 (70s)
+    t2v1 test 200/364 (123s)
+    t2v1 test 300/364 (196s)
+t2v1: 150 cal + 364 test images [260s]
+    t2v3 cal 100/150 (63s)
+    t2v3 test 100/364 (83s)
+    t2v3 test 200/364 (125s)
+    t2v3 test 300/364 (194s)
+t2v3: 150 cal + 364 test images [301s]
+    t2v4 cal 100/150 (106s)
+    t2v4 test 100/364 (72s)
+    t2v4 test 200/364 (155s)
+    t2v4 test 300/364 (247s)
+t2v4: 150 cal + 364 test images [354s]
+    t3v0 cal 100/150 (39s)
+    t3v0 test 100/365 (98s)
+    t3v0 test 200/365 (104s)
+    t3v0 test 300/365 (191s)
+t3v0: 150 cal + 365 test images [274s]
+    t3v1 cal 100/150 (89s)
+    t3v1 test 100/365 (147s)
+    t3v1 test 200/365 (203s)
+    t3v1 test 300/365 (288s)
+t3v1: 150 cal + 365 test images [398s]
+    t3v2 cal 100/150 (56s)
+    t3v2 test 100/365 (96s)
+    t3v2 test 200/365 (164s)
+    t3v2 test 300/365 (180s)
+t3v2: 150 cal + 365 test images [294s]
+    t3v4 cal 100/150 (88s)
+    t3v4 test 100/365 (102s)
+    t3v4 test 200/365 (108s)
+    t3v4 test 300/365 (203s)
+t3v4: 150 cal + 365 test images [293s]
+    t4v0 cal 100/150 (96s)
+    t4v0 test 100/365 (89s)
+    t4v0 test 200/365 (135s)
+    t4v0 test 300/365 (157s)
+t4v0: 150 cal + 365 test images [269s]
+    t4v1 cal 100/150 (76s)
+    t4v1 test 100/365 (115s)
+    t4v1 test 200/365 (164s)
+    t4v1 test 300/365 (184s)
+t4v1: 150 cal + 365 test images [293s]
+    t4v2 cal 100/150 (103s)
+    t4v2 test 100/365 (99s)
+    t4v2 test 200/365 (112s)
+    t4v2 test 300/365 (136s)
+t4v2: 150 cal + 365 test images [254s]
+    t4v3 cal 100/150 (101s)
+    t4v3 test 100/365 (104s)
+    t4v3 test 200/365 (146s)
+    t4v3 test 300/365 (146s)
+t4v3: 150 cal + 365 test images [275s]
+next: python3 src/report/build_tables.py
