@@ -1,0 +1,6 @@
+n_train,models,stopped_min,stopped_median,stopped_max,nonfinite_train,nonfinite_val,models_with_nonfinite
+50,20,15,20.5,38,0,0,0
+150,20,13,41.5,65,0,0,0
+400,20,23,39.0,69,0,0,0
+800,20,21,56.0,69,0,0,0
+1093,20,19,38.5,81,0,0,0
