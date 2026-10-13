@@ -49,6 +49,7 @@ Outputs (results/tables/)
   selection.csv   the prior's effect when (tau, beta) is selected by pooled F1 vs
                   by mean per-image F1, for both unaries (needs rung5_counts/)
   selection_detail.csv  per-image detail behind selection.csv, over all 20 pairs
+  sam2.csv        rung 3: automatic union vs the ground-truth oracle (rung3_sam2_20pairs.csv)
   training.csv    per training-set size: models, stopping epochs, and the number of
                   non-finite training / validation batches skipped (rung5_training*.csv)
 
@@ -449,6 +450,14 @@ def main():
                                  f1=f, f1_sd=fs, iou=i, n_pairs=len(r3),
                                  beta0_selected="", source="rung3_sam2_20pairs.csv"))
     write_csv("main.csv", main_rows)
+
+    # ---- sam2.csv: rung 3's size-filtered union vs the ground-truth oracle that
+    # picks each image's best single proposal (a diagnostic, never a method)
+    if r3:
+        fa, fsa = fold_mean(r3, "f1")
+        fo, fso = fold_mean(r3, "oracle_f1")
+        write_csv("sam2.csv", [dict(variant="automatic", f1=fa, f1_sd=fsa, n_pairs=len(r3)),
+                               dict(variant="oracle", f1=fo, f1_sd=fso, n_pairs=len(r3))])
 
     # ---- gains.csv (per pair)
     gains = [dict(unary="ELA", test_fold=p["test_fold"], val_fold=p["val_fold"],

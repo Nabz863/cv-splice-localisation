@@ -1,0 +1,7 @@
+building tables
+  rung 2 reproduces rung2_nested_pairs.csv on all 20 pairs (max diff 0.0e+00)
+  wrote results/tables/main.csv (6 rows)
+  wrote results/tables/sam2.csv (2 rows)
+  wrote results/tables/gains.csv (40 rows)
+  wrote results/tables/datasize.csv (5 rows)
+results/rung5_training.csv does not record non-finite batches - retrain with the current cache_logits.py

@@ -449,11 +449,223 @@ def fig_perimage():
     return fig
 
 
+# ------------------------------------------------------------- 10. the U-Net
+def fig_unet():
+    """The rung 4/5 network, drawn as feature-map slabs in the style of the
+    course text's U-Net figures. Channel counts, kernel size and patch size are
+    read from the model class (src/methods/unet.py) and patch_data.PATCH, so the
+    drawing cannot drift from the code."""
+    from matplotlib.patches import Polygon, Rectangle
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "methods"))
+    from unet import UNet
+    from patch_data import PATCH
+    m = UNet()
+    ch = [m.e1[0].out_channels, m.e2[0].out_channels, m.e3[0].out_channels,
+          m.bott[0].out_channels]
+    k, c_in = m.pre.kernel_size[0], m.pre.out_channels
+    res = [PATCH // 2 ** i for i in range(4)]
+
+    # (front, top, side): the side face is the map's spatial extent, so it gets
+    # the main tint; the front (channel thickness) is a shade darker.
+    BLUE_F, BLUE_T, BLUE_S = "#b9d2f2", "#e9f1fc", "#d6e5f8"
+    GOLD_F, GOLD_T, GOLD_S = "#efcd7a", "#fbf0d2", "#f6e1aa"
+    VIO_F, VIO_T, VIO_S = "#c4bbec", "#eeebf9", "#ddd7f4"
+    GREY_F, GREY_T, GREY_S = "#d9d7d0", "#f6f5f2", "#ebe9e4"
+    GOLD = "#c8930f"
+
+    fig = plt.figure(figsize=(FULL, 2.55))
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(-0.75, 15.6); ax.set_ylim(-0.95, 4.85); ax.axis("off")
+    ax.set_aspect("auto")
+
+    H = {res[0]: 1.55, res[1]: 1.05, res[2]: 0.70, res[3]: 0.46}
+    W = lambda c: 0.07 + 0.0016 * c
+    Y = [3.55, 2.25, 1.15, 0.25]
+
+    def slab(x, yc, w, h, cols):
+        f, t, s = cols
+        d = 0.22 * h
+        dx, dy = d, 0.55 * d
+        b, top = yc - h / 2, yc + h / 2
+        ax.add_patch(Polygon([(x, top), (x + w, top), (x + w + dx, top + dy), (x + dx, top + dy)],
+                             closed=True, fc=t, ec=INK2, lw=0.5))
+        ax.add_patch(Polygon([(x + w, b), (x + w + dx, b + dy), (x + w + dx, top + dy), (x + w, top)],
+                             closed=True, fc=s, ec=INK2, lw=0.5))
+        ax.add_patch(Rectangle((x, b), w, h, fc=f, ec=INK2, lw=0.5))
+        return dict(x0=x, x1=x + w + dx, xm=x + w / 2, b=b, top=top + dy, yc=yc, xr=x + w)
+
+    def arrow(p0, p1, c=INK2, lw=0.8):
+        ax.annotate("", xy=p1, xytext=p0, arrowprops=dict(arrowstyle="-|>", color=c, lw=lw,
+                    shrinkA=0, shrinkB=0, mutation_scale=7))
+
+    def label(x, y, s, **kw):
+        kw.setdefault("fontsize", 7); kw.setdefault("ha", "center")
+        ax.text(x, y, s, color=kw.pop("color", INK), **kw)
+
+    # input and the constrained layer
+    inp = slab(0.0, Y[0], 0.07, H[res[0]], (GREY_F, GREY_T, GREY_S))
+    label(inp["xm"] + 0.1, inp["top"] + 0.1, "RGB")
+    con = slab(1.15, Y[0], 0.07, H[res[0]], (VIO_F, VIO_T, VIO_S))
+    arrow((inp["x1"] + 0.05, Y[0]), (con["x0"] - 0.05, Y[0]))
+    label(con["xm"] + 0.1, con["top"] + 0.1, f"{c_in}", color=VIOLET)
+    label(con["xm"] + 0.1, con["b"] - 0.12, f"constrained\n{k}$\\times${k}: centre $-1$,\nsurround sums to 1",
+          va="top", color=VIOLET, fontsize=6.5, linespacing=1.15)
+
+    # encoder
+    ex = [2.35, 3.35, 4.25]
+    enc = []
+    for i in range(3):
+        e = slab(ex[i], Y[i], W(ch[i]), H[res[i]], (BLUE_F, BLUE_T, BLUE_S))
+        label(e["xm"] + 0.06, e["top"] + 0.08, f"{ch[i]}")
+        enc.append(e)
+    arrow((con["x1"] + 0.05, Y[0]), (enc[0]["x0"] - 0.05, Y[0]))
+    bot = slab(5.25, Y[3], W(ch[3]), H[res[3]], (BLUE_F, BLUE_T, BLUE_S))
+    label(bot["xm"] + 0.05, bot["top"] + 0.08, f"{ch[3]}")
+    for i in range(4):                                   # resolution of each level, at left
+        label(-0.2, Y[i], f"{res[i]}$\\times${res[i]}", ha="right", va="center", fontsize=6.5,
+              color=INK2)
+    lower = enc[1:] + [bot]
+    for i in range(3):                                   # max-pool, down a level
+        a, b = enc[i], lower[i]
+        arrow((a["xm"] + 0.02, a["b"] - 0.05), (b["x0"] - 0.06, b["yc"]), c=INK2)
+
+    # decoder: concat [skip copy | upsampled], then two convs
+    dx = {2: 6.55, 1: 8.55, 0: 10.75}
+    prev = bot
+    dec = {}
+    for i in (2, 1, 0):
+        g = slab(dx[i], Y[i], W(ch[i]), H[res[i]], (GOLD_F, GOLD_T, GOLD_S))
+        u = slab(g["xr"], Y[i], W(ch[i]), H[res[i]], (BLUE_F, BLUE_T, BLUE_S))
+        label((g["x0"] + u["x1"]) / 2, u["top"] + 0.08, f"{ch[i]}+{ch[i]}")
+        arrow((prev["x1"] + 0.06, prev["yc"]), (u["xm"], u["b"] - 0.05))                 # up-conv
+        o = slab(u["x1"] + 0.45, Y[i], W(ch[i]), H[res[i]], (BLUE_F, BLUE_T, BLUE_S))
+        label(o["xm"] + 0.06, o["top"] + 0.08, f"{ch[i]}")
+        arrow((u["x1"] + 0.05, Y[i]), (o["x0"] - 0.05, Y[i]))                             # convs
+        e = enc[i]                                                                         # skip
+        arrow((e["x1"] + 0.06, Y[i] + (0.1 if i == 0 else 0)), (g["x0"] - 0.06, Y[i] + (0.1 if i == 0 else 0)),
+              c=GOLD, lw=1.0)
+        dec[i] = o; prev = o
+
+    # output: 1x1 conv to one logit per pixel, then threshold or MRF
+    o = dec[0]
+    lg = slab(o["x1"] + 0.55, Y[0], 0.07, H[res[0]], (GREY_F, GREY_T, GREY_S))
+    arrow((o["x1"] + 0.05, Y[0]), (lg["x0"] - 0.05, Y[0]))
+    label(lg["xm"] + 0.1, lg["top"] + 0.08, "1")
+    label(lg["xm"] + 0.1, lg["b"] - 0.12, "logits", va="top", color=INK2, fontsize=6.5)
+    bx, bw, bh = lg["x1"] + 0.45, 1.65, 0.95
+    ax.add_patch(FancyBboxPatch((bx, Y[0] - bh / 2), bw, bh, boxstyle="round,pad=0,rounding_size=0.1",
+                                fc="#fbe2d7", ec=ORANGE, lw=0.9, gid="box"))
+    label(bx + bw / 2, Y[0], "threshold $\\tau$\n(rung 4), or\nMRF $(\\tau,\\beta)$\n(rung 5)",
+          va="center", fontsize=6.6, linespacing=1.1)
+    arrow((lg["x1"] + 0.05, Y[0]), (bx - 0.05, Y[0]))
+
+    # key, written once
+    kx, ky = 6.6, 4.62
+    arrow((kx, ky), (kx + 0.45, ky), c=GOLD, lw=1.0)
+    label(kx + 0.55, ky, "skip: copy and concatenate", ha="left", va="center", fontsize=6.5)
+    ax.text(-0.7, -0.38, "Slab height: resolution (left). Slab thickness: channels (above). "
+            "Down: 2$\\times$2 max-pool. Up: 2$\\times$2 transposed conv.", fontsize=6.5,
+            color=INK2, va="center", ha="left")
+    ax.text(-0.7, -0.72, "Right: 2$\\times$(3$\\times$3 conv, BatchNorm, ReLU), same padding; "
+            f"the last is a 1$\\times$1 conv. {sum(p.numel() for p in m.parameters()) / 1e6:.2f} M "
+            "parameters.", fontsize=6.5, color=INK2, va="center", ha="left")
+    return fig
+
+
+# ------------------------------------------------------------------ 11. SAM2
+def fig_sam2():
+    """Rung 3 against the rungs either side of it, and against the oracle that
+    picks each image's best SAM2 proposal using the ground truth."""
+    s = table("sam2.csv", required=False)
+    if not s:
+        return None
+    s = {r["variant"]: r for r in s}
+    t = {r["key"]: r for r in table("main.csv")}
+    ds = {int(r["n_train"]): r for r in table("datasize.csv")}
+    rows = [("SAM2, best proposal\n(picked with ground truth)", s["oracle"], INK2, "hollow"),
+            ("SAM2, size-filtered union\n(rung 3)", s["automatic"], INK2, "full"),
+            ("U-Net + MRF (rung 5)", t["rung5"], ORANGE, "full"),
+            ("U-Net (rung 4)", t["rung4"], BLUE, "full"),
+            ("U-Net, 50 training masks", dict(f1=ds[min(ds)]["f1"], f1_sd=ds[min(ds)]["f1_sd"]), BLUE,
+             "full"),
+            ("ELA + MRF (rung 2)", t["rung2"], ORANGE, "full")]
+    fig, ax = plt.subplots(figsize=(COL, 2.35))
+    y = np.arange(len(rows))[::-1].astype(float)
+    for yi, (lab, r, c, style) in zip(y, rows):
+        v, sd = float(r["f1"]), float(r["f1_sd"])
+        ax.plot([v - sd, v + sd], [yi, yi], color=c, lw=1.4, solid_capstyle="round")
+        ax.plot(v, yi, "o", ms=5.5, color=c, mfc="white" if style == "hollow" else c, mew=1.3,
+                mec=c if style == "hollow" else "white")
+        ax.text(v + sd + 0.02, yi, f"{v:.3f}", va="center", fontsize=6.8)
+    ch = num(t["chance"], "f1")
+    ax.axvline(ch, color=MUTED, ls=(0, (3, 2)), lw=0.9)
+    ax.text(ch, 1.0, f"chance {ch:.3f}", transform=above_axes(ax), ha="center", va="bottom",
+            fontsize=6.5, color=INK2)
+    a, o = float(s["automatic"]["f1"]), float(s["oracle"]["f1"])
+    ax.annotate("", xy=(o - 0.015, y[0] - 0.12), xytext=(a + 0.15, y[1] + 0.12),
+                arrowprops=dict(arrowstyle="-|>", color=INK2, lw=0.7, mutation_scale=6,
+                                shrinkA=0, shrinkB=0, ls=(0, (2, 1.5))))
+    ax.set_yticks(y, [r[0] for r in rows], fontsize=6.6)
+    ax.tick_params(axis="y", length=0); ax.spines["left"].set_visible(False)
+    ax.set_xlim(0.15, 1.0); ax.set_ylim(-0.6, len(rows) - 0.4)
+    ax.set_xlabel("Pixel F1 (micro), $\\pm$1 SD across test folds")
+    grid_x(ax)
+    return fig
+
+
+# --------------------------------------------- 12. selection: pixels vs images
+def fig_selection():
+    """The U-Net's prior when (tau, beta) are chosen by pooled F1 vs by mean
+    per-image F1: each criterion's effect on both measures (selection.csv), and
+    the share of images left with no correct pixel (selection_detail.csv)."""
+    sel = table("selection.csv", required=False)
+    if not sel:
+        return None
+    sel = {(r["unary"], r["criterion"]): r for r in sel}
+    det = {(r["unary"], r["criterion"]): r for r in table("selection_detail.csv")}
+    fig, ax = plt.subplots(figsize=(COL, 2.2))
+    ys, labels = [], []
+    groups = (("pooled", "chosen for pooled F1"), ("per-image", "chosen for per-image F1"))
+    y = 4.6
+    for crit, head in groups:
+        r = sel[("U-Net", crit)]
+        betas = sorted(float(x.split(":")[0]) for x in r["beta_counts"].split())
+        lost = float(det[("U-Net", crit)]["frac_lost"])
+        pct = f"{100 * lost:.0f}" if lost >= 0.1 else f"{100 * lost:.1f}"
+        ax.text(0.502, y + 0.62, f"{head} ($\\beta$ {betas[0]:g}\u2013{betas[-1]:g}): "
+                f"{pct}% of images lose every detection", fontsize=6.2, color=INK2,
+                va="center", ha="left")
+        for meas, k0, k1 in (("pooled F1", "pooled_beta0", "pooled_prior"),
+                             ("per-image F1", "img_beta0", "img_prior")):
+            a, b = float(r[k0]), float(r[k1])
+            ax.annotate("", xy=(b, y), xytext=(a, y), arrowprops=dict(
+                arrowstyle="-|>", color=ORANGE if b > a else MUTED, lw=1.3, mutation_scale=7,
+                shrinkA=3.5, shrinkB=2.5))
+            ax.plot(a, y, "o", ms=5, color=BLUE, mec="white", mew=0.8, zorder=3)
+            ax.plot(b, y, "o", ms=5, color=ORANGE, mec="white", mew=0.8, zorder=3)
+            lx = max(a, b) + 0.012
+            ax.text(lx, y, f"{b - a:+.3f}".replace("-", "−"), va="center", fontsize=6.6,
+                    color=ORANGE if b > a else INK2)
+            ys.append(y); labels.append(meas)
+            y -= 0.9
+        y -= 0.75
+    ax.set_yticks(ys, labels, fontsize=6.6)
+    ax.tick_params(axis="y", length=0); ax.spines["left"].set_visible(False)
+    ax.set_xlim(0.5, 0.8); ax.set_ylim(y + 0.9 - 0.55, 5.55)
+    ax.set_xlabel("U-Net F1, mean over 20 pairs")
+    grid_x(ax)
+    h = [plt.Line2D([], [], marker="o", ls="", ms=5, color=BLUE),
+         plt.Line2D([], [], marker="o", ls="", ms=5, color=ORANGE)]
+    ax.legend(h, ["$\\beta = 0$", "with the prior"], loc="lower right", fontsize=6.5,
+              handletextpad=0.2, borderaxespad=0.2)
+    return fig
+
 FIGURES = [("fig0_method", fig_method), ("fig1_main_f1", fig_main), ("fig2_prior_gain", fig_gain),
            ("fig3_datasize", fig_datasize), ("fig4_per_category", fig_category),
            ("fig5_image_auc", fig_auc), ("fig6_copymove", fig_copymove),
            ("fig7_stabiliser", fig_stabiliser), ("fig8_mechanism", fig_mechanism),
-           ("fig9_perimage_f1", fig_perimage)]
+           ("fig9_perimage_f1", fig_perimage), ("fig10_unet", fig_unet),
+           ("fig11_sam2", fig_sam2), ("fig12_selection", fig_selection)]
 
 
 def main():
@@ -465,7 +677,8 @@ def main():
             print(f"  {name}: skipped (its table is not there yet)")
             continue
         try:
-            save_checked(fig, os.path.join(OUT, name))
+            exts = ("pdf", "png", "svg") if name == "fig10_unet" else ("pdf", "png")
+            save_checked(fig, os.path.join(OUT, name), exts=exts)
             print(f"  {name}: ok")
         except RuntimeError as e:
             failed.append(str(e))
