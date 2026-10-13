@@ -1,0 +1,11 @@
+  fig0_method: ok
+  fig1_main_f1: ok
+  fig2_prior_gain: ok
+  fig3_datasize: ok
+  fig4_per_category: ok
+  fig5_image_auc: ok
+  fig6_copymove: ok
+  fig7_stabiliser: ok
+  fig8_mechanism: ok
+  fig9_perimage_f1: ok
+all figures written to results/figures/

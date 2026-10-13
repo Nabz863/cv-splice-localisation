@@ -393,35 +393,39 @@ def fig_stabiliser():
 
 # -------------------------------------------------------------- 8. mechanism
 def fig_mechanism():
+    """Pixels the prior changes, by distance to the true boundary (mechanism.py,
+    all 20 pairs). Gains to the right of zero, losses to the left, in millions."""
     d = table("mechanism.csv", required=False)
     if not d:
         return None
-    k = 1e3
-    fig, ax = plt.subplots(figsize=(6.4, 2.5))
+    k = 1e6
+    fig, ax = plt.subplots(figsize=(COL, 1.8))
     y = np.arange(len(d))[::-1]
     v = {key: np.array([float(r[key]) for r in d]) / k
          for key in ("fp_removed", "fn_filled", "tp_lost", "fp_added")}
-    ax.barh(y, v["fp_removed"], height=0.58, color=ORANGE, edgecolor="white", lw=2,
+    h = 0.62
+    ax.barh(y, v["fp_removed"], height=h, color=ORANGE, edgecolor="white", lw=1.2,
             label="false positives removed")
-    ax.barh(y, v["fn_filled"], left=v["fp_removed"], height=0.58, color=AQUA, edgecolor="white",
-            lw=2, label="missed pixels filled")
-    ax.barh(y, -v["tp_lost"], height=0.58, color=MUTED, edgecolor="white", lw=2,
+    ax.barh(y, v["fn_filled"], left=v["fp_removed"], height=h, color=AQUA, edgecolor="white",
+            lw=1.2, label="missed pixels filled")
+    ax.barh(y, -v["tp_lost"], height=h, color=MUTED, edgecolor="white", lw=1.2,
             label="correct pixels lost")
-    ax.barh(y, -v["fp_added"], left=-v["tp_lost"], height=0.58, color=PALE, edgecolor="white",
-            lw=2, label="false positives added")
+    ax.barh(y, -v["fp_added"], left=-v["tp_lost"], height=h, color=PALE, edgecolor="white",
+            lw=1.2, label="false positives added")
     gain = v["fp_removed"] + v["fn_filled"]
     for yi, gv, r in zip(y, gain, d):
-        ax.text(gv + gain.max() * 0.02, yi, f"net {float(r['share']):.0%}", va="center", fontsize=7)
+        ax.text(gv + 0.6, yi, f"net {float(r['net']) / k:+.1f}M".replace("-", "\u2212"),
+                va="center", fontsize=6.8)
     ax.axvline(0, color=INK2, lw=0.8)
     ax.set_yticks(y, [r["band"].replace("<=", "≤").replace("-", "–") for r in d])
     ax.tick_params(axis="y", length=0)
-    ax.set_ylabel("distance to true boundary")
-    ax.set_xlim(-max((v["tp_lost"] + v["fp_added"]).max(), gain.max() * 0.05) * 1.3,
-                gain.max() * 1.22)
-    ax.set_xlabel("pixels the prior changes (thousands); losses left of zero, gains right")
+    ax.set_ylabel("distance to\ntrue boundary")
+    lo = (v["tp_lost"] + v["fp_added"]).max()
+    ax.set_xlim(-lo * 1.15, gain.max() * 1.32)
+    ax.set_xlabel("pixels changed by the prior (millions)")
     grid_x(ax)
-    ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, fontsize=7,
-              handlelength=1, handleheight=1)
+    ax.legend(loc="lower left", bbox_to_anchor=(-0.02, 1.0), ncol=2, fontsize=6.5,
+              handlelength=1, handleheight=1, columnspacing=1.0)
     return fig
 
 
