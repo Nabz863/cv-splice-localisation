@@ -1,0 +1,41 @@
+/home-mscluster/nmahomed/cv-project
+test_fold,val_fold,stopped_at,best_val,nonfinite_train,nonfinite_val,epochs_max,patience,batch,workers,lr,weight_decay,grad_clip,constraint_norm,amp_dtype,n_cal,crops_per_image,patch,n_train,crop_rng,nonfinite_counted
+0,1,81,0.525100,0,0,90,10,8,2,0.001,0.0001,1.0,sum,bfloat16,150,8,256,0,per-worker,1
+building tables
+  rung 2 reproduces rung2_nested_pairs.csv on all 20 pairs (max diff 0.0e+00)
+  wrote results/tables/main.csv (6 rows)
+  wrote results/tables/sam2.csv (2 rows)
+  wrote results/tables/gains.csv (40 rows)
+  wrote results/tables/datasize.csv (5 rows)
+  wrote results/tables/training.csv (5 rows)
+  wrote results/tables/category.csv (10 rows)
+  wrote results/tables/auc.csv (68 rows)
+  fixed operating point tau=0.75, beta=8.0 (best pooled F1 on all splicing images)
+  wrote results/tables/copymove.csv (4 rows)
+  wrote results/tables/splits.csv (3 rows)
+  wrote results/tables/icm.csv (2 rows)
+  wrote results/tables/icm_energy.csv (5 rows)
+  selection: pooled selection from per-image counts reproduces rung5_mrf_refine.csv on all 20 pairs
+  wrote results/tables/selection.csv (4 rows)
+  wrote results/tables/selection_detail.csv (4 rows)
+  WARNING: holdout 1 chose E_ela q=95 w=32
+  wrote results/tables/cues.csv (14 rows)
+  stabiliser baseline: 57 epochs from wandb/offline-run-20261012_180602-ahifsfwp
+  stabiliser clip: 90 epochs from wandb/offline-run-20261012_181829-v0ll187o
+  stabiliser wd1e-3: 70 epochs from wandb/offline-run-20261012_183848-h29i3wlm
+  wrote results/tables/stabiliser.csv (217 rows)
+done
+  fig0_method: ok
+  fig1_main_f1: ok
+  fig2_prior_gain: ok
+  fig3_datasize: ok
+  fig4_per_category: ok
+  fig5_image_auc: ok
+  fig6_copymove: ok
+  fig7_stabiliser: ok
+  fig8_mechanism: ok
+  fig9_perimage_f1: ok
+  fig10_unet: ok
+  fig11_sam2: ok
+  fig12_selection: ok
+all figures written to results/figures/

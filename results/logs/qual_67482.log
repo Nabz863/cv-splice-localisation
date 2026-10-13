@@ -1,0 +1,16 @@
+/home-mscluster/nmahomed/cv-project/venv/lib/python3.14/site-packages/torch/jit/_script.py:1485: FutureWarning: `torch.jit.script` is not supported in Python 3.14+ and may break. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+t0v1: size band [0.02, 0.5] | 4 images | cuda
+    best Tp_D_CRN_L_N_nat00085_nat00086_10069: 6 proposals, union F1 0.000, oracle F1 0.004 (10s)
+     p67 Tp_D_NRN_S_N_nat10145_ani00097_11988: 8 proposals, union F1 0.000, oracle F1 0.980 (2s)
+     p33 Tp_D_NNN_M_N_arc00070_arc00072_00290: 14 proposals, union F1 0.752, oracle F1 0.987 (1s)
+   worst Tp_D_NRN_S_N_pla00038_pla00049_10983: 9 proposals, union F1 0.000, oracle F1 0.000 (1s)
+next: python src/methods/fig_qualitative.py
+wrote results/fig_qualitative_splice.png
+wrote results/fig_qualitative_splice.pdf
+tau=-1.0, beta=64.0 (t0v1); ELA tau=0.75, beta=8.0
+  best: Tp_D_CRN_L_N_nat00085_nat00086_10069.tif
+  p67: Tp_D_NRN_S_N_nat10145_ani00097_11988.jpg
+  p33: Tp_D_NNN_M_N_arc00070_arc00072_00290.tif
+  worst: Tp_D_NRN_S_N_pla00038_pla00049_10983.jpg
+rung 5 per-image F1 on fold 0: mean 0.6047, median 0.8353, min 0.0000, max 0.9990
