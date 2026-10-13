@@ -13,3 +13,4 @@ results/ckpt_refine/
 wandb/
 results/stale/
 results/.rerun_unet_started
+checkpoints/

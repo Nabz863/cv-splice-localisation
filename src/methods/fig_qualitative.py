@@ -1,7 +1,8 @@
 """Qualitative figures: what each rung actually produces, including where it fails.
 
-Splice mode builds one row per example with six panels — image, ground truth, the
-z-scored ELA map, ELA+MRF, the U-Net probability map, U-Net+MRF — so the reader can
+Splice mode builds one row per example with seven panels — image, ground truth, the
+z-scored ELA map, ELA+MRF, SAM2's size-filtered union (with the oracle's best single
+proposal outlined in gold), the U-Net probability map, U-Net+MRF — so the reader can
 see the thing the numbers are describing: ELA responding to compression texture
 across the whole frame, the prior turning a speckled map into blobs, and the learned
 unary already being blob-like before the prior touches it.
@@ -14,7 +15,9 @@ Copy-move mode is the predicted-failure figure: four panels (image, ground truth
 ELA, ELA+MRF) on the copy-move set, where the pasted region carries the host's own
 compression history, so there is no seam for ELA to find by construction.
 
-CPU only. Imports no torch: the U-Net panels come from the cached logits.
+CPU only. Imports no torch: the U-Net panels come from the cached logits and the
+SAM2 panels from results/sam2_examples/ (sam2_examples.py, GPU); without those the
+figure is drawn without the SAM2 column.
 
 Usage (from the repo root):
     python src/methods/fig_qualitative.py
@@ -37,10 +40,11 @@ from mrf import solve_graphcut
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 MODE = os.environ.get("MODE", "splice")
 TAG = os.environ.get("TAG", "t0v1")
-N_ROWS = int(os.environ.get("N_ROWS", 5))
+N_ROWS = int(os.environ.get("N_ROWS", 4))
+SAM2_DIR = "results/sam2_examples"
 TAU_ELA = float(os.environ.get("TAU_ELA", 0.75))
 BETA_ELA = float(os.environ.get("BETA_ELA", 8.0))
-DPI = int(os.environ.get("DPI", 150))
+DPI = int(os.environ.get("DPI", 300))
 
 
 def f1(pred, gt):
@@ -76,7 +80,10 @@ def panel(ax, data, kind, title):
     ax.set_xticks([]); ax.set_yticks([])
 
 
-def splice():
+def pick_examples():
+    """The splice figure's examples: rung 5's own per-image F1 on TAG's test fold,
+    at N_ROWS evenly spaced quantiles, best to worst. sam2_examples.py imports this
+    so that its SAM2 masks are for exactly these images."""
     tau, beta = read_pair_params(TAG)
     test_fold = int(TAG[1])
     rows = [r for r in csv.DictReader(open(os.environ.get("MANIFEST", os.path.join(ROOT, "splice_manifest.csv"))))
@@ -98,36 +105,82 @@ def splice():
     scores = np.array(scores)
 
     order = scores.argsort()[::-1]
-    picks = [order[int(round(q * (n - 1)))] for q in np.linspace(0, 1, N_ROWS)]
-    labels = ["best", "p75", "median", "p25", "worst"] if N_ROWS == 5 else \
-             [f"q{int(100 - 100 * q)}" for q in np.linspace(0, 1, N_ROWS)]
+    qs = np.linspace(0, 1, N_ROWS)
+    picks = [order[int(round(q * (n - 1)))] for q in qs]
+    labels = ["best" if q == 0 else "worst" if q == 1 else f"p{round(100 * (1 - q))}" for q in qs]
+    return dict(rows=[rows[i] for i in picks], lgs=[lgs[i] for i in picks],
+                gts=[gts[i] for i in picks], labels=labels, tau=tau, beta=beta,
+                test_fold=test_fold, scores=scores)
 
-    fig, axes = plt.subplots(len(picks), 6, figsize=(13, 2.3 * len(picks)))
+
+def sam2_masks(path):
+    """Rung 3's masks for one image, written by sam2_examples.py, or None."""
+    p = os.path.join(SAM2_DIR, os.path.basename(path).rsplit(".", 1)[0] + ".npz")
+    if not os.path.exists(p):
+        return None
+    z = np.load(p)
+    shape = tuple(z["shape"]); k = shape[0] * shape[1]
+    un = lambda key: np.unpackbits(z[key])[:k].reshape(shape).astype(bool)
+    return un("union"), un("oracle")
+
+
+def splice():
+    ex = pick_examples()
+    tau, beta = ex["tau"], ex["beta"]
+    sam = [sam2_masks(r["image"]) for r in ex["rows"]]
+    have_sam = all(s is not None for s in sam)
+    if not have_sam:
+        print("  no SAM2 masks for these examples - run sam2_examples.py; drawing without rung 3")
+    cols = ["image", "ground truth", "ELA (rung 1)", "ELA + MRF", "SAM2 (rung 3)",
+            "U-Net (rung 4)", "U-Net + MRF"]
+    if not have_sam:
+        cols.remove("SAM2 (rung 3)")
+    FS = 6.5
+    fig, axes = plt.subplots(len(ex["rows"]), len(cols), figsize=(7.16, 1.0 * len(ex["rows"]) + 0.3))
     axes = np.atleast_2d(axes)
-    for r, (i, lab) in enumerate(zip(picks, labels)):
-        img = np.asarray(Image.open(rows[i]["image"]).convert("RGB"))
-        gt, lg = gts[i], lgs[i]
-        ela = ela_of(rows[i]["image"])
+
+    def show(ax, data, kind, title, header):
+        if kind == "rgb":
+            ax.imshow(data, interpolation="lanczos")
+        elif kind == "mask":
+            ax.imshow(data, cmap="gray", vmin=0, vmax=1, interpolation="nearest")
+        else:
+            lo, hi = np.percentile(data, [1, 99])
+            ax.imshow(data, cmap="inferno", vmin=lo, vmax=hi, interpolation="nearest")
+        ax.set_title((header + "\n" if header else "") + title, fontsize=FS, pad=2, linespacing=1.1)
+        ax.set_xticks([]); ax.set_yticks([])
+        for sp in ax.spines.values():
+            sp.set_linewidth(0.4); sp.set_color("#8a8984")
+
+    for r, (row, gt, lg, lab, sm) in enumerate(zip(ex["rows"], ex["gts"], ex["lgs"], ex["labels"], sam)):
+        img = np.asarray(Image.open(row["image"]).convert("RGB"))
+        ela = ela_of(row["image"])
         e1 = np.asarray(ela >= TAU_ELA, bool)
         e2 = np.asarray(solve_graphcut(ela, TAU_ELA, BETA_ELA), bool)
         u4 = np.asarray(solve_graphcut(lg, tau, 0.0), bool)
         u5 = np.asarray(solve_graphcut(lg, tau, beta), bool)
-
-        panel(axes[r, 0], img, "rgb", f"{lab}  {os.path.basename(rows[i]['image'])[:22]}")
-        panel(axes[r, 1], gt, "mask", f"ground truth  ({gt.mean()*100:.1f}% tampered)")
-        panel(axes[r, 2], ela, "heat", f"ELA   F1 {f1(e1, gt):.3f}")
-        panel(axes[r, 3], e2, "mask", f"ELA+MRF   F1 {f1(e2, gt):.3f}")
-        panel(axes[r, 4], 1 / (1 + np.exp(-lg)), "heat", f"U-Net p   F1 {f1(u4, gt):.3f}")
-        panel(axes[r, 5], u5, "mask", f"U-Net+MRF   F1 {f1(u5, gt):.3f}")
-
-    fig.suptitle(f"Splice localisation, test fold {test_fold} ({TAG}).  "
-                 f"ELA tau={TAU_ELA}, beta={BETA_ELA};  U-Net tau={tau}, beta={beta}.  "
-                 f"Rows are quantiles of rung 5 per-image F1.", fontsize=9)
-    fig.tight_layout(rect=[0, 0, 1, 0.97])
+        h = (lambda c: c) if r == 0 else (lambda c: "")
+        panels = [(img, "rgb", "", h("image")),
+                  (gt, "mask", f"{gt.mean() * 100:.1f}% tampered", h("ground truth")),
+                  (ela, "heat", f"F1 {f1(e1, gt):.2f}", h("ELA (rung 1)")),
+                  (e2, "mask", f"F1 {f1(e2, gt):.2f}", h("ELA + MRF"))]
+        if have_sam:
+            panels.append((sm[0], "mask", f"F1 {f1(sm[0], gt):.2f}", h("SAM2 (rung 3)")))
+        panels += [(1 / (1 + np.exp(-lg)), "heat", f"F1 {f1(u4, gt):.2f}", h("U-Net (rung 4)")),
+                   (u5, "mask", f"F1 {f1(u5, gt):.2f}", h("U-Net + MRF"))]
+        for c, (data, kind, title, header) in enumerate(panels):
+            show(axes[r, c], data, kind, title, header)
+        if have_sam:                          # the oracle's best proposal, outlined in gold
+            axes[r, 4].contour(sm[1].astype(float), levels=[0.5], colors="#e3a21a", linewidths=0.6)
+        axes[r, 0].set_ylabel(lab, fontsize=FS)
+    fig.subplots_adjust(left=0.03, right=0.995, top=0.93, bottom=0.01, wspace=0.06, hspace=0.32)
     save(fig, "splice")
-    print(f"rung 5 per-image F1 on fold {test_fold}: "
-          f"mean {scores.mean():.4f}, median {np.median(scores):.4f}, "
-          f"min {scores.min():.4f}, max {scores.max():.4f}")
+    print(f"tau={tau}, beta={beta} ({TAG}); ELA tau={TAU_ELA}, beta={BETA_ELA}")
+    for lab, row in zip(ex["labels"], ex["rows"]):
+        print(f"  {lab}: {os.path.basename(row['image'])}")
+    s = ex["scores"]
+    print(f"rung 5 per-image F1 on fold {ex['test_fold']}: "
+          f"mean {s.mean():.4f}, median {np.median(s):.4f}, min {s.min():.4f}, max {s.max():.4f}")
 
 
 def copymove():
