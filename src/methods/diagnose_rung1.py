@@ -1,10 +1,10 @@
-"""Does the rung-1 score map carry signal at all, independent of threshold?"""
+"""Exploratory: pixel AUC of the noise cue on every image, and the all-tampered F1 to beat."""
 import csv, os, sys
 from concurrent.futures import ProcessPoolExecutor
 import numpy as np
 from PIL import Image
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.dirname(__file__))
 from noise_residual import score_map
 
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
@@ -18,7 +18,7 @@ def one(r):
     t = truth.ravel()
     if t.all() or not t.any():
         return None
-    # Pixel-level ROC AUC via rank identity, subsampled for tractability
+    # pixel AUC from ranks, on a fixed sample of 20,000 pixels
     idx = np.random.default_rng(0).choice(len(t), size=min(20000, len(t)), replace=False)
     s, t = s[idx], t[idx]
     order = s.argsort()

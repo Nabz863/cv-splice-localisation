@@ -1,23 +1,7 @@
-"""Rung 5: per-image confusion counts at every (tau, beta), for every pair.
+"""Rung 5: keep every image's tp/fp/fn at every (tau, beta), so build_tables.py can select by per-image F1.
 
-sweep_cached.py keeps only the counts pooled over each split, which is enough to
-select (tau, beta) by pooled F1 but not by any per-image criterion. This keeps
-every image's (tp, fp, fn) at every grid point instead, so build_tables.py can
-select by mean per-image F1 (or anything else) without recomputing a single cut,
-and can check that pooled selection from these counts reproduces
-rung5_pair_{tag}.csv exactly.
-
-CPU only, imports no torch. Same grid and solver as sweep_cached.py. About as
-long as that script (~4-5 min per pair on 12 cores, ~1.5 h for all 20).
-Resumable: a pair whose output exists is skipped.
-
-Writes results/rung5_counts/{tag}.npz with
-    cal   (n_cal, grid, 3)   int64   tp, fp, fn per validation-calibration image
-    test  (n_test, grid, 3)  int64   tp, fp, fn per test image
-    grid  (grid, 2)                  (tau, beta), identical to sweep_cached.GRID
-
-Usage (from the repo root):
-    CUT_WORKERS=12 python src/methods/sweep_perimage.py
+Same grid and solver as sweep_cached.py. Writes results/rung5_counts/<tag>.npz.
+Usage:  CUT_WORKERS=12 python src/methods/sweep_perimage.py
 """
 import glob, os, sys, time
 import multiprocessing as mp
@@ -32,6 +16,7 @@ OUT = "results/rung5_counts"
 
 
 def counts_one(item):
+    """tp/fp/fn for one image at every grid point."""
     lg, gt = item
     c = np.zeros((len(GRID), 3), np.int64)
     for gi, (tau, beta) in enumerate(GRID):
@@ -41,6 +26,7 @@ def counts_one(item):
 
 
 def per_image(items, ex, label):
+    """Stack of per-image counts, shape (images, grid, 3)."""
     t0, out = time.time(), []
     for i, c in enumerate(ex.map(counts_one, items, chunksize=2)):
         out.append(c)
@@ -61,7 +47,7 @@ if __name__ == "__main__":
         for p in paths:
             tag = os.path.basename(p).replace(".npz", "")
             out = os.path.join(OUT, f"{tag}.npz")
-            if os.path.exists(out):
+            if os.path.exists(out):                                    # resumable: skip finished pairs
                 print(f"{tag}: done already", flush=True)
                 continue
             t0 = time.time()
@@ -70,7 +56,7 @@ if __name__ == "__main__":
             c_cal = per_image(cal, ex, f"{tag} cal")
             c_te = per_image(te, ex, f"{tag} test")
             np.savez_compressed(out + ".tmp.npz", cal=c_cal, test=c_te, grid=np.array(GRID))
-            os.replace(out + ".tmp.npz", out)
+            os.replace(out + ".tmp.npz", out)                          # write-then-rename: no half files
             print(f"{tag}: {len(cal)} cal + {len(te)} test images [{time.time()-t0:.0f}s]",
                   flush=True)
     print("next: python3 src/report/build_tables.py", flush=True)

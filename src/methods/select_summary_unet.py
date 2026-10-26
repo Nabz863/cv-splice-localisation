@@ -1,24 +1,8 @@
-"""Choose the U-Net's image-level summary on held-out data, then report it on test.
+"""Image-level AUC, step 3: pick the best of the five scores without touching the test fold.
 
-image_auc_unet.py reports five summaries of the same logit map. The pre-registered
-one (area labelled tampered, at the (tau, beta) chosen for PIXEL F1) is a poor
-detector, and the best of the five was only identifiable after looking at the test
-AUCs. Quoting that one directly would be selection on the test set.
-
-So, same nested discipline as everywhere else:
-  select  on  validation-fold tampered (the 'cal' split already cached in
-              results/logits/{tag}.npz)  vs  half A of the authentic images
-  report  on  test-fold tampered  vs  half B of the authentic images
-The two authentic halves are disjoint, and neither tampered set saw the other.
-
-CPU only. Imports no torch. Reads image_auc_unet_{tag}.csv for the test side, so
-run that first.
-
-Usage (from the repo root):
-    python src/methods/select_summary_unet.py
-    TAG=t0v2 python src/methods/select_summary_unet.py
-
-Writes results/image_auc_select_{tag}.csv, which build_tables.py reads.
+Select on validation-fold tampered vs half A of the authentic images; report on test-fold
+tampered vs the other half B. Writes results/image_auc_select_<tag>.csv.
+Usage:  TAG=t0v1 python src/methods/select_summary_unet.py
 """
 import csv, os, sys
 from concurrent.futures import ProcessPoolExecutor
@@ -33,10 +17,11 @@ from image_auc_unet import scores_one, read_pair_params
 TAG = os.environ.get("TAG", "t0v1")
 WORKERS = int(os.environ.get("WORKERS", 10))
 KEYS = ["unet_area", "mrf_area", "prob_mean", "prob_max", "prob_p99"]
-PREREG = {"unet_area", "mrf_area"}
+PREREG = {"unet_area", "mrf_area"}         # the scores planned before seeing any results
 
 
 def auc(pos, neg):
+    """AUC of tampered scores pos vs authentic scores neg."""
     return image_auc(list(pos) + list(neg), [1] * len(pos) + [0] * len(neg))
 
 
@@ -51,6 +36,7 @@ def main():
     rows = list(csv.DictReader(open(p)))
     test_t = [{k: float(r[k]) for k in KEYS} for r in rows if r["label"] == "1"]
     auth = [{k: float(r[k]) for k in KEYS} for r in rows if r["label"] == "0"]
+    # ---- split the authentic images into two fixed halves ----
     perm = np.random.default_rng(0).permutation(len(auth))
     h = len(auth) // 2
     auth_sel = [auth[i] for i in perm[:h]]
@@ -63,6 +49,7 @@ def main():
     print(f"select: {len(cal_s)} val-fold tampered vs {len(auth_sel)} authentic (half A)")
     print(f"report: {len(test_t)} test-fold tampered vs {len(auth_rep)} authentic (half B)\n")
 
+    # ---- select on validation + half A, then report every score on test + half B ----
     sel = {k: auc([s[k] for s in cal_s], [a[k] for a in auth_sel]) for k in KEYS}
     best = max(KEYS, key=lambda k: sel[k])
 

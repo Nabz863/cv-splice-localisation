@@ -1,30 +1,8 @@
-"""Qualitative figures: what each rung actually produces, including where it fails.
+"""Qualitative figure (Fig. 5): image, truth, ELA, ELA+MRF, SAM2, U-Net, U-Net+MRF per row.
 
-Splice mode builds one row per example with seven panels — image, ground truth, the
-z-scored ELA map, ELA+MRF, SAM2's size-filtered union (with the oracle's best single
-proposal outlined in gold), the U-Net probability map, U-Net+MRF — so the reader can
-see the thing the numbers are describing: ELA responding to compression texture
-across the whole frame, the prior turning a speckled map into blobs, and the learned
-unary already being blob-like before the prior touches it.
-
-Examples are chosen by rung 5's own per-image F1 at the five quantiles of that
-distribution, best to worst, rather than hand-picked. The worst row is the point of
-the figure as much as the best one.
-
-Copy-move mode is the predicted-failure figure: four panels (image, ground truth,
-ELA, ELA+MRF) on the copy-move set, where the pasted region carries the host's own
-compression history, so there is no seam for ELA to find by construction.
-
-CPU only. Imports no torch: the U-Net panels come from the cached logits and the
-SAM2 panels from results/sam2_examples/ (sam2_examples.py, GPU); without those the
-figure is drawn without the SAM2 column.
-
-Usage (from the repo root):
-    python src/methods/fig_qualitative.py
-    MODE=copymove python src/methods/fig_qualitative.py
-    TAG=t0v2 N_ROWS=6 python src/methods/fig_qualitative.py
-
-Writes results/fig_qualitative_{mode}.png (and .pdf, for the report)
+Rows are chosen at evenly spaced quantiles of rung 5's per-image F1 (not hand-picked).
+MODE=copymove draws the copy-move version. Writes results/fig_qualitative_<mode>.png/.pdf.
+Usage:  python src/methods/fig_qualitative.py
 """
 import csv, os, sys
 import numpy as np
@@ -48,17 +26,20 @@ DPI = int(os.environ.get("DPI", 300))
 
 
 def f1(pred, gt):
+    """Per-image F1."""
     tp = int((pred & gt).sum()); fp = int((pred & ~gt).sum()); fn = int((~pred & gt).sum())
     den = 2 * tp + fp + fn
     return 2 * tp / den if den else 1.0
 
 
 def ela_of(path):
-    img = np.asarray(Image.open(path).convert("RGB"))   # uint8, as run_mrf.py
-    return v_ela(img)                    # robust z-score map, as run_mrf.py
+    """ELA score map of one image (rung 1)."""
+    img = np.asarray(Image.open(path).convert("RGB"))
+    return v_ela(img)
 
 
 def read_pair_params(tag):
+    """(tau, beta) the pair selected on validation (or TAU/BETA from the environment)."""
     p = f"results/rung5_pair_{tag}.csv"
     if os.environ.get("TAU") and os.environ.get("BETA"):
         return float(os.environ["TAU"]), float(os.environ["BETA"])
@@ -69,6 +50,7 @@ def read_pair_params(tag):
 
 
 def panel(ax, data, kind, title):
+    """Draw one panel: an RGB image, a binary mask, or a heat map."""
     if kind == "rgb":
         ax.imshow(data)
     elif kind == "mask":
@@ -81,9 +63,7 @@ def panel(ax, data, kind, title):
 
 
 def pick_examples():
-    """The splice figure's examples: rung 5's own per-image F1 on TAG's test fold,
-    at N_ROWS evenly spaced quantiles, best to worst. sam2_examples.py imports this
-    so that its SAM2 masks are for exactly these images."""
+    """Pick N_ROWS test images at evenly spaced quantiles of rung 5's per-image F1, best to worst."""
     tau, beta = read_pair_params(TAG)
     test_fold = int(TAG[1])
     rows = [r for r in csv.DictReader(open(os.environ.get("MANIFEST", os.path.join(ROOT, "splice_manifest.csv"))))
@@ -104,8 +84,8 @@ def pick_examples():
         scores.append(f1(np.asarray(solve_graphcut(lg, tau, beta), bool), gt))
     scores = np.array(scores)
 
-    order = scores.argsort()[::-1]
-    qs = np.linspace(0, 1, N_ROWS)
+    order = scores.argsort()[::-1]                   # images sorted best to worst
+    qs = np.linspace(0, 1, N_ROWS)                   # evenly spaced quantiles
     picks = [order[int(round(q * (n - 1)))] for q in qs]
     labels = ["best" if q == 0 else "worst" if q == 1 else f"p{round(100 * (1 - q))}" for q in qs]
     return dict(rows=[rows[i] for i in picks], lgs=[lgs[i] for i in picks],
@@ -124,7 +104,10 @@ def sam2_masks(path):
     return un("union"), un("oracle")
 
 
+# ---- The two figures ----
+
 def splice():
+    """Splicing figure: one row per picked image, seven panels."""
     ex = pick_examples()
     tau, beta = ex["tau"], ex["beta"]
     sam = [sam2_masks(r["image"]) for r in ex["rows"]]
@@ -184,6 +167,7 @@ def splice():
 
 
 def copymove():
+    """Copy-move figure: image, truth, ELA, ELA+MRF on random copy-move images."""
     mf = os.environ.get("CM_MANIFEST", os.path.join(ROOT, "copymove_manifest.csv"))
     rows = list(csv.DictReader(open(mf)))
     pick = list(np.random.default_rng(0).permutation(len(rows))[:N_ROWS])
@@ -213,6 +197,7 @@ def copymove():
 
 
 def save(fig, mode):
+    """Save the figure as PNG and PDF."""
     os.makedirs("results", exist_ok=True)
     for ext in ("png", "pdf"):
         p = f"results/fig_qualitative_{mode}.{ext}"

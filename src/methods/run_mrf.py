@@ -1,6 +1,7 @@
-"""Rung 2: per-image counts at every (tau, beta) with the exact graph-cut solver.
+"""Rung 2: TP/FP/FN of the graph-cut MRF for every image at every (tau, beta) -> results/rung2_grid.npz.
 
-ICM on the same grid is a separate script, icm_vs_graphcut.py."""
+Usage:  python src/methods/run_mrf.py
+"""
 import csv, os, sys, time
 from concurrent.futures import ProcessPoolExecutor
 import numpy as np
@@ -15,6 +16,7 @@ from mrf import solve_icm, solve_graphcut, energy
 set_seed(0)
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 CACHE = os.path.join(ROOT, "ela_cache")
+# ---- Search grid ----
 TAUS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1.0]
 BETAS = [0.0, 0.5, 2.0, 4.0, 8.0, 16.0]
 GRID = [(t, b) for t in TAUS for b in BETAS]
@@ -25,7 +27,7 @@ os.makedirs(CACHE, exist_ok=True)
 
 
 def score_for(r):
-    """ELA map, cached -- it is deterministic and reused across the whole grid."""
+    """ELA map for one image, cached on disk (it is reused at every grid point)."""
     key = os.path.join(CACHE, os.path.basename(r["image"]).rsplit(".", 1)[0] + ".npy")
     if os.path.exists(key):
         return np.load(key)
@@ -35,14 +37,15 @@ def score_for(r):
 
 
 def one(r):
+    """Counts and energy for one image at every grid point."""
     s = score_for(r)
     truth = np.array(Image.open(r["mask"]).convert("L")) > 127
     out = np.zeros((len(SOLVERS), len(GRID), 3), np.int64)
     ener = np.zeros((len(SOLVERS), len(GRID)))
     for si, (_, solve) in enumerate(SOLVERS.items()):
         for gi, (tau, beta) in enumerate(GRID):
-            x = solve(s, tau, beta)
-            out[si, gi] = ((x & truth).sum(), (x & ~truth).sum(), (~x & truth).sum())
+            x = solve(s, tau, beta)                                       # predicted mask
+            out[si, gi] = ((x & truth).sum(), (x & ~truth).sum(), (~x & truth).sum())   # tp, fp, fn
             ener[si, gi] = energy(s, x, tau, beta)
     return out, ener
 
@@ -57,12 +60,14 @@ if __name__ == "__main__":
             if (i + 1) % 200 == 0:
                 print(f"  {i+1}/{len(rows)}  ({time.time()-t0:.0f}s)")
 
+    # ---- Save per-image counts (build_tables.py does the 20-pair selection from these) ----
     os.makedirs("results", exist_ok=True)
     np.savez_compressed("results/rung2_grid.npz", counts=counts,
                         energies=energies, grid=np.array(GRID),
                         solvers=list(SOLVERS))
     print("saved results/rung2_grid.npz")
 
+    # ---- Quick printed summary: pick (tau, beta) on the other 4 folds, score the 5th ----
     folds = np.array([int(r["fold"]) for r in rows])
 
     def f1_of(idx, si, gi):
@@ -86,8 +91,7 @@ if __name__ == "__main__":
         f1s = [p[2] for p in per_fold]
         print(f"mean F1 {np.mean(f1s):.4f} +/- {np.std(f1s):.4f}")
 
-    # Energy comparison must hold (tau, beta) FIXED and use beta > 0:
-    # at beta = 0 thresholding attains energy 0 exactly, so any solver ties.
+    # ---- Mean energy per solver at fixed (tau, beta); beta = 0 skipped (every solver ties) ----
     print("\nmean energy at fixed (tau, beta), lower = better optimisation")
     print(f"{'tau':>6}{'beta':>7}" + "".join(f"{n:>12}" for n in SOLVERS))
     for gi, (tau, beta) in enumerate(GRID):

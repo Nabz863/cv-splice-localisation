@@ -1,7 +1,4 @@
-"""Summarise rung 5: does the spatial prior still help over a learned unary?
-
-SUFFIX=_n50 (etc.) summarises a data-size run into rung5_mrf_refine_n50.csv.
-"""
+"""Rung 5, step 3: collect the 20 per-pair results into results/rung5_mrf_refine{SUFFIX}.csv."""
 import csv, glob, os
 from collections import defaultdict
 import numpy as np
@@ -23,6 +20,7 @@ for r in rows:
           f"{float(r['beta']):>7.2f}{float(r['f1']):>9.4f}"
           f"{float(r['f1_beta0']):>10.4f}{float(r['prior_gain']):>+9.4f}")
 
+# mean over validation folds within each test fold, then over test folds
 fm = np.array([np.mean(by_test[k]) for k in sorted(by_test)])
 fm0 = np.array([np.mean(by_test0[k]) for k in sorted(by_test0)])
 betas = np.array([float(r["beta"]) for r in rows])

@@ -1,8 +1,11 @@
-"""Shared evaluation. Every method routes through this — do not duplicate."""
+"""Metrics shared by every method, so all rungs are scored the same way."""
 import numpy as np
 
 
+# ---- Pixel-level F1 / IoU ----
+
 def _check(pred, true):
+    """Boolean copies of both masks; error if their shapes differ."""
     pred, true = np.asarray(pred), np.asarray(true)
     if pred.shape != true.shape:
         raise ValueError(f"shape mismatch: pred {pred.shape}, true {true.shape}")
@@ -10,27 +13,21 @@ def _check(pred, true):
 
 
 def confusion(pred_mask, true_mask):
-    """Pixel counts. pred_mask/true_mask are boolean arrays, same shape."""
+    """TP/FP/FN/TN pixel counts for one image."""
     p, t = _check(pred_mask, true_mask)
     return {
-        "tp": int(( p &  t).sum()),
-        "fp": int(( p & ~t).sum()),
-        "fn": int((~p &  t).sum()),
-        "tn": int((~p & ~t).sum()),
+        "tp": int(( p &  t).sum()),     # predicted spliced, is spliced
+        "fp": int(( p & ~t).sum()),     # predicted spliced, is authentic
+        "fn": int((~p &  t).sum()),     # predicted authentic, is spliced
+        "tn": int((~p & ~t).sum()),     # predicted authentic, is authentic
     }
 
 
 def f1_iou(pred_mask, true_mask):
-    """Pixel F1 and IoU for the tampered (positive) class.
-
-    Convention for the degenerate case: if the ground truth is empty AND the
-    prediction is empty, both metrics are 1.0 (a correct 'nothing here').
-    If exactly one is empty, both are 0.0. Stated explicitly because 0/0 is a
-    choice, not a fact, and every method must make the same one.
-    """
+    """F1 and IoU of the spliced class (both 1.0 if both masks are empty)."""
     c = confusion(pred_mask, true_mask)
     tp, fp, fn = c["tp"], c["fp"], c["fn"]
-    if tp + fp + fn == 0:
+    if tp + fp + fn == 0:                              # nothing to find, nothing found
         return {"f1": 1.0, "iou": 1.0, **c}
     return {
         "f1": 2 * tp / (2 * tp + fp + fn),
@@ -39,50 +36,37 @@ def f1_iou(pred_mask, true_mask):
     }
 
 
+# ---- ROC AUC ----
+
 def image_auc(scores, labels):
-    """Image-level ROC AUC via the rank (Mann-Whitney) identity.
-
-    scores: per-image tamperedness score (higher = more likely tampered)
-    labels: 1 = tampered, 0 = authentic
-
-    Equals P(score of a random tampered image > score of a random authentic
-    one), counting ties as half. Tied scores take their average rank, else ties
-    would be broken by input order and bias the result.
-    """
+    """AUC = P(random tampered scores higher than random authentic); ties count half."""
     from scipy.stats import rankdata
     scores, labels = np.asarray(scores, float), np.asarray(labels, int)
     n_pos, n_neg = int((labels == 1).sum()), int((labels == 0).sum())
-    if n_pos == 0 or n_neg == 0:
+    if n_pos == 0 or n_neg == 0:                       # undefined with one class
         return float("nan")
-    ranks = rankdata(scores, method="average")
+    ranks = rankdata(scores, method="average")         # tied scores share the average rank
+    # Mann-Whitney: (sum of positive ranks - its minimum) / number of pos-neg pairs
     return float((ranks[labels == 1].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg))
 
 
 def pixel_auc(score, truth, n_sample=20000, seed=0):
-    """Pixel-level ROC AUC of one score map against one binary mask.
-
-    A fixed random subsample of n_sample pixels keeps the cost bounded on large
-    images (same pixels for every score map of that image, since the seed is
-    fixed). Returns None if the sampled pixels are all one class. Ties take their
-    average rank, via image_auc; ties are common here (flat image regions give
-    identical scores), and breaking them by position would bias the AUC.
-    """
+    """AUC of a score map against a mask, on a fixed random sample of pixels (None if one class)."""
     truth = np.asarray(truth, bool)
     idx = np.random.default_rng(seed).choice(truth.size, size=min(n_sample, truth.size),
-                                             replace=False)
+                                             replace=False)          # same pixels every call
     s, t = np.asarray(score, float).ravel()[idx], truth.ravel()[idx]
     if t.all() or not t.any():
         return None
-    return image_auc(s, t.astype(int))
+    return image_auc(s, t.astype(int))                 # each pixel treated as one sample
 
 
 def bootstrap_auc_ci(pos, neg, n=2000, seed=0, level=0.95):
-    """Percentile bootstrap CI for image_auc, resampling each class with
-    replacement. pos/neg are the scores of tampered/authentic images."""
+    """Bootstrap confidence interval for image_auc (resample each class with replacement)."""
     rng = np.random.default_rng(seed)
     pos, neg = np.asarray(pos, float), np.asarray(neg, float)
     lab = np.r_[np.ones(len(pos), int), np.zeros(len(neg), int)]
     v = [image_auc(np.r_[rng.choice(pos, len(pos), True), rng.choice(neg, len(neg), True)], lab)
          for _ in range(n)]
-    a = (1 - level) / 2 * 100
+    a = (1 - level) / 2 * 100                          # 2.5 for a 95% interval
     return float(np.percentile(v, a)), float(np.percentile(v, 100 - a))

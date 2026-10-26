@@ -1,26 +1,19 @@
-"""The training configuration of the rung 4/5 models, and a check that a saved
-model or cached logits were produced under it.
-
-Before this existed, cache_logits.py loaded any results/models/refine_{tag}.pt it
-found. Two pairs (t0v1, t0v2) were in fact models left over from an earlier
-script, trained at a different batch size from the other 18, and nothing recorded
-that. Now every saved model and logits file has a JSON sidecar holding the config
-it was produced under, and loading refuses on any mismatch.
-
-No torch import, so CPU-only scripts can use it.
-"""
+"""Save each U-Net's training config next to it (JSON), and refuse files made under a different config."""
 import json, os
 
+# config fields that must match for a saved model / logits file to be reused
 KEYS = ("epochs_max", "patience", "batch", "workers", "lr", "weight_decay", "grad_clip",
         "constraint_norm", "amp_dtype", "n_cal", "crops_per_image", "patch", "n_train",
         "crop_rng", "nonfinite_counted")
 
 
 def sidecar(path):
+    """model.pt -> model.json"""
     return os.path.splitext(path)[0] + ".json"
 
 
 def write(path, config, **extra):
+    """Write the config (plus any extra fields) next to path."""
     with open(sidecar(path), "w") as f:
         json.dump({**{k: config[k] for k in KEYS}, **extra}, f, indent=1, sort_keys=True)
 

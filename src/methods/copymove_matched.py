@@ -1,23 +1,8 @@
-"""Copy-move transfer test, scored against matched chance lines.
+"""Copy-move transfer test: rungs 1-2 with the splicing-selected (tau, beta), unchanged.
 
-The original copy-move result compared F1 against 2p/(1+p) at the MEAN per-image
-tampered rate. That is the right chance line for neither convention:
-  micro F1 (pooled counts)  ->  2P/(1+P), P = pooled tampered-pixel rate
-  per-image mean F1         ->  mean over images of 2p_i/(1+p_i)
-This recomputes rungs 1 and 2 on every copy-move pair, keeps per-image counts, and
-reports both, each against its own line. tau and beta are the splicing-selected
-values, applied unchanged, as before: the question is transfer, not refitting.
-
-CPU only. Imports no torch.
-
-Usage (from the repo root):
-    python src/methods/copymove_matched.py
-    CM_MANIFEST=$DATASETS/casia2/splice_manifest.csv python src/methods/copymove_matched.py
-        (the second form is the validation check: it must reproduce rung 2's
-         0.2653 / 0.2898 exactly at tau=0.75, beta=8)
-
-Writes results/copymove_matched.csv (summary) and results/copymove_counts.npz
-(per-image tp/fp/fn, so nothing needs recomputing later).
+Scored against the all-tampered chance line pooled the same way as the metric.
+Writes results/copymove_matched.csv and results/copymove_counts.npz.
+Usage:  python src/methods/copymove_matched.py
 """
 import csv, os, sys, time
 from concurrent.futures import ProcessPoolExecutor
@@ -30,27 +15,30 @@ from mrf import solve_graphcut
 
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 MANIFEST = os.environ.get("CM_MANIFEST", os.path.join(ROOT, "copymove_manifest.csv"))
-TAU = float(os.environ.get("TAU", 0.75))
+TAU = float(os.environ.get("TAU", 0.75))       # splicing-selected operating point, not re-tuned
 BETA = float(os.environ.get("BETA", 8.0))
 WORKERS = int(os.environ.get("WORKERS", 10))
 
 
 def counts_one(r):
-    img = np.asarray(Image.open(r["image"]).convert("RGB"))   # uint8, as run_mrf.py
+    """tp/fp/fn for rung 1 and rung 2 on one copy-move image, plus its pixel count."""
+    img = np.asarray(Image.open(r["image"]).convert("RGB"))
     gt = np.asarray(Image.open(r["mask"]).convert("L")) > 127
-    z = v_ela(img)                       # robust z-score map, as run_mrf.py
-    x1 = z >= TAU
-    x2 = np.asarray(solve_graphcut(z, TAU, BETA), bool)
+    z = v_ela(img)                                            # ELA score map
+    x1 = z >= TAU                                             # rung 1: threshold
+    x2 = np.asarray(solve_graphcut(z, TAU, BETA), bool)       # rung 2: MRF
     c = lambda x: ((x & gt).sum(), (x & ~gt).sum(), (~x & gt).sum())
     return c(x1), c(x2), gt.size
 
 
 def f1_micro(c):
+    """Pooled F1."""
     tp, fp, fn = c.sum(0).astype(float)
     return 2 * tp / (2 * tp + fp + fn)
 
 
 def f1_img(c):
+    """Mean per-image F1."""
     tp, fp, fn = c[:, 0].astype(float), c[:, 1].astype(float), c[:, 2].astype(float)
     den = 2 * tp + fp + fn
     return float(np.where(den > 0, 2 * tp / np.maximum(den, 1), 0.0).mean())
@@ -69,8 +57,9 @@ def main():
             if (i + 1) % 500 == 0:
                 print(f"  {i+1}/{len(rows)} ({time.time()-t0:.0f}s)", flush=True)
 
-    pos = (c1[:, 0] + c1[:, 2]).astype(float)
-    P = pos.sum() / area.sum()
+    # ---- chance lines: predict-all F1, pooled and per-image ----
+    pos = (c1[:, 0] + c1[:, 2]).astype(float)                  # spliced pixels per image
+    P = pos.sum() / area.sum()                                 # pooled tampered rate
     frac = pos / area
     ch_micro = 2 * P / (1 + P)
     ch_img = float((2 * frac / (1 + frac)).mean())

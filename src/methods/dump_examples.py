@@ -1,3 +1,4 @@
+"""Exploratory: draw 6 random images, their masks and every rung-1 cue -> results/rung1_examples.png."""
 import csv, os, sys
 import numpy as np
 import matplotlib; matplotlib.use("Agg")
@@ -9,7 +10,7 @@ from noise_variants import VARIANTS
 
 ROOT = os.path.join(os.environ["DATASETS"], "casia2")
 rows = list(csv.DictReader(open(os.path.join(ROOT, "splice_manifest.csv"))))
-rows = list(np.random.default_rng(1).permutation(rows))[:6]
+rows = list(np.random.default_rng(1).permutation(rows))[:6]       # 6 random images
 
 fig, axes = plt.subplots(len(rows), 2 + len(VARIANTS),
                          figsize=(3 * (2 + len(VARIANTS)), 3 * len(rows)))
@@ -20,7 +21,7 @@ for i, r in enumerate(rows):
     axes[i, 1].imshow(truth, cmap="gray"); axes[i, 1].set_title("mask" if i == 0 else "")
     for j, (k, f) in enumerate(VARIANTS.items()):
         s = f(img)
-        axes[i, 2 + j].imshow(np.clip(s, 0, 5), cmap="inferno")
+        axes[i, 2 + j].imshow(np.clip(s, 0, 5), cmap="inferno")     # clip z-scores at 5 for display
         if i == 0: axes[i, 2 + j].set_title(k, fontsize=9)
     for a in axes[i]: a.set_axis_off()
 

@@ -1,4 +1,4 @@
-"""Characterise the (tau, beta) objective surface."""
+"""Plot rung 2's dataset F1 over the (tau, beta) grid -> results/rung2_surface.png."""
 import numpy as np
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -11,8 +11,8 @@ fig, axes = plt.subplots(1, len(solvers), figsize=(6.5 * len(solvers), 5), squee
 for si, name in enumerate(solvers):
     S = np.zeros((len(taus), len(betas)))
     for gi, (t, b) in enumerate(grid):
-        tp, fp, fn = counts[:, si, gi].sum(0)
-        S[taus.index(t), betas.index(b)] = 2 * tp / (2 * tp + fp + fn)
+        tp, fp, fn = counts[:, si, gi].sum(0)                        # pool counts over all images
+        S[taus.index(t), betas.index(b)] = 2 * tp / (2 * tp + fp + fn)   # pooled F1
     ax = axes[0][si]
     im = ax.imshow(S, cmap="viridis", aspect="auto", origin="lower")
     ax.set_xticks(range(len(betas))); ax.set_xticklabels(betas, rotation=45)
@@ -20,7 +20,7 @@ for si, name in enumerate(solvers):
     ax.set_xlabel("beta"); ax.set_ylabel("tau"); ax.set_title(f"dataset F1 - {name}")
     plt.colorbar(im, ax=ax)
 
-    i, j = np.unravel_index(S.argmax(), S.shape)
+    i, j = np.unravel_index(S.argmax(), S.shape)                     # best (tau, beta)
     print(f"\n{name}: F1 {S.min():.4f} to {S.max():.4f}  (spread {S.max()-S.min():.4f})")
     print(f"  best tau={taus[i]}, beta={betas[j]}")
     print(f"  on boundary: tau {'YES' if i in (0, len(taus)-1) else 'no'}, "

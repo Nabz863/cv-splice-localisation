@@ -1,4 +1,4 @@
-"""The overlap check must catch each kind of collision and pass a clean figure."""
+"""Tests for overlap.py: each kind of collision is caught and a clean figure passes."""
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt

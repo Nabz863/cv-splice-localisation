@@ -1,22 +1,7 @@
-"""Image-level AUC for rungs 4 and 5, phase 1: U-Net logits for authentic images.
+"""Image-level AUC for rungs 4/5, step 1 (GPU): run one pair's U-Net on the authentic images.
 
-The tampered side is already cached (results/logits/{tag}.npz holds that model's
-test-fold logits), but the authentic images were never put through the network, so
-image-level AUC for the learned rungs needs one forward pass over them.
-
-GPU ONLY, and deliberately free of multiprocessing: same discipline as
-cache_logits.py, for the same reason. The graph cuts and the AUC itself happen in
-image_auc_unet.py, which imports no torch.
-
-N_AUTH defaults to 2000 rather than all 7,492 because the cache is float16 maps on
-disk (~200 KB/image) and the confidence interval is set by the smaller class, which
-is the 1,822 tampered images either way. Set N_AUTH=0 to cache all of them.
-
-Usage (from the repo root):
-    python src/methods/cache_auth_logits.py
-    TAG=t0v2 N_AUTH=0 python src/methods/cache_auth_logits.py
-
-Writes results/logits/auth_{tag}.npz
+N_AUTH=0 uses all authentic images (default 2000). Writes results/logits/auth_<tag>.npz.
+Usage:  TAG=t0v1 N_AUTH=0 python src/methods/cache_auth_logits.py
 """
 import csv, glob, os, sys, time
 import numpy as np
@@ -38,7 +23,7 @@ N_AUTH = int(os.environ.get("N_AUTH", 2000))
 
 @torch.no_grad()
 def logits_full(model, path):
-    """Same padding and un-padding as cache_logits.py, so the maps are comparable."""
+    """Whole-image logits, padded exactly as in cache_logits.py."""
     img = np.array(Image.open(path).convert("RGB"), np.float32) / 255.0
     h, w = img.shape[:2]
     ph, pw = (-h) % 8, (-w) % 8
@@ -58,7 +43,7 @@ def main():
         have = sorted(glob.glob("results/models/*.pt"))
         raise SystemExit(f"{saved} not found. models present: {have}")
 
-    # The model must be the one whose test logits are in results/logits/{TAG}.npz.
+    # ---- Load the model and check it is the one that produced this pair's test logits ----
     lg_meta = refine_meta.sidecar(f"results/logits/{TAG}.npz")
     if not os.path.exists(lg_meta):
         raise SystemExit(f"{lg_meta} missing: run cache_logits.py first")
@@ -68,6 +53,7 @@ def main():
     model.eval()
     print(f"loaded {saved} on {DEV}")
 
+    # ---- List the authentic images ----
     auth_dir = os.environ.get("AUTH_DIR", os.path.join(os.environ["DATASETS"], "casia2",
                                                        "images", "CASIA2.0_revised", "Au"))
     paths = sorted(sum((glob.glob(os.path.join(auth_dir, e))
@@ -76,14 +62,15 @@ def main():
     if not paths:
         raise SystemExit(f"no images in {auth_dir}")
     if N_AUTH and N_AUTH < len(paths):
-        paths = sorted(np.random.default_rng(0).permutation(paths)[:N_AUTH])
+        paths = sorted(np.random.default_rng(0).permutation(paths)[:N_AUTH])   # fixed random subset
     print(f"{len(paths)} authentic images from {auth_dir}\n")
 
+    # ---- Run the model on each image ----
     blob, kept, t0 = {}, [], time.time()
     for i, p in enumerate(paths):
         try:
             lg = logits_full(model, p).astype(np.float16)
-        except Exception as e:
+        except Exception as e:                                  # unreadable image: skip, but say so
             print(f"  skip {os.path.basename(p)}: {type(e).__name__}: {e}", flush=True)
             continue
         j = len(kept)

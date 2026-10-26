@@ -1,15 +1,6 @@
-"""Is the noise-residual cue tracking texture rather than noise?
+"""Does the noise cue just find texture? Correlate its score with local edge strength (200 images).
 
-For the first 200 manifest images, correlates the rung-1 noise-residual score
-map (noise_residual.score_map) with local texture energy (Sobel gradient
-magnitude averaged over a 32 x 32 window). A high correlation means the cue is
-finding busy regions, not foreign noise.
-
-CPU, about a minute. Writes results/texture_corr.csv (one row per image), which
-build_tables.py summarises.
-
-Usage (from the repo root):
-    python src/methods/diagnose_texture.py
+Writes results/texture_corr.csv.   Usage:  python src/methods/diagnose_texture.py
 """
 import csv, os, sys
 import numpy as np
@@ -25,11 +16,11 @@ if __name__ == "__main__":
     rows = list(csv.DictReader(open(os.path.join(ROOT, "splice_manifest.csv"))))[:200]
     cors = []
     for r in rows:
-        g = np.array(Image.open(r["image"]).convert("L"), float) / 255.0
-        gx = ndimage.sobel(g, 0); gy = ndimage.sobel(g, 1)
-        texture = ndimage.uniform_filter(np.hypot(gx, gy), size=32)
-        s = score_map(np.array(Image.open(r["image"]).convert("RGB")))
-        cors.append(np.corrcoef(s.ravel(), texture.ravel())[0, 1])
+        g = np.array(Image.open(r["image"]).convert("L"), float) / 255.0     # greyscale [0, 1]
+        gx = ndimage.sobel(g, 0); gy = ndimage.sobel(g, 1)                    # image gradients
+        texture = ndimage.uniform_filter(np.hypot(gx, gy), size=32)           # local edge strength
+        s = score_map(np.array(Image.open(r["image"]).convert("RGB")))       # noise-cue score
+        cors.append(np.corrcoef(s.ravel(), texture.ravel())[0, 1])            # Pearson correlation
 
     os.makedirs("results", exist_ok=True)
     with open("results/texture_corr.csv", "w", newline="") as f:

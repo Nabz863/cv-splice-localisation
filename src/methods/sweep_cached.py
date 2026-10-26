@@ -1,17 +1,8 @@
-"""Rung 5, phase 2: the (tau, beta) sweep over cached logits.
+"""Rung 5, step 2 (CPU): choose (tau, beta) on each pair's validation logits, score on test.
 
-CPU ONLY. Imports no torch and touches no GPU, so it cannot hit the CUDA faults
-that dogged the combined script, and it runs unchanged on the cluster.
-
-For each pair: grid-search (tau, beta) on the validation-calibration logits,
-apply the winner to the test logits, and separately find the best beta = 0
-configuration the same way. beta = 0 reduces exactly to thresholding the U-Net's
-logits, so the difference isolates the spatial prior.
-
-tau is in LOGIT space (0 = p 0.5), unlike rung 2's z-scored ELA map.
-
-SUFFIX=_n50 (etc.) sweeps the data-size runs' logits (results/logits/t0v1_n50.npz
-...); the default, empty, sweeps the full-data pairs only.
+Also records the best beta = 0 setting (= rung 4), so the prior's gain is measured
+against its own control. tau is a logit threshold (0 = probability 0.5).
+SUFFIX=_n50 etc. sweeps a data-size run. Writes results/rung5_pair_<tag>.csv.
 """
 import csv, glob, os, sys, time
 import multiprocessing as mp
@@ -21,6 +12,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(__file__))
 from mrf import solve_graphcut, energy
 
+# ---- Search grid ----
 TAUS = [float(x) for x in os.environ.get("TAUS", "-2,-1,-0.5,0,0.5,1,2").split(",")]
 BETAS = [float(x) for x in os.environ.get("BETAS", "0,4,16,32,64,128,256").split(",")]
 GRID = [(t, b) for t in TAUS for b in BETAS]
@@ -29,16 +21,18 @@ SUFFIX = os.environ.get("SUFFIX", "")
 
 
 def load_split(z, split):
+    """(logits, ground-truth mask) for every image of one split ("cal" or "test") in a cache file."""
     n = int(z[f"n_{split}"])
     out = []
     for i in range(n):
         shape = tuple(z[f"{split}_shape_{i}"])
-        gt = np.unpackbits(z[f"{split}_gt_{i}"])[:shape[0]*shape[1]].reshape(shape).astype(bool)
+        gt = np.unpackbits(z[f"{split}_gt_{i}"])[:shape[0]*shape[1]].reshape(shape).astype(bool)  # masks stored 1 bit/pixel
         out.append((z[f"{split}_lg_{i}"].astype(np.float32), gt))
     return out
 
 
 def cuts_one(item):
+    """tp/fp/fn and energy for one image at every grid point."""
     lg, gt = item
     c = np.zeros((len(GRID), 3), np.int64)
     e = np.zeros(len(GRID))
@@ -50,6 +44,7 @@ def cuts_one(item):
 
 
 def counts_over(items, ex, label):
+    """Counts pooled over all images of a split (images processed in parallel)."""
     t0 = time.time()
     c = np.zeros((len(GRID), 3), np.int64)
     e = np.zeros(len(GRID))
@@ -61,11 +56,13 @@ def counts_over(items, ex, label):
 
 
 def f1_of(c, gi):
+    """Pooled F1 at grid point gi."""
     tp, fp, fn = c[gi]
     return 2 * tp / (2 * tp + fp + fn) if (tp + fp + fn) else 0.0
 
 
 def run_pair(path, ex):
+    """Select on validation, evaluate on test, for one (test, validation) pair."""
     tag = os.path.basename(path).replace(".npz", "")
     out = f"results/rung5_pair_{tag}.csv"
     if os.path.exists(out):
@@ -75,19 +72,21 @@ def run_pair(path, ex):
     with np.load(path) as z:
         cal, te = load_split(z, "cal"), load_split(z, "test")
 
+    # ---- Select on the validation images ----
     cc, _ = counts_over(cal, ex, f"{tag} cal")
-    gi = int(np.argmax([f1_of(cc, g) for g in range(len(GRID))]))
+    gi = int(np.argmax([f1_of(cc, g) for g in range(len(GRID))]))      # best (tau, beta)
     tau, beta = GRID[gi]
     zero = [g for g, (t, b) in enumerate(GRID) if b == 0.0]
-    gi0 = zero[int(np.argmax([f1_of(cc, g) for g in zero]))]
+    gi0 = zero[int(np.argmax([f1_of(cc, g) for g in zero]))]           # best with beta = 0 (rung 4)
 
+    # ---- Evaluate both choices on the test images ----
     ct, _ = counts_over(te, ex, f"{tag} test")
     tp, fp, fn = ct[gi]
     f1, iou = 2*tp/(2*tp+fp+fn), tp/(tp+fp+fn)
     f1_0 = f1_of(ct, gi0)
 
     os.makedirs("results", exist_ok=True)
-    k, v = tag[1], tag[3]
+    k, v = tag[1], tag[3]                       # tag "t0v1" -> test fold 0, validation fold 1
     with open(out, "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["test_fold", "val_fold", "tau", "beta", "f1", "iou",
@@ -105,7 +104,7 @@ if __name__ == "__main__":
     print(f"{len(paths)} cached pairs | {len(GRID)} (tau, beta) points | "
           f"{WORKERS} workers | CPU only", flush=True)
     with ProcessPoolExecutor(max_workers=WORKERS,
-                             mp_context=mp.get_context("spawn")) as ex:
+                             mp_context=mp.get_context("spawn")) as ex:   # "spawn": fresh worker processes
         for p in paths:
             run_pair(p, ex)
     print(f"summarise: SUFFIX={SUFFIX} python3 src/methods/merge_refine.py", flush=True)

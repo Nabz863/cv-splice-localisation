@@ -1,3 +1,9 @@
+"""Rung 3, step 2: 20-pair evaluation of SAM2 from the cache, plus image-level AUC on authentic images.
+
+Picks each validation fold's size window, scores every test fold, and runs SAM2 on the
+authentic images (GPU, resumable) for the AUC. Writes results/rung3_sam2_20pairs.csv,
+rung3_sam2_folds.csv, image_auc_sam2_*.csv.   Usage:  python src/methods/run_sam2_auc.py
+"""
 import os
 import sys
 import csv
@@ -11,6 +17,7 @@ from PIL import Image
 from sklearn.metrics import roc_auc_score
 
 
+# ---- Size-filter grid (same as run_sam2.py) ----
 N_FOLDS = 5
 MIN_FRACS = [0.0, 0.001, 0.005, 0.01, 0.02]
 MAX_FRACS = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.75, 1.00]
@@ -23,7 +30,7 @@ AUTH_DIR = DATASETS / "casia2" / "images" / "CASIA2.0_revised" / "Au"
 CACHE_DIR = Path(
     os.environ.get(
         "SAM2_CACHE",
-        "/content/drive/MyDrive/CV_Project/sam2_cache"
+        "results/sam2_cache"
     )
 )
 
@@ -38,7 +45,7 @@ AUC_SUMMARY = RESULTS / "image_auc_sam2_summary.csv"
 
 CHECKPOINT = os.environ.get(
     "SAM2_CHECKPOINT",
-    "/content/sam2/checkpoints/sam2.1_hiera_base_plus.pt"
+    "checkpoints/sam2.1_hiera_base_plus.pt"
 )
 
 MODEL_CFG = "configs/sam2.1/sam2.1_hiera_b+.yaml"
@@ -46,7 +53,10 @@ MODEL_CFG = "configs/sam2.1/sam2.1_hiera_b+.yaml"
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"}
 
 
+# ---- Helpers ----
+
 def metric(df):
+    """Pooled F1 and IoU over a set of rows."""
     tp = df["tp"].sum()
     fp = df["fp"].sum()
     fn = df["fn"].sum()
@@ -58,6 +68,7 @@ def metric(df):
 
 
 def choose_config(counts, val_fold):
+    """Size window with the best pooled F1 on the validation fold."""
     fold = counts[counts["fold"] == val_fold]
     best = None
 
@@ -77,10 +88,14 @@ def choose_config(counts, val_fold):
 
 
 def cfg_key(lo, hi):
+    """String key for a size window."""
     return f"{float(lo):.6f}|{float(hi):.6f}"
 
 
+# ---- Authentic images: SAM2 area score per size window (cached, resumable) ----
+
 def load_auth_cache():
+    """Authentic-image scores computed so far."""
     if not AUTH_CACHE.exists():
         return pd.DataFrame(
             columns=["image", "min_frac", "max_frac", "score"]
@@ -95,6 +110,7 @@ def load_auth_cache():
 
 
 def completed_auth_images(auth, configs):
+    """Authentic images that already have a score for every needed window."""
     if len(auth) == 0:
         return set()
 
@@ -116,6 +132,7 @@ def completed_auth_images(auth, configs):
 
 
 def append_auth(rows):
+    """Append new scores to the cache file."""
     if not rows:
         return
 
@@ -130,6 +147,7 @@ def append_auth(rows):
 
 
 def cache_authentic(configs):
+    """Run SAM2 on every authentic image not yet cached; score = fraction of image predicted."""
     configs = sorted(set(configs))
 
     paths = sorted(
@@ -150,8 +168,9 @@ def cache_authentic(configs):
     if len(done) == len(paths):
         return
 
-    if "/content/sam2" not in sys.path:
-        sys.path.insert(0, "/content/sam2")
+    sam2_repo = os.environ.get("SAM2_REPO", "sam2")          # optional local clone of the sam2 repo
+    if sam2_repo not in sys.path:
+        sys.path.insert(0, sam2_repo)
 
     from sam2.build_sam import build_sam2
     from sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
@@ -215,6 +234,7 @@ def cache_authentic(configs):
 
 
 def image_areas(counts):
+    """Pixel count of every tampered image (retries reads on a flaky network drive)."""
     tp_dir = DATASETS / "casia2" / "images" / "CASIA2.0_revised" / "Tp"
 
     names = set(Path(str(x)).name for x in counts["image"].unique())
@@ -252,6 +272,7 @@ def main():
     if counts["image"].nunique() != 1822:
         raise RuntimeError("Incomplete tampered SAM2 cache")
 
+    # ---- 1. choose a size window on each fold (used when that fold is the validation fold) ----
     selected = {}
 
     print("VALIDATION FILTERS")
@@ -265,11 +286,13 @@ def main():
             f"F1={f1:.4f} IoU={iou:.4f}"
         )
 
+    # ---- 2. authentic-image scores for those windows ----
     cache_authentic(selected.values())
 
     auth = load_auth_cache()
     areas = image_areas(counts)
 
+    # ---- 3. every (test, validation) pair: localisation F1/IoU and image-level AUC ----
     rows = []
 
     print("\n20 PAIRS")
@@ -292,6 +315,7 @@ def main():
 
             f1, iou = metric(test)
 
+            # tampered-image score = fraction of the image predicted spliced ((tp + fp) / area)
             test["score"] = [
                 (tp + fp) / areas[Path(str(image)).name]
                 for image, tp, fp in zip(
@@ -358,6 +382,7 @@ def main():
                 f"AUC={auc:.4f}"
             )
 
+    # ---- 4. save per pair, and per test fold (mean over its validation folds) ----
     pairs = pd.DataFrame(rows)
 
     folds = (

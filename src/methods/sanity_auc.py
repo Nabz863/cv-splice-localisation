@@ -1,4 +1,4 @@
-"""Does pixel_auc report what we think? Oracle should be 1.0, noise 0.5."""
+"""Sanity check for pixel_auc: a blurred ground truth should score ~1.0, random noise ~0.5."""
 import csv, os, sys
 import numpy as np
 from PIL import Image

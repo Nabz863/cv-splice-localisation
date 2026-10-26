@@ -1,21 +1,4 @@
-"""Refuse to save a figure whose labels collide with anything.
-
-Eyeballing a figure misses collisions at some sizes and catches them at others.
-This measures them instead. After the figure is drawn, every visible piece of
-text, every legend, every bar, marker, line and arrow has a bounding box (or a
-path) in screen pixels, and any two that should not touch are tested:
-
-  text      vs text, bars/boxes, markers, line paths, arrows
-  legend    vs every data artist and every text outside the legend itself
-  box       vs box (diagram boxes must not overlap each other)
-
-The one permitted overlap is text that sits entirely inside a box drawn for it
-(the labels in the method diagram). Tag such a box with gid="box".
-
-Usage:
-    problems = collisions(fig)          # list of human-readable strings
-    save_checked(fig, "results/figures/fig1")   # raises if problems is non-empty
-"""
+"""Find overlapping labels/legends/markers in a matplotlib figure; save_checked() refuses to save if any."""
 import numpy as np
 from matplotlib.collections import LineCollection
 from matplotlib.legend import Legend

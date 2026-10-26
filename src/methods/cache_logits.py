@@ -1,30 +1,8 @@
-"""Rung 5, phase 1: train (or load) each pair's U-Net and cache its logits.
+"""Rung 4/5, step 1 (GPU): train each (test, validation) pair's U-Net and save its logits.
 
-GPU ONLY. No multiprocessing anywhere in this file -- a CUDA context and a
-process pool in the same interpreter produced repeated illegal-memory-access
-faults, and separating the phases removes the interaction entirely rather than
-trying to work around it.
-
-Writes results/logits/{tag}.npz holding the validation-calibration and test
-logits for one (test, val) pair, as float16 to keep the files small. Phase 2
-(sweep_cached.py) consumes these and touches no GPU.
-
-A batch whose loss is not finite is skipped, as before, but now counted: per
-epoch in the log, and per model (training and validation separately) in
-results/rung5_training{suffix}.csv and the model's sidecar. Earlier versions
-skipped such batches without recording them.
-
-Every saved model and logits file gets a JSON sidecar with the training config;
-an existing file whose sidecar is missing or differs is refused, never silently
-reused (refine_meta.py). Per-pair stopping epochs and best validation losses are
-appended to results/rung5_training{suffix}.csv, which is committed.
-
-N_TRAIN=n trains on a fixed random subset of n images of each pair's training
-folds (the data-size curve); every output then carries the suffix _n{n}, e.g.
-results/logits/t0v1_n50.npz. The default, N_TRAIN=0, uses all training images.
-
-Usage (from the repo root; slurm/cache_logits.sbatch is the canonical call):
-    BATCH=8 WORKERS=2 python src/methods/cache_logits.py
+Writes results/models/refine_<tag>.pt, results/logits/<tag>.npz (validation + test logits)
+and a row in results/rung5_training{SUFFIX}.csv. N_TRAIN=n trains on n masks (data-size curve).
+Usage:  BATCH=8 WORKERS=2 python src/methods/cache_logits.py
 """
 import csv, os, sys, time
 import numpy as np
@@ -43,6 +21,7 @@ DEV = "cuda" if torch.cuda.is_available() else "cpu"
 if DEV == "cpu" and not os.environ.get("ALLOW_CPU"):
     raise SystemExit("GPU unavailable - refusing CPU fallback. Set ALLOW_CPU=1 to override.")
 
+# ---- Settings (environment variables override the defaults) ----
 EPOCHS = int(os.environ.get("EPOCHS", 90))
 PATIENCE = int(os.environ.get("PATIENCE", 10))
 BATCH = int(os.environ.get("BATCH", 8))
@@ -51,12 +30,13 @@ WORKERS = int(os.environ.get("WORKERS", 2))
 NORM = os.environ.get("NORM", "sum")
 WD = float(os.environ.get("WD", 1e-4))
 CLIP = float(os.environ.get("CLIP", 1.0))
-N_CAL = int(os.environ.get("N_CAL", 150))
-NESTED = bool(int(os.environ.get("NESTED", 1)))
+N_CAL = int(os.environ.get("N_CAL", 150))           # validation images used to pick thresholds
+NESTED = bool(int(os.environ.get("NESTED", 1)))     # 1 = all 20 (test, val) pairs
 N_TRAIN = int(os.environ.get("N_TRAIN", 0))          # 0 = all training images
 SUFFIX = f"_n{N_TRAIN}" if N_TRAIN else ""
 AMP_DTYPE = torch.bfloat16
 CROPS = 8                                           # SpliceCrops default
+# everything that defines a trained model; saved next to each model and logits file
 CONFIG = dict(epochs_max=EPOCHS, patience=PATIENCE, batch=BATCH, workers=WORKERS, lr=1e-3,
               weight_decay=WD, grad_clip=CLIP, constraint_norm=NORM, amp_dtype="bfloat16",
               n_cal=N_CAL, crops_per_image=CROPS, patch=PATCH, n_train=N_TRAIN,
@@ -65,23 +45,27 @@ CONFIG = dict(epochs_max=EPOCHS, patience=PATIENCE, batch=BATCH, workers=WORKERS
 
 @torch.no_grad()
 def logits_full(model, path):
+    """Run the model on a whole image (padded to a multiple of 8) and return its logits."""
     img = np.array(Image.open(path).convert("RGB"), np.float32) / 255.0
     h, w = img.shape[:2]
-    ph, pw = (-h) % 8, (-w) % 8
+    ph, pw = (-h) % 8, (-w) % 8                       # 3 poolings need sides divisible by 8
     img = np.pad(img, ((0, ph), (0, pw), (0, 0)), mode="reflect")
     x = torch.from_numpy(img.transpose(2, 0, 1))[None].to(DEV)
-    return model(x)[0, 0].float().cpu().numpy()[:h, :w]
+    return model(x)[0, 0].float().cpu().numpy()[:h, :w]   # crop the padding off again
 
+
+# ---- Training ----
 
 def train_one(test_fold, val_fold, rows, tag):
-    set_seed(test_fold * 10 + val_fold)
-    tr = [r for r in rows if int(r["fold"]) not in (test_fold, val_fold)]
+    """Train one U-Net on the three remaining folds, early-stopping on the validation fold."""
+    set_seed(test_fold * 10 + val_fold)               # one fixed seed per pair
+    tr = [r for r in rows if int(r["fold"]) not in (test_fold, val_fold)]   # training folds
     if N_TRAIN:
-        tr = list(np.random.default_rng(0).permutation(tr))[:N_TRAIN]
+        tr = list(np.random.default_rng(0).permutation(tr))[:N_TRAIN]       # fixed random subset
     va = [r for r in rows if int(r["fold"]) == val_fold]
 
     os.makedirs("results/ckpt_refine", exist_ok=True)
-    ck = f"results/ckpt_refine/{tag}.pt"
+    ck = f"results/ckpt_refine/{tag}.pt"              # checkpoint, so an interrupted run can resume
 
     dl = DataLoader(SpliceCrops(tr, train=True, crops_per_image=CROPS, seed=test_fold),
                     batch_size=BATCH,
@@ -92,12 +76,12 @@ def train_one(test_fold, val_fold, rows, tag):
     model = UNet(norm=NORM).to(DEV)
     opt = (torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=WD) if WD
            else torch.optim.Adam(model.parameters(), lr=1e-3))
-    sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, EPOCHS)
-    scaler = torch.amp.GradScaler(DEV, enabled=(DEV == "cuda"))
+    sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, EPOCHS)     # cosine learning-rate decay
+    scaler = torch.amp.GradScaler(DEV, enabled=(DEV == "cuda"))        # mixed-precision loss scaling
 
     best, best_state, bad, start_ep, stopped = float("inf"), None, 0, 0, EPOCHS
-    nf_train = nf_val = 0                         # non-finite batches skipped, whole run
-    if os.path.exists(ck):
+    nf_train = nf_val = 0                         # count of batches skipped for NaN/inf loss
+    if os.path.exists(ck):                         # resume from a checkpoint
         refine_meta.check(ck, CONFIG)
         st = torch.load(ck, map_location=DEV, weights_only=False)
         model.load_state_dict(st["model"]); opt.load_state_dict(st["opt"])
@@ -108,22 +92,23 @@ def train_one(test_fold, val_fold, rows, tag):
 
     model.constrain()
     for ep in range(start_ep, EPOCHS):
+        # ---- one training epoch ----
         model.train()
         tot, n, t0, bad_tr, bad_va = 0.0, 0, time.time(), 0, 0
         for x, y in dl:
             x, y = x.to(DEV, non_blocking=True), y.to(DEV, non_blocking=True)
             opt.zero_grad()
-            with torch.amp.autocast(DEV, dtype=AMP_DTYPE, enabled=(DEV == "cuda")):
+            with torch.amp.autocast(DEV, dtype=AMP_DTYPE, enabled=(DEV == "cuda")):   # bfloat16 forward pass
                 loss = dice_bce(model(x), y)
-            if not torch.isfinite(loss):
+            if not torch.isfinite(loss):           # skip (and count) a NaN/inf batch
                 bad_tr += 1
                 continue
             scaler.scale(loss).backward()
-            if CLIP > 0:
+            if CLIP > 0:                           # gradient clipping (norm 1)
                 scaler.unscale_(opt)
                 torch.nn.utils.clip_grad_norm_(model.parameters(), CLIP)
             scaler.step(opt); scaler.update()
-            model.constrain()
+            model.constrain()                      # restore the first-layer constraint
             tot += loss.item() * x.size(0); n += x.size(0)
         sched.step()
         nf_train += bad_tr
@@ -131,6 +116,7 @@ def train_one(test_fold, val_fold, rows, tag):
             print(f"  {tag} ep {ep+1}: every training batch non-finite - stopping", flush=True)
             break
 
+        # ---- validation loss ----
         model.eval()
         vl, vn = 0.0, 0
         with torch.no_grad():
@@ -148,6 +134,7 @@ def train_one(test_fold, val_fold, rows, tag):
               + (f"  NON-FINITE batches: train {bad_tr}, val {bad_va}" if bad_tr or bad_va
                  else ""), flush=True)
 
+        # ---- early stopping: keep the best weights, stop after PATIENCE epochs without improvement ----
         if vl < best - 1e-4:
             best, bad = vl, 0
             best_state = {k: v.detach().clone() for k, v in model.state_dict().items()}
@@ -158,6 +145,7 @@ def train_one(test_fold, val_fold, rows, tag):
                 print(f"  early stop at epoch {ep+1} (best val {best:.4f})", flush=True)
                 break
 
+        # save a checkpoint (write to .tmp, then rename, so a crash can't leave a broken file)
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(),
                     "sched": sched.state_dict(), "scaler": scaler.state_dict(),
                     "best": best, "best_state": best_state, "bad": bad,
@@ -166,12 +154,13 @@ def train_one(test_fold, val_fold, rows, tag):
         refine_meta.write(ck, CONFIG)
 
     if best_state is not None:
-        model.load_state_dict(best_state)
+        model.load_state_dict(best_state)          # restore the best-validation weights
     model.eval()
     if os.path.exists(ck):
         os.remove(ck)
         os.remove(refine_meta.sidecar(ck))
 
+    # ---- save the model, its config, and a row in the training log ----
     os.makedirs("results/models", exist_ok=True)
     saved = f"results/models/refine_{tag}.pt"
     torch.save(model.state_dict(), saved)
@@ -190,10 +179,13 @@ def train_one(test_fold, val_fold, rows, tag):
     return model
 
 
+# ---- Logits ----
+
 def cache_pair(test_fold, val_fold, rows):
+    """Train (or load) one pair's model and save its logits on 150 validation and all test images."""
     tag = f"t{test_fold}v{val_fold}{SUFFIX}"
     out = f"results/logits/{tag}.npz"
-    if os.path.exists(out):
+    if os.path.exists(out):                        # already done for this config
         refine_meta.check(out, CONFIG)
         print(f"{tag}: cached already", flush=True)
         return
@@ -211,13 +203,13 @@ def cache_pair(test_fold, val_fold, rows):
 
     va = [r for r in rows if int(r["fold"]) == val_fold]
     te = [r for r in rows if int(r["fold"]) == test_fold]
-    cal = list(np.random.default_rng(1).permutation(va))[:N_CAL]
+    cal = list(np.random.default_rng(1).permutation(va))[:N_CAL]   # fixed 150 validation images
 
     t0 = time.time()
     blob = {}
     for split, subset in (("cal", cal), ("test", te)):
         for i, r in enumerate(subset):
-            lg = logits_full(model, r["image"]).astype(np.float16)
+            lg = logits_full(model, r["image"]).astype(np.float16)  # float16 halves the file size
             m = (np.array(Image.open(r["mask"]).convert("L")) > 127)
             blob[f"{split}_lg_{i}"] = lg
             blob[f"{split}_gt_{i}"] = np.packbits(m)      # 1 bit/pixel

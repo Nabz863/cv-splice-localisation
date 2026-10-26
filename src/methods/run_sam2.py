@@ -1,14 +1,10 @@
 
-"""Rung 3: SAM2 zero-shot splice localisation.
+"""Rung 3, step 1 (GPU): run SAM2.1 Base+ (no prompts, no fine-tuning) on every splicing image.
 
-Protocol:
-- SAM2.1 Base+ automatic mask generation, no prompts and no fine-tuning.
-- Candidate masks are filtered only by their fraction of image area.
-- The size filter is selected on validation fold (k+1)%5.
-- It is then applied unchanged to test fold k.
-- Pixel F1/IoU are micro-averaged by summing TP/FP/FN across the fold.
-- Oracle-best candidate is reported separately as an upper bound.
-- SAM2 inference is cached so interrupted Colab runs can resume.
+For each image, stores tp/fp/fn of the union of proposals inside every size window, plus the
+single best proposal (oracle), in SAM2_CACHE. Resumable. run_sam2_auc.py then does the 20-pair
+evaluation (the 5-pair summary this script prints, results/rung3_sam2.csv, is not used).
+Usage:  SAM2_CHECKPOINT=... SAM2_CACHE=... python src/methods/run_sam2.py [--limit N]
 """
 
 import os
@@ -33,6 +29,7 @@ from sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
 from src.eval.metrics import f1_iou
 
 
+# ---- Size-filter grid: keep proposals covering between min_frac and max_frac of the image ----
 N_FOLDS = 5
 
 MIN_FRACS = [0.0, 0.001, 0.005, 0.01, 0.02]
@@ -48,9 +45,10 @@ CONFIGS = [
 DATASETS = Path(os.environ["DATASETS"])
 MANIFEST = DATASETS / "casia2" / "splice_manifest.csv"
 
+# ---- Paths (relative to the repo root unless set in the environment) ----
 CHECKPOINT = os.environ.get(
     "SAM2_CHECKPOINT",
-    "/content/sam2/checkpoints/sam2.1_hiera_base_plus.pt"
+    "checkpoints/sam2.1_hiera_base_plus.pt"
 )
 
 MODEL_CFG = "configs/sam2.1/sam2.1_hiera_b+.yaml"
@@ -58,7 +56,7 @@ MODEL_CFG = "configs/sam2.1/sam2.1_hiera_b+.yaml"
 CACHE_DIR = Path(
     os.environ.get(
         "SAM2_CACHE",
-        "/content/drive/MyDrive/CV_Project/sam2_cache"
+        "results/sam2_cache"
     )
 )
 
@@ -68,12 +66,16 @@ ORACLE_CACHE = CACHE_DIR / "sam2_bplus_oracle.csv"
 RESULTS = Path("results/rung3_sam2.csv")
 
 
+# ---- Helpers ----
+
 def load_manifest():
+    """Rows of the splicing manifest."""
     with open(MANIFEST, newline="") as f:
         return list(csv.DictReader(f))
 
 
 def metric_from_counts(tp, fp, fn):
+    """F1 and IoU from pooled counts."""
     den_f1 = 2 * tp + fp + fn
     den_iou = tp + fp + fn
 
@@ -84,12 +86,14 @@ def metric_from_counts(tp, fp, fn):
 
 
 def atomic_csv(df, path):
+    """Write a CSV via a temporary file, so an interruption can't leave half a file."""
     tmp = Path(str(path) + ".tmp")
     df.to_csv(tmp, index=False)
     os.replace(tmp, path)
 
 
 def save_cache(count_records, oracle_records):
+    """Save progress so far."""
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     atomic_csv(pd.DataFrame(count_records), COUNTS_CACHE)
@@ -97,6 +101,7 @@ def save_cache(count_records, oracle_records):
 
 
 def load_cache():
+    """Load any progress from a previous run."""
     if COUNTS_CACHE.exists():
         counts = pd.read_csv(COUNTS_CACHE).to_dict("records")
     else:
@@ -111,6 +116,7 @@ def load_cache():
 
 
 def complete_images(count_records, oracle_records):
+    """Images that already have results for every size window and an oracle row."""
     if not count_records or not oracle_records:
         return set()
 
@@ -131,12 +137,15 @@ def complete_images(count_records, oracle_records):
     return good_counts & good_oracle
 
 
+# ---- SAM2 on one image ----
+
 def process_image(row, mask_generator):
+    """Counts for every size window, plus the oracle (best single proposal by IoU)."""
     image = np.array(Image.open(row["image"]).convert("RGB"))
     truth = np.array(Image.open(row["mask"]).convert("L")) > 127
 
     with torch.inference_mode():
-        masks = mask_generator.generate(image)
+        masks = mask_generator.generate(image)        # automatic proposals, no prompt
 
     image_area = truth.size
 
@@ -156,8 +165,8 @@ def process_image(row, mask_generator):
         pred = np.zeros_like(truth, dtype=bool)
 
         for seg, frac in zip(candidate_masks, candidate_fracs):
-            if lo <= frac <= hi:
-                pred |= seg
+            if lo <= frac <= hi:                     # proposal inside the size window ...
+                pred |= seg                          # ... is added to the predicted mask
 
         m = f1_iou(pred, truth)
 
@@ -171,6 +180,7 @@ def process_image(row, mask_generator):
             "fn": m["fn"],
         })
 
+    # oracle: the single proposal with the highest IoU against the truth (diagnostic only)
     if candidate_masks:
         best = None
         best_iou = -1.0
@@ -196,7 +206,10 @@ def process_image(row, mask_generator):
     return count_rows, oracle_row
 
 
+# ---- Evaluation (5 fixed pairs; the 20-pair version is in run_sam2_auc.py) ----
+
 def aggregate(df):
+    """Pooled F1 and IoU over a set of rows."""
     tp = int(df["tp"].sum())
     fp = int(df["fp"].sum())
     fn = int(df["fn"].sum())
@@ -207,6 +220,7 @@ def aggregate(df):
 
 
 def choose_validation_config(counts_df, val_fold):
+    """Size window with the best pooled F1 on the validation fold."""
     fold_df = counts_df[counts_df["fold"] == val_fold]
 
     best = None
@@ -228,6 +242,7 @@ def choose_validation_config(counts_df, val_fold):
 
 
 def final_results(count_records, oracle_records):
+    """Print and save the 5-pair summary."""
     counts_df = pd.DataFrame(count_records)
     oracle_df = pd.DataFrame(oracle_records)
 
@@ -361,7 +376,7 @@ def main():
 
     for i, row in enumerate(pending, 1):
 
-        # Remove any incomplete old rows for this image
+        # drop any partial rows left for this image by an interrupted run
         count_records = [
             x for x in count_records
             if x["image"] != row["image"]

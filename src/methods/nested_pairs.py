@@ -1,13 +1,6 @@
-"""How much does the validation-fold choice actually change the result?
+"""Rung 2 under all 20 (test, validation) fold pairs: how much does the validation fold matter?
 
-The main protocol pairs test fold k with val fold (k+1)%5 -- one pairing out of
-the four available per test fold. This enumerates all 5 x 4 = 20 pairs for the
-MRF, which costs nothing because the per-image counts are already stored, and
-reports how much the test F1 for a given fold varies with the val fold used to
-pick (tau, beta).
-
-If the spread is small, the fixed pairing is a safe simplification and rung 4
-does not need 20 training runs. If it is large, that is a real finding.
+Reads results/rung2_grid.npz, writes results/rung2_nested_pairs.csv.
 """
 import csv, itertools, os
 import numpy as np
@@ -21,6 +14,7 @@ N = 5
 
 
 def f1_of(idx, gi):
+    """Pooled F1 over images idx at grid point gi."""
     tp, fp, fn = counts[idx, 0, gi].sum(0)
     return 2 * tp / (2 * tp + fp + fn) if (tp + fp + fn) else 1.0
 
@@ -31,8 +25,8 @@ by_test, all_pairs = {k: [] for k in range(N)}, []
 for k, v in itertools.product(range(N), range(N)):
     if k == v:
         continue
-    vi, ti = np.where(folds == v)[0], np.where(folds == k)[0]
-    gi = int(np.argmax([f1_of(vi, g) for g in range(len(grid))]))
+    vi, ti = np.where(folds == v)[0], np.where(folds == k)[0]           # validation / test images
+    gi = int(np.argmax([f1_of(vi, g) for g in range(len(grid))]))      # best grid point on validation
     tp, fp, fn = counts[ti, 0, gi].sum(0)
     f1 = 2 * tp / (2 * tp + fp + fn)
     by_test[k].append(f1)

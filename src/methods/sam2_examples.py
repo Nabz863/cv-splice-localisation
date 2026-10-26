@@ -1,20 +1,7 @@
-"""Rung 3 masks for the qualitative figure's example images.
+"""SAM2 masks (rung-3 union and oracle) for the few images in the qualitative figure (GPU).
 
-run_sam2.py keeps only per-image confusion counts, not masks, so the qualitative
-figure cannot draw rung 3 from its cache. This reruns the identical model
-(SAM2.1 Hiera Base+, automatic mask generator, default settings, no prompts) on
-the few images fig_qualitative.py shows -- the same images, chosen by its own
-pick_examples() -- and stores, for each:
-    union   the proposals whose area fraction lies in the size band that TAG's
-            validation fold selected (results/rung3_sam2_20pairs.csv), unioned:
-            exactly rung 3's prediction for that image
-    oracle  the single proposal with the highest IoU against the ground truth
-            (the diagnostic upper bound; never part of the method)
-
-Writes results/sam2_examples/{image stem}.npz. Then run fig_qualitative.py.
-
-Usage (from the repo root; GPU if available, CPU works but is slow):
-    SAM2_CHECKPOINT=checkpoints/sam2.1_hiera_base_plus.pt python src/methods/sam2_examples.py
+Writes results/sam2_examples/<image>.npz; run fig_qualitative.py afterwards.
+Usage:  SAM2_CHECKPOINT=checkpoints/sam2.1_hiera_base_plus.pt python src/methods/sam2_examples.py
 """
 import csv, os, sys, time
 import numpy as np
@@ -31,6 +18,7 @@ MODEL_CFG = "configs/sam2.1/sam2.1_hiera_b+.yaml"        # as run_sam2.py
 
 
 def size_band(tag):
+    """Size window this pair's validation fold selected for rung 3."""
     k, v = int(tag[1]), int(tag[3])
     for r in csv.DictReader(open("results/rung3_sam2_20pairs.csv")):
         if int(r["test_fold"]) == k and int(r["val_fold"]) == v:
@@ -39,6 +27,7 @@ def size_band(tag):
 
 
 def iou(a, b):
+    """IoU of two masks."""
     u = (a | b).sum()
     return (a & b).sum() / u if u else 1.0
 
@@ -63,11 +52,11 @@ if __name__ == "__main__":
             masks = gen.generate(img)
         segs = [m["segmentation"].astype(bool) for m in masks]
         fracs = [float(m["area"]) / truth.size for m in masks]           # as run_sam2.py
-        union = np.zeros_like(truth)
+        union = np.zeros_like(truth)                                      # rung 3's prediction
         for s, fr in zip(segs, fracs):
             if lo <= fr <= hi:
                 union |= s
-        oracle = max(segs, key=lambda s: iou(s, truth)) if segs else np.zeros_like(truth)
+        oracle = max(segs, key=lambda s: iou(s, truth)) if segs else np.zeros_like(truth)   # best single proposal
         stem = os.path.basename(row["image"]).rsplit(".", 1)[0]
         np.savez_compressed(os.path.join(SAM2_DIR, stem + ".npz"), shape=np.array(truth.shape),
                             union=np.packbits(union), oracle=np.packbits(oracle),

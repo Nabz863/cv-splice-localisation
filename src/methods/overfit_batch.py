@@ -1,13 +1,6 @@
-"""The book's ritual (sec 2.6.3): overfit one fixed batch before any real run.
+"""Wiring check before real training: the U-Net should be able to overfit one fixed batch.
 
-Per the book, augmentation and regularisation are disabled -- this is a capacity
-and wiring check, not a generalisation test. train=False on the dataset turns off
-flips and rotations; weight decay is off; the model is in train() mode so
-BatchNorm uses batch statistics as it would during real training.
-
-Reaching a low loss proves only that the data, model, loss and optimiser are
-connected and that capacity is sufficient. It does not prove the model will
-generalise.
+No augmentation and no weight decay. Usage:  python src/methods/overfit_batch.py
 """
 import os, sys
 import numpy as np
@@ -22,17 +15,17 @@ DEV = "cuda" if torch.cuda.is_available() else "cpu"
 if DEV == "cpu" and not os.environ.get("ALLOW_CPU"):
     raise SystemExit("GPU unavailable - refusing CPU fallback. Set ALLOW_CPU=1 to override.")
 
-STEPS = int(os.environ.get("STEPS", 2000))
+STEPS = int(os.environ.get("STEPS", 2000))               # max optimiser steps
 CONSTRAINED = bool(int(os.environ.get("CONSTRAINED", 1)))
 NORM = os.environ.get("NORM", "l1")
-TARGET = float(os.environ.get("TARGET", 0.05))
+TARGET = float(os.environ.get("TARGET", 0.05))           # loss that counts as "overfitted"
 
 rows = load_rows()[:8]
-x, y = next(iter(DataLoader(SpliceCrops(rows, train=False), batch_size=8)))
+x, y = next(iter(DataLoader(SpliceCrops(rows, train=False), batch_size=8)))   # one fixed batch, no augmentation
 x, y = x.to(DEV), y.to(DEV)
 
 model = UNet(constrained=CONSTRAINED, norm=NORM).to(DEV)
-opt = torch.optim.Adam(model.parameters(), lr=1e-3)      # no weight decay: ritual
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)      # no weight decay
 
 print(f"device {DEV} | constrained={CONSTRAINED} norm={NORM} | "
       f"target loss {TARGET} in {STEPS} steps")
@@ -47,7 +40,7 @@ for step in range(STEPS):
         break
     loss.backward()
     opt.step()
-    model.constrain()
+    model.constrain()                                     # re-apply the first-layer constraint
 
     if loss.item() < TARGET:
         print(f"PASS — reached {loss.item():.4f} at step {step}")

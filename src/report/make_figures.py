@@ -1,22 +1,8 @@
-"""Draw every report and slide figure from results/tables/, and check each one.
+"""Draw every figure from results/tables/ (written by build_tables.py) into results/figures/.
 
-This script reads nothing but the tables build_tables.py (and mechanism.py)
-write, so every mark on every figure traces back to a results file. Each figure
-is checked by overlap.py at output resolution before it is saved; a figure with
-any collision is not written, and the script exits non-zero after listing all
-of them.
-
-Colour roles, fixed across every figure:
-  blue    no spatial prior (beta = 0)
-  orange  with the spatial prior
-  aqua    a different score (the U-Net's max probability)
-  gray    chance and other reference lines
-The stabiliser figure has no prior in it, so it uses blue / aqua / violet,
-validated as a set, with every line labelled directly.
-
-Usage (from the repo root):
-    python src/report/build_tables.py
-    python src/report/make_figures.py          -> results/figures/*.pdf, *.png
+Each figure is checked for overlapping labels (overlap.py) before saving.
+Colours: blue = no prior (beta 0), orange = with prior, aqua = other score, grey = chance/reference.
+Usage:  python src/report/make_figures.py
 """
 import csv, os, sys
 from collections import defaultdict
@@ -50,6 +36,7 @@ plt.rcParams.update({
 
 
 def table(name, required=True):
+    """Rows of results/tables/<name> (None if missing and not required)."""
     path = os.path.join(TAB, name)
     if not os.path.exists(path):
         if required:
@@ -59,14 +46,17 @@ def table(name, required=True):
 
 
 def num(r, k):
+    """Field k of row r as a float (None if blank)."""
     return float(r[k]) if r.get(k, "") != "" else None
 
 
 def grid_x(ax):
+    """Light vertical grid lines."""
     ax.grid(axis="x", color=GRID, lw=0.6); ax.set_axisbelow(True)
 
 
 def grid_y(ax):
+    """Light horizontal grid lines."""
     ax.grid(axis="y", color=GRID, lw=0.6); ax.set_axisbelow(True)
 
 
@@ -76,11 +66,13 @@ def above_axes(ax):
 
 
 def swatch(c):
+    """Legend handle: a coloured square."""
     return plt.Rectangle((0, 0), 1, 1, color=c)
 
 
 # --------------------------------------------------------------------- 0. method
 def fig_method():
+    """Fig. 1: the five rungs and where their knowledge comes from."""
     fig, ax = plt.subplots(figsize=(FULL, 2.9))
     ax.set_xlim(0, 10.6); ax.set_ylim(0, 6.15); ax.axis("off")
 
@@ -131,6 +123,7 @@ def fig_method():
 
 # ------------------------------------------------------------------- 1. main F1
 def fig_main():
+    """Main F1 bar chart (slides; Table I in the report)."""
     t = {r["key"]: r for r in table("main.csv")}
     chance = num(t["chance"], "f1")
     order = [("rung1", "Rung 1  ELA", BLUE), ("rung2", "Rung 2  ELA + MRF", ORANGE),
@@ -164,6 +157,7 @@ def fig_main():
 
 # ------------------------------------------------------------- 2. prior's gain
 def fig_gain():
+    """Fig. 4: F1 added by the prior in each of the 20 pairs."""
     g = table("gains.csv"); t = {r["key"]: r for r in table("main.csv")}
     by = defaultdict(list)
     for r in g:
@@ -192,6 +186,7 @@ def fig_gain():
 
 # ----------------------------------------------------------------- 3. data size
 def fig_datasize():
+    """Fig. 8: rungs 4-5 F1 vs number of training masks."""
     d = table("datasize.csv", required=False); t = {r["key"]: r for r in table("main.csv")}
     if not d:
         return None
@@ -232,6 +227,7 @@ def fig_datasize():
 
 # --------------------------------------------------------------- 4. categories
 def fig_category():
+    """Per-category F1 (not in the report; Sec. V-F text)."""
     d = sorted(table("category.csv"), key=lambda r: float(r["pooled_frac"]))
     fig, ax = plt.subplots(figsize=(6.4, 3.4))
     y = np.arange(len(d))[::-1]
@@ -263,6 +259,7 @@ def fig_category():
 
 # ------------------------------------------------------------- 5. image AUC
 def fig_auc():
+    """Image-level AUC chart (Table II in the report)."""
     rows = [r for r in table("auc.csv") if r["subset"] == "all"]
     cv = any(r["tag"] == "all20" for r in rows)
     if cv:   # all 20 pairs cached: show the cross-validated rows, interval = +-1 SD over folds
@@ -311,6 +308,7 @@ def fig_auc():
 
 # --------------------------------------------------------------- 6. copy-move
 def fig_copymove():
+    """Copy-move margins over chance (Sec. VI)."""
     d = table("copymove.csv")
     sets = list(dict.fromkeys(r["dataset"] for r in d))
     fig, ax = plt.subplots(figsize=(4.8, 2.9))
@@ -337,11 +335,7 @@ def fig_copymove():
 
 # -------------------------------------------------------------- 7. stabilisers
 def fig_stabiliser():
-    """Weight norm per epoch, with each run's first non-finite loss marked.
-
-    Deliberately no fp16-maximum line: 65,504 is the largest single value fp16
-    holds, while this is an L2 norm over every weight, so a line at 65,504 would
-    imply a threshold the data does not show (both divergences began below it)."""
+    """Fig. 3: weight norm per epoch for the fp16 runs, first non-finite loss marked."""
     d = table("stabiliser.csv", required=False)
     if not d:
         return None
@@ -393,8 +387,7 @@ def fig_stabiliser():
 
 # -------------------------------------------------------------- 8. mechanism
 def fig_mechanism():
-    """Pixels the prior changes, by distance to the true boundary (mechanism.py,
-    all 20 pairs). Gains to the right of zero, losses to the left, in millions."""
+    """Fig. 6: pixels the prior changes, by distance to the true boundary."""
     d = table("mechanism.csv", required=False)
     if not d:
         return None
@@ -431,6 +424,7 @@ def fig_mechanism():
 
 # ------------------------------------------------------------ 9. per-image F1
 def fig_perimage():
+    """Histogram of per-image F1, rungs 4 and 5."""
     d = table("perimage_f1.csv", required=False)
     if not d:
         return None
@@ -451,10 +445,7 @@ def fig_perimage():
 
 # ------------------------------------------------------------- 10. the U-Net
 def fig_unet():
-    """The rung 4/5 network, drawn as feature-map slabs in the style of the
-    course text's U-Net figures. Channel counts, kernel size and patch size are
-    read from the model class (src/methods/unet.py) and patch_data.PATCH, so the
-    drawing cannot drift from the code."""
+    """Fig. 2: the U-Net drawn as feature-map slabs; sizes are read from unet.py."""
     from matplotlib.patches import Polygon, Rectangle
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "methods"))
     from unet import UNet
@@ -574,8 +565,7 @@ def fig_unet():
 
 # ------------------------------------------------------------------ 11. SAM2
 def fig_sam2():
-    """Rung 3 against the rungs either side of it, and against the oracle that
-    picks each image's best SAM2 proposal using the ground truth."""
+    """Fig. 9: SAM2 among the other rungs, plus the ground-truth oracle."""
     s = table("sam2.csv", required=False)
     if not s:
         return None
@@ -615,9 +605,7 @@ def fig_sam2():
 
 # --------------------------------------------- 12. selection: pixels vs images
 def fig_selection():
-    """The U-Net's prior when (tau, beta) are chosen by pooled F1 vs by mean
-    per-image F1: each criterion's effect on both measures (selection.csv), and
-    the share of images left with no correct pixel (selection_detail.csv)."""
+    """Fig. 7: the prior when (tau, beta) are chosen by pooled F1 vs per-image F1."""
     sel = table("selection.csv", required=False)
     if not sel:
         return None
@@ -669,6 +657,7 @@ FIGURES = [("fig0_method", fig_method), ("fig1_main_f1", fig_main), ("fig2_prior
 
 
 def main():
+    """Draw, check and save every figure in FIGURES."""
     os.makedirs(OUT, exist_ok=True)
     failed = []
     for name, make in FIGURES:

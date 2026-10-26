@@ -7,3 +7,5 @@ PyMaxflow
 matplotlib
 wandb
 torch
+pandas
+scikit-learn

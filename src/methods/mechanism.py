@@ -1,33 +1,10 @@
-"""Where does the prior's gain over the U-Net come from?
+"""Where does the prior's gain over the U-Net come from? (Fig. 6 and the region counts)
 
-DeepLab used a CRF to SHARPEN BOUNDARIES that its downsampling backbone blurred.
-Our U-Net outputs at full resolution with skip connections, so that mechanism
-should be absent, yet the prior still adds +0.034 F1. This finds out which pixels
-the prior actually changes:
-
-  every pixel where the beta>0 cut disagrees with the beta=0 cut is one of
-    false positive removed   (gain)     false negative filled  (gain)
-    true positive lost       (loss)     false positive added   (loss)
-  and is binned by its distance to the ground-truth boundary.
-
-If the net gain sits within a few pixels of the boundary, the mechanism is
-DeepLab's. If it sits far from any boundary -- speckle deleted in the background,
-holes filled inside regions -- the network gets the edges right but is
-inconsistent about WHICH regions are tampered, which is a different finding.
-
-Also reports connected components before and after (spurious = no overlap with
-the ground truth), and the per-image F1 distribution for rungs 4 and 5.
-
-CPU only, imports no torch. Uses the cached test logits and each pair's own
-selected (tau, beta). By default all 20 (test, val) pairs, so every image is
-counted four times, once under each val fold's model; TAGS=t0v1 restricts it.
-
-Usage (from the repo root):
-    python src/methods/mechanism.py
-    TAGS=t0v1 BANDS=2,10 python src/methods/mechanism.py
-
-Writes results/tables/mechanism.csv, mechanism_summary.csv and perimage_f1.csv;
-make_figures.py draws them.
+Every pixel the prior changes is classed as FP removed / FN filled (gains) or TP lost /
+FP added (losses), and binned by distance to the true boundary. Also counts connected
+regions before/after and per-image F1. Uses each pair's selected (tau, beta); TAGS=t0v1
+restricts to one pair. Writes results/tables/mechanism*.csv and perimage_f1.csv.
+Usage:  python src/methods/mechanism.py
 """
 import csv, os, sys
 from concurrent.futures import ProcessPoolExecutor
@@ -37,19 +14,22 @@ from scipy import ndimage
 sys.path.insert(0, os.path.dirname(__file__))
 from mrf import solve_graphcut
 
+# ---- Settings ----
 _ALL = ",".join(f"t{k}v{v}" for k in range(5) for v in range(5) if k != v)
 TAGS = os.environ.get("TAGS", _ALL).split(",")
-B1, B2 = (float(x) for x in os.environ.get("BANDS", "3,15").split(","))
+B1, B2 = (float(x) for x in os.environ.get("BANDS", "3,15").split(","))   # distance bands, pixels
 WORKERS = int(os.environ.get("WORKERS", 10))
 BANDS = [f"<= {B1:g} px", f"{B1:g}-{B2:g} px", f"> {B2:g} px"]
 KINDS = ["fp_removed", "fn_filled", "tp_lost", "fp_added"]
 
 def read_pair_params(tag):
+    """(tau, beta) this pair selected on validation."""
     r = list(csv.DictReader(open(f"results/rung5_pair_{tag}.csv")))[0]
     return float(r["tau"]), float(r["beta"])
 
 
 def load_test(tag):
+    """(logits, mask) for each test image of a pair."""
     z = np.load(f"results/logits/{tag}.npz", allow_pickle=False)
     out = []
     for i in range(int(z["n_test"])):
@@ -60,41 +40,47 @@ def load_test(tag):
 
 
 def f1(x, gt):
+    """Per-image F1."""
     tp = (x & gt).sum(); fp = (x & ~gt).sum(); fn = (~x & gt).sum()
     d = 2 * tp + fp + fn
     return 2 * tp / d if d else 1.0
 
 
 def one(item, tau, beta):
+    """For one image: what the prior changed, by distance band; region counts; F1 before/after."""
     lg, gt = item
-    x4 = np.asarray(solve_graphcut(lg, tau, 0.0), bool)
-    x5 = np.asarray(solve_graphcut(lg, tau, beta), bool)
+    x4 = np.asarray(solve_graphcut(lg, tau, 0.0), bool)     # rung 4 (no prior)
+    x5 = np.asarray(solve_graphcut(lg, tau, beta), bool)    # rung 5 (with prior)
 
-    edge = gt ^ ndimage.binary_erosion(gt)
+    # ---- distance of every pixel to the true splice boundary -> band 0, 1 or 2 ----
+    edge = gt ^ ndimage.binary_erosion(gt)                  # boundary pixels of the true mask
     d = ndimage.distance_transform_edt(~edge) if edge.any() else np.full(gt.shape, np.inf)
     band = np.where(d <= B1, 0, np.where(d <= B2, 1, 2))
 
+    # ---- classify each pixel whose label the prior changed ----
     kinds = {"fp_removed": x4 & ~x5 & ~gt, "fn_filled": ~x4 & x5 & gt,
              "tp_lost": x4 & ~x5 & gt, "fp_added": ~x4 & x5 & ~gt}
     c = np.zeros((3, 4), np.int64)
     for k, (name, m) in enumerate(kinds.items()):
-        c[:, k] = np.bincount(band[m], minlength=3)[:3]
+        c[:, k] = np.bincount(band[m], minlength=3)[:3]     # count per band
     # far-band corrections split: inside the tampered region vs background
     far = band == 2
     inside = np.array([(kinds["fn_filled"] & far & gt).sum(),
                        (kinds["fp_removed"] & far & ~gt).sum()])
 
-    st = np.ones((3, 3), bool)
+    # ---- connected regions, and how many touch no spliced pixel ("spurious") ----
+    st = np.ones((3, 3), bool)                              # 8-connectivity
     def comps(x):
         lab, n = ndimage.label(x, structure=st)
         if n == 0:
             return 0, 0
-        hit = ndimage.maximum(gt, lab, index=np.arange(1, n + 1))
+        hit = ndimage.maximum(gt, lab, index=np.arange(1, n + 1))   # does each region overlap the truth?
         return n, int((np.asarray(hit) == 0).sum())
     return c, inside, comps(x4), comps(x5), f1(x4, gt), f1(x5, gt)
 
 
 def main():
+    # ---- run every pair, accumulating totals ----
     tot = np.zeros((3, 4), np.int64); far_split = np.zeros(2, np.int64)
     comp4, comp5, f4s, f5s, per_img = [], [], [], [], []
     for tag in TAGS:
@@ -108,6 +94,7 @@ def main():
                 comp4.append(k4); comp5.append(k5); f4s.append(a); f5s.append(b)
                 per_img.append(dict(tag=tag, index=i, f1_rung4=float(a), f1_rung5=float(b)))
 
+    # ---- print and save ----
     gain = tot[:, 0] + tot[:, 1]; loss = tot[:, 2] + tot[:, 3]; net = gain - loss
     print(f"\nboundary bands: distance to the nearest ground-truth boundary pixel")
     print(f"{'band':<12}{'FP removed':>12}{'FN filled':>11}{'TP lost':>10}{'FP added':>10}"
