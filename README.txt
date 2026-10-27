@@ -137,6 +137,17 @@ Step E. Rungs 4 and 5 (GPU; two jobs, run in parallel, ~20 h each)
     them for another cluster. Optional: python src/methods/overfit_batch.py first,
     a one-batch wiring check.)
 
+Step E2. The earlier transposed-convolution U-Net (optional)
+    Its results are committed at 4b22355 (git checkout 4b22355 shows them; Table I there
+    has U-Net 0.6943 and U-Net + MRF 0.7356). To retrain it with the current code, in a
+    SEPARATE clone (the GPU jobs move the current rung 4/5 outputs to results/stale/):
+        UPSAMPLE=transpose DATASETS=$DATASETS bash scripts/retrain_unet.sh
+    sbatch passes UPSAMPLE on to cache_logits.py, which builds the 2x2 transposed-conv
+    decoder and records it in each model's sidecar; every later step reads the decoder
+    from there. Two things always use the default (resize) decoder: the fp16 stabiliser
+    runs (Fig. 3) and the drawing of Fig. 2. The architecture and seeds match 4b22355, so
+    this should reproduce those numbers, but we have not rerun it to check.
+
 Step F. Further analyses at the fixed operating point tau = 0.75, beta = 8 (CPU)
     python src/methods/per_category.py         # -> results/per_category.csv     (Sec. V-F)
     python src/methods/copymove_matched.py     # -> results/copymove_*           (Sec. VI)
