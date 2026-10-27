@@ -19,7 +19,7 @@ An earlier version used 2x2 transposed convolutions; its results are at commit 4
 
 Every number in the report is computed by src/report/build_tables.py from files in
 results/, and every figure is drawn by src/report/make_figures.py from results/tables/.
-The committed rung 4/5 results were produced by the code in commit 940e903 (rungs 1-3
+The committed rung 4/5 results were produced by the code in commit f01abdb (rungs 1-3
 are unchanged since 4b22355); later commits change only comments, documentation, default
 file paths and the job-submission script, not any computation.
 
