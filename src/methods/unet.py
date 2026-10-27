@@ -17,6 +17,20 @@ Two normalisation schemes:
             of magnitudes, so it is only small when every weight is small. Stable,
             but measurably worse validation loss in the stabiliser comparison,
             because it changes the filter's effective scale.
+
+Two decoder upsampling schemes:
+
+  "resize"    -- nearest-neighbour x2 resize, then an ordinary 3x3 convolution
+                 (Odena, Dumoulin & Olah, "Deconvolution and checkerboard
+                 artifacts", Distill 2016). The default. Every output pixel is
+                 produced by the same kernel, so the decoder has no position-
+                 dependent weights and cannot learn a periodic pattern.
+
+  "transpose" -- 2x2 transposed convolution, stride 2 (the original U-Net's
+                 "up-convolution"). With kernel = stride its patches do not
+                 overlap, but each of the four positions in a 2x2 output block
+                 gets its own weights, so a period-2 checkerboard can still be
+                 learned. Kept only to reload models trained before the switch.
 """
 import torch
 import torch.nn as nn
@@ -62,19 +76,33 @@ def block(i, o):
         nn.Conv2d(o, o, 3, padding=1), nn.BatchNorm2d(o), nn.ReLU(inplace=True))
 
 
+UPSAMPLE = ("resize", "transpose")
+
+
+def up(i, o, scheme):
+    """Double the resolution and map i channels to o. See the module docstring."""
+    if scheme == "resize":
+        return nn.Sequential(nn.Upsample(scale_factor=2, mode="nearest"),
+                             nn.Conv2d(i, o, 3, padding=1))
+    if scheme == "transpose":
+        return nn.ConvTranspose2d(i, o, 2, stride=2)
+    raise ValueError(f"upsample must be one of {UPSAMPLE}, not {scheme!r}")
+
+
 class UNet(nn.Module):
-    def __init__(self, base=32, constrained=True, norm="sum"):
+    def __init__(self, base=32, constrained=True, norm="sum", upsample="resize"):
         super().__init__()
         self.constrained = constrained
+        self.upsample = upsample
         self.pre = ConstrainedConv2d(3, 3, 5, norm=norm) if constrained else nn.Identity()
 
         self.e1, self.e2, self.e3 = block(3, base), block(base, base*2), block(base*2, base*4)
         self.bott = block(base*4, base*8)
-        self.u3 = nn.ConvTranspose2d(base*8, base*4, 2, stride=2)
+        self.u3 = up(base*8, base*4, upsample)
         self.d3 = block(base*8, base*4)
-        self.u2 = nn.ConvTranspose2d(base*4, base*2, 2, stride=2)
+        self.u2 = up(base*4, base*2, upsample)
         self.d2 = block(base*4, base*2)
-        self.u1 = nn.ConvTranspose2d(base*2, base, 2, stride=2)
+        self.u1 = up(base*2, base, upsample)
         self.d1 = block(base*2, base)
         self.out = nn.Conv2d(base, 1, 1)
         self.pool = nn.MaxPool2d(2)

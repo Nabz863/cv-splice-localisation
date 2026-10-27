@@ -62,8 +62,13 @@ def main():
     lg_meta = refine_meta.sidecar(f"results/logits/{TAG}.npz")
     if not os.path.exists(lg_meta):
         raise SystemExit(f"{lg_meta} missing: run cache_logits.py first")
-    refine_meta.check(saved, json.load(open(lg_meta)))
-    model = UNet(norm=NORM).to(DEV)
+    meta = json.load(open(lg_meta))
+    if "upsample" not in meta:
+        raise SystemExit(f"{lg_meta} predates the resize-then-convolve decoder; rerun "
+                         f"cache_logits.py (slurm/rerun_unet.sbatch) first")
+    refine_meta.check(saved, meta)
+    # Build the architecture the sidecar records, not whatever the default is now.
+    model = UNet(norm=meta["constraint_norm"], upsample=meta["upsample"]).to(DEV)
     model.load_state_dict(torch.load(saved, map_location=DEV))
     model.eval()
     print(f"loaded {saved} on {DEV}")

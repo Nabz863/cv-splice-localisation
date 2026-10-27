@@ -20,6 +20,7 @@ echo "commit: $(git rev-parse --short HEAD)$(git diff --quiet || echo '+uncommit
 
 python3 src/eval/test_metrics.py
 python3 src/methods/test_mrf.py
+python3 src/methods/test_unet.py
 python3 src/report/test_overlap.py
 
 python3 src/methods/sanity_auc.py

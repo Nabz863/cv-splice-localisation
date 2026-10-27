@@ -13,7 +13,11 @@ import json, os
 
 KEYS = ("epochs_max", "patience", "batch", "workers", "lr", "weight_decay", "grad_clip",
         "constraint_norm", "amp_dtype", "n_cal", "crops_per_image", "patch", "n_train",
-        "crop_rng", "nonfinite_counted")
+        "crop_rng", "nonfinite_counted", "upsample")
+# "upsample" was added when the decoder moved from transposed convolutions to
+# resize-then-convolve (unet.py). Sidecars written before that have no such key,
+# so check() refuses them: every model and logits file from the old decoder is
+# stale, whatever else matches.
 
 
 def sidecar(path):

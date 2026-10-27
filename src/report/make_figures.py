@@ -363,7 +363,7 @@ def fig_stabiliser():
         else:
             j = int(wn.argmax())
             tag = f"peak {wn[j]:,.0f} (ep {ep[j]}),\nnever non-finite"
-        ends.append([wn[-1], f"{names.get(cand, cand)}: {tag}", ep[-1]])
+        ends.append([wn[-1], f"{names.get(cand, cand)}: {tag}", ep[-1], colours[cand]])
     all_wn = [float(r["weight_norm"]) for r in d]
     ax.set_yscale("log")
     ax.set_ylim(min(all_wn) * 0.6, max(all_wn) * 2.5)
@@ -380,9 +380,12 @@ def fig_stabiliser():
         if ypos and v - ypos[-1] < min_gap:
             v = ypos[-1] + min_gap
         ypos.append(v)
-    for (wn, text, last), v in zip(ends, ypos):
-        ax.text(last + 2, 10 ** v, text, va="center", fontsize=7, color=INK)
-    ax.set_xlim(0, max(e[2] for e in ends) + 2)
+    # every label goes in one column right of the longest run, in its line's colour:
+    # a run that stopped early would otherwise put its label across the other lines
+    x_lab = max(e[2] for e in ends) + 2
+    for (wn, text, last, c), v in zip(ends, ypos):
+        ax.text(x_lab, 10 ** v, text, va="center", fontsize=7, color=c)
+    ax.set_xlim(0, x_lab)
     ax.set_xlabel("Epoch (400 optimiser steps each; fp16 autocast)")
     ax.set_ylabel("Weight norm, all parameters (log)")
     grid_y(ax)
@@ -537,7 +540,7 @@ def fig_unet():
         g = slab(dx[i], Y[i], W(ch[i]), H[res[i]], (GOLD_F, GOLD_T, GOLD_S))
         u = slab(g["xr"], Y[i], W(ch[i]), H[res[i]], (BLUE_F, BLUE_T, BLUE_S))
         label((g["x0"] + u["x1"]) / 2, u["top"] + 0.08, f"{ch[i]}+{ch[i]}")
-        arrow((prev["x1"] + 0.06, prev["yc"]), (u["xm"], u["b"] - 0.05))                 # up-conv
+        arrow((prev["x1"] + 0.06, prev["yc"]), (u["xm"], u["b"] - 0.05))                 # upsample
         o = slab(u["x1"] + 0.45, Y[i], W(ch[i]), H[res[i]], (BLUE_F, BLUE_T, BLUE_S))
         label(o["xm"] + 0.06, o["top"] + 0.08, f"{ch[i]}")
         arrow((u["x1"] + 0.05, Y[i]), (o["x0"] - 0.05, Y[i]))                             # convs
@@ -563,8 +566,10 @@ def fig_unet():
     kx, ky = 6.6, 4.62
     arrow((kx, ky), (kx + 0.45, ky), c=GOLD, lw=1.0)
     label(kx + 0.55, ky, "skip: copy and concatenate", ha="left", va="center", fontsize=6.5)
+    up_txt = {"resize": "nearest $\\times$2 resize, then 3$\\times$3 conv",
+              "transpose": "2$\\times$2 transposed conv"}[m.upsample]
     ax.text(-0.7, -0.38, "Slab height: resolution (left). Slab thickness: channels (above). "
-            "Down: 2$\\times$2 max-pool. Up: 2$\\times$2 transposed conv.", fontsize=6.5,
+            f"Down: 2$\\times$2 max-pool. Up: {up_txt}.", fontsize=6.5,
             color=INK2, va="center", ha="left")
     ax.text(-0.7, -0.72, "Right: 2$\\times$(3$\\times$3 conv, BatchNorm, ReLU), same padding; "
             f"the last is a 1$\\times$1 conv. {sum(p.numel() for p in m.parameters()) / 1e6:.2f} M "
