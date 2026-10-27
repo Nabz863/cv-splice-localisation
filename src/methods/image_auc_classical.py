@@ -4,36 +4,38 @@ Score per image = fraction of pixels labelled tampered (ela_area = rung 1, mrf_a
 ela_mean and ela_p99 are reported for comparison. Writes results/image_auc_classical.csv.
 Usage:  python src/methods/image_auc_classical.py
 """
-import csv, os, sys, time, glob
-from concurrent.futures import ProcessPoolExecutor
-import numpy as np
-from PIL import Image
+import csv, os, sys, time, glob                   # standard-library helpers (glob finds files by pattern)
+from concurrent.futures import ProcessPoolExecutor   # runs a function on many images in parallel
+import numpy as np                                # arrays and maths
+from PIL import Image                             # reads image files
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, os.path.dirname(__file__))
-from eval.metrics import image_auc, bootstrap_auc_ci
-from noise_variants import v_ela
-from mrf import solve_graphcut
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))   # so src/ packages can be imported
+sys.path.insert(0, os.path.dirname(__file__))                       # so files in this folder can be imported
+from eval.metrics import image_auc, bootstrap_auc_ci   # AUC and its 95% confidence interval
+from noise_variants import v_ela                  # rung 1's score map
+from mrf import solve_graphcut                    # rung 2's solver
 
-ROOT = os.path.join(os.environ["DATASETS"], "casia2")
-MANIFEST = os.environ.get("MANIFEST", os.path.join(ROOT, "splice_manifest.csv"))
-AUTH_DIR = os.environ.get("AUTH_DIR", os.path.join(ROOT, "images", "CASIA2.0_revised", "Au"))
-TAU = float(os.environ.get("TAU", 0.75))
-BETA = float(os.environ.get("BETA", 8.0))
-WORKERS = int(os.environ.get("WORKERS", 10))
+ROOT = os.path.join(os.environ["DATASETS"], "casia2")   # dataset folder
+MANIFEST = os.environ.get("MANIFEST", os.path.join(ROOT, "splice_manifest.csv"))   # tampered images
+AUTH_DIR = os.environ.get("AUTH_DIR", os.path.join(ROOT, "images", "CASIA2.0_revised", "Au"))   # authentic images
+TAU = float(os.environ.get("TAU", 0.75))          # rung 1-2 threshold
+BETA = float(os.environ.get("BETA", 8.0))         # rung 2 prior strength
+WORKERS = int(os.environ.get("WORKERS", 10))      # parallel processes
 N_AUTH = int(os.environ.get("N_AUTH", 0))       # 0 = every authentic image
 
+
+# ---- Helpers ----
 
 def scores_one(path):
     """Image-level scores for one image (rung 1 and rung 2 areas, plus two alternatives)."""
     try:
-        img = np.asarray(Image.open(path).convert("RGB"))
-        z = v_ela(img)
-        x = solve_graphcut(z, TAU, BETA)
+        img = np.asarray(Image.open(path).convert("RGB"))   # load the image
+        z = v_ela(img)                            # ELA score map
+        x = solve_graphcut(z, TAU, BETA)          # rung 2's mask
         return dict(
             path=path,
-            ela_mean=float(z.mean()),
-            ela_p99=float(np.percentile(z, 99)),
+            ela_mean=float(z.mean()),             # average ELA score
+            ela_p99=float(np.percentile(z, 99)),  # 99th-percentile ELA score
             ela_area=float((z >= TAU).mean()),               # rung 1: fraction labelled tampered
             mrf_area=float(np.asarray(x, bool).mean()),      # rung 2: same, after the MRF
         )
@@ -47,36 +49,39 @@ def run(paths, label):
     with ProcessPoolExecutor(WORKERS) as ex:
         for i, r in enumerate(ex.map(scores_one, paths, chunksize=4)):
             out.append(r)
-            if (i + 1) % 200 == 0:
+            if (i + 1) % 200 == 0:                # progress every 200 images
                 print(f"  {label} {i+1}/{len(paths)} ({time.time()-t0:.0f}s)", flush=True)
-    bad = [r for r in out if "error" in r]
+    bad = [r for r in out if "error" in r]        # images that failed to load
     if bad:
         print(f"  {label}: {len(bad)} failed, e.g. {bad[0]['path']} -> {bad[0]['error']}")
-    return [r for r in out if "error" not in r]
+    return [r for r in out if "error" not in r]   # keep only the successes
 
+
+# ---- Main ----
 
 def main():
     # ---- tampered images from the manifest, authentic images from the Au folder ----
     rows = list(csv.DictReader(open(MANIFEST)))
-    tam = [r["image"] for r in rows]
+    tam = [r["image"] for r in rows]              # tampered image paths
     auth_dir = AUTH_DIR
     auth = sorted(sum((glob.glob(os.path.join(auth_dir, e))
                        for e in ("*.jpg", "*.JPG", "*.tif", "*.TIF",
-                                 "*.png", "*.PNG", "*.bmp", "*.BMP")), []))
+                                 "*.png", "*.PNG", "*.bmp", "*.BMP")), []))   # every image file, sorted
     if not auth:
         raise SystemExit(f"no images found in {auth_dir}")
-    if N_AUTH and N_AUTH < len(auth):
+    if N_AUTH and N_AUTH < len(auth):             # optional: use a random subset
         auth = list(np.random.default_rng(0).permutation(auth))[:N_AUTH]
 
     print(f"tampered  {len(tam)} from {MANIFEST}")
     print(f"authentic {len(auth)} from {auth_dir}")
     print(f"tau={TAU}, beta={BETA}, workers={WORKERS}\n")
 
-    t = run(tam, "tampered")
-    a = run(auth, "authentic")
+    t = run(tam, "tampered")                      # scores of tampered images
+    a = run(auth, "authentic")                    # scores of authentic images
 
+    # ---- Save every image's scores (label 1 = tampered, 0 = authentic) ----
     os.makedirs("results", exist_ok=True)
-    keys = ["path", "label", "ela_mean", "ela_p99", "ela_area", "mrf_area"]
+    keys = ["path", "label", "ela_mean", "ela_p99", "ela_area", "mrf_area"]   # CSV columns
     with open("results/image_auc_classical.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=keys)
         w.writeheader()
@@ -84,12 +89,13 @@ def main():
             for r in group:
                 w.writerow({**{k: r[k] for k in keys if k != "label"}, "label": lab})
 
+    # ---- AUC of each summary score, with a bootstrap 95% interval ----
     print(f"\n{'summary':<12}{'rung':>6}{'AUC':>8}{'95% CI':>18}")
     print("-" * 44)
     for name, rung in (("ela_area", 1), ("mrf_area", 2),
                        ("ela_mean", "1*"), ("ela_p99", "1*")):
-        p = [r[name] for r in t]; n = [r[name] for r in a]
-        v = image_auc(p + n, [1] * len(p) + [0] * len(n)); lo, hi = bootstrap_auc_ci(p, n)
+        p = [r[name] for r in t]; n = [r[name] for r in a]  # tampered scores; authentic scores
+        v = image_auc(p + n, [1] * len(p) + [0] * len(n)); lo, hi = bootstrap_auc_ci(p, n)   # AUC; interval
         print(f"{name:<12}{str(rung):>6}{v:>8.4f}   [{lo:.4f}, {hi:.4f}]")
     print("\n* alternative summaries of the same rung 1 map, shown for transparency;")
     print("  ela_area / mrf_area are the pre-registered pair, since they are the same")

@@ -1,20 +1,21 @@
 """Rung 2/5: Potts MRF over a score map. E(x) = sum D_i(x_i) + beta * #(neighbours that disagree)."""
-import numpy as np
+import numpy as np                                      # arrays and maths
 
 
 # ---- Energy terms ----
 
 def unary(score, tau):
     """Cost of label 0 and label 1 per pixel; label 1 is cheaper where score > tau."""
-    d = score - tau
+    d = score - tau                                     # how far each pixel's score is above the threshold
+    # Above tau: label 0 costs d, label 1 costs 0. Below tau: label 1 costs -d, label 0 costs 0.
     return np.maximum(d, 0.0), np.maximum(-d, 0.0)      # (D0, D1), kept >= 0 for max-flow
 
 
 def _neighbour_counts(x):
     """Per pixel: n1 = 4-neighbours labelled 1, nb = number of 4-neighbours (no wrap-around)."""
-    xi = x.astype(np.int16)
-    n1 = np.zeros(x.shape, np.int16)
-    nb = np.zeros(x.shape, np.int16)
+    xi = x.astype(np.int16)                             # labels as 0/1 integers
+    n1 = np.zeros(x.shape, np.int16)                    # will hold "how many neighbours are 1"
+    nb = np.zeros(x.shape, np.int16)                    # will hold "how many neighbours exist"
     n1[1:, :] += xi[:-1, :]; nb[1:, :] += 1             # neighbour above
     n1[:-1, :] += xi[1:, :]; nb[:-1, :] += 1            # neighbour below
     n1[:, 1:] += xi[:, :-1]; nb[:, 1:] += 1             # neighbour to the left
@@ -26,18 +27,18 @@ def _neighbour_counts(x):
 
 def solve_icm(score, tau, beta, iters=8):
     """Each pixel repeatedly takes its cheaper label given its neighbours (local minimum only)."""
-    D0, D1 = unary(score, tau)
+    D0, D1 = unary(score, tau)                          # each pixel's own cost for label 0 and label 1
     x = (score > tau)                                   # start from plain thresholding
-    ii, jj = np.indices(x.shape)
+    ii, jj = np.indices(x.shape)                        # row and column index of every pixel
     parity = (ii + jj) % 2                              # checkerboard: neighbours never update together
 
-    for _ in range(iters):
+    for _ in range(iters):                              # a fixed number of sweeps
         for p in (0, 1):                                # update one checkerboard colour at a time
             n1, nb = _neighbour_counts(x)
             c0 = D0 + beta * n1                         # cost of 0 = unary + disagreeing with 1-neighbours
             c1 = D1 + beta * (nb - n1)                  # cost of 1 = unary + disagreeing with 0-neighbours
-            m = parity == p
-            x = np.where(m, c1 < c0, x)
+            m = parity == p                             # the pixels of this colour
+            x = np.where(m, c1 < c0, x)                 # they take the cheaper label; others keep theirs
     return x
 
 
@@ -45,9 +46,9 @@ def solve_icm(score, tau, beta, iters=8):
 
 def solve_graphcut(score, tau, beta):
     """Global minimum of E via s-t min cut (exact because the Potts energy is submodular)."""
-    import maxflow
+    import maxflow                                      # PyMaxflow: the Boykov-Kolmogorov max-flow solver
     D0, D1 = unary(score, tau)
-    g = maxflow.Graph[float]()
+    g = maxflow.Graph[float]()                          # an empty graph
     nodes = g.add_grid_nodes(score.shape)               # one node per pixel
     if beta > 0:
         g.add_grid_edges(nodes, beta)                   # 4-neighbour edges with weight beta

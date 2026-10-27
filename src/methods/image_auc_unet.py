@@ -4,50 +4,50 @@ Uses the (tau, beta) this pair chose on validation (rung5_pair_<tag>.csv), so no
 is tuned on test. Rung 4 = beta 0, rung 5 = chosen beta. Writes results/image_auc_unet_<tag>.csv.
 Usage:  TAG=t0v1 python src/methods/image_auc_unet.py
 """
-import csv, os, sys, time
-from concurrent.futures import ProcessPoolExecutor
-from functools import partial
-import numpy as np
+import csv, os, sys, time                         # standard-library helpers
+from concurrent.futures import ProcessPoolExecutor   # runs a function on many images in parallel
+from functools import partial                     # fixes some arguments of a function in advance
+import numpy as np                                # arrays and maths
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, os.path.dirname(__file__))
-from eval.metrics import image_auc, bootstrap_auc_ci
-from mrf import solve_graphcut
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))   # so "eval" (in src/) can be imported
+sys.path.insert(0, os.path.dirname(__file__))                       # so mrf.py can be imported
+from eval.metrics import image_auc, bootstrap_auc_ci   # AUC and its confidence interval
+from mrf import solve_graphcut                    # the MRF solver
 
-TAG = os.environ.get("TAG", "t0v1")
-WORKERS = int(os.environ.get("WORKERS", 10))
-_TAU = os.environ.get("TAU")
-_BETA = os.environ.get("BETA")
+TAG = os.environ.get("TAG", "t0v1")               # which (test, validation) pair
+WORKERS = int(os.environ.get("WORKERS", 10))      # parallel CPU processes
+_TAU = os.environ.get("TAU")                      # optional manual override of tau
+_BETA = os.environ.get("BETA")                    # optional manual override of beta
 
 
 def read_pair_params(tag):
     """(tau, beta) chosen on this pair's validation fold (or TAU/BETA from the environment)."""
-    if _TAU is not None and _BETA is not None:
+    if _TAU is not None and _BETA is not None:    # both given by hand: use them
         print(f"using TAU={_TAU}, BETA={_BETA} from the environment")
         return float(_TAU), float(_BETA)
-    p = f"results/rung5_pair_{tag}.csv"
+    p = f"results/rung5_pair_{tag}.csv"           # written by sweep_cached.py
     if not os.path.exists(p):
         raise SystemExit(f"{p} not found, so the selected (tau, beta) is unknown.\n"
                          f"either run the rung 5 sweep for {tag} first, or pass them "
                          f"explicitly: TAU=.. BETA=.. python src/methods/image_auc_unet.py")
-    r = list(csv.DictReader(open(p)))[0]
+    r = list(csv.DictReader(open(p)))[0]          # the file's single row
     return float(r["tau"]), float(r["beta"])
 
 
 def load_tampered(tag):
     """This pair's test-fold logits (already cached by cache_logits.py)."""
-    z = np.load(f"results/logits/{tag}.npz", allow_pickle=False)
-    n = int(z["n_test"])
-    return [z[f"test_lg_{i}"].astype(np.float32) for i in range(n)]
+    z = np.load(f"results/logits/{tag}.npz", allow_pickle=False)  # tampered test images' logits
+    n = int(z["n_test"])                          # number of test images
+    return [z[f"test_lg_{i}"].astype(np.float32) for i in range(n)]   # one logit map per image
 
 
 def load_authentic(tag):
     """This pair's authentic-image logits (from cache_auth_logits.py)."""
-    p = f"results/logits/auth_{tag}.npz"
+    p = f"results/logits/auth_{tag}.npz"                # authentic images' logits
     if not os.path.exists(p):
         raise SystemExit(f"{p} not found; run cache_auth_logits.py first (it needs the GPU)")
-    z = np.load(p, allow_pickle=False)
-    n = int(z["n"])
+    z = np.load(p, allow_pickle=False)                  # load them
+    n = int(z["n"])                               # number of authentic images
     return [z[f"lg_{i}"].astype(np.float32) for i in range(n)]
 
 
@@ -57,9 +57,9 @@ def scores_one(lg, TAU, BETA):
     x4 = solve_graphcut(lg, TAU, 0.0)      # rung 4: the prior switched off
     x5 = solve_graphcut(lg, TAU, BETA)     # rung 5
     return dict(
-        prob_mean=float(p.mean()),
-        prob_max=float(p.max()),
-        prob_p99=float(np.percentile(p, 99)),
+        prob_mean=float(p.mean()),                      # average probability over the image
+        prob_max=float(p.max()),                        # the single most confident pixel
+        prob_p99=float(np.percentile(p, 99)),           # 99th-percentile probability
         unet_area=float(np.asarray(x4, bool).mean()),   # fraction of image labelled spliced, rung 4
         mrf_area=float(np.asarray(x5, bool).mean()),    # same for rung 5
     )
@@ -67,45 +67,47 @@ def scores_one(lg, TAU, BETA):
 
 def run(maps, label, tau, beta):
     """scores_one over a list of maps, in parallel."""
-    t0, out = time.time(), []
-    fn = partial(scores_one, TAU=tau, BETA=beta)
+    t0, out = time.time(), []                           # timer; per-image scores
+    fn = partial(scores_one, TAU=tau, BETA=beta)  # scores_one with tau and beta already filled in
     with ProcessPoolExecutor(WORKERS) as ex:
-        for i, r in enumerate(ex.map(fn, maps, chunksize=2)):
+        for i, r in enumerate(ex.map(fn, maps, chunksize=2)):   # results come back in order
             out.append(r)
-            if (i + 1) % 100 == 0:
+            if (i + 1) % 100 == 0:                # progress every 100 images
                 print(f"  {label} {i+1}/{len(maps)} ({time.time()-t0:.0f}s)", flush=True)
     return out
 
 
 def main():
-    TAU, BETA = read_pair_params(TAG)
-    tam, aut = load_tampered(TAG), load_authentic(TAG)
+    TAU, BETA = read_pair_params(TAG)             # settings chosen on validation, not on test
+    tam, aut = load_tampered(TAG), load_authentic(TAG)   # tampered test images, authentic images
     print(f"{TAG}: {len(tam)} tampered (test fold), {len(aut)} authentic")
     print(f"tau={TAU}, beta={BETA} (selected on this pair's validation split)\n")
 
-    t = run(tam, "tampered", TAU, BETA)
-    a = run(aut, "authentic", TAU, BETA)
+    t = run(tam, "tampered", TAU, BETA)           # scores for every tampered image
+    a = run(aut, "authentic", TAU, BETA)          # scores for every authentic image
 
+    # ---- Save every image's scores (label 1 = tampered, 0 = authentic) ----
     os.makedirs("results", exist_ok=True)
-    keys = ["prob_mean", "prob_max", "prob_p99", "unet_area", "mrf_area"]
+    keys = ["prob_mean", "prob_max", "prob_p99", "unet_area", "mrf_area"]  # the image-level summary scores
     with open(f"results/image_auc_unet_{TAG}.csv", "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=["label"] + keys)
+        w = csv.DictWriter(f, fieldnames=["label"] + keys)  # CSV columns
         w.writeheader()
         for lab, g in ((1, t), (0, a)):
             for r in g:
                 w.writerow({"label": lab, **r})
 
+    # ---- AUC of each score, with a 95% bootstrap interval ----
     print(f"\n{'summary':<12}{'rung':>6}{'AUC':>8}{'95% CI':>18}")
     print("-" * 44)
-    rows = []
+    rows = []                                           # (score name, AUC)
     for name, rung in (("unet_area", 4), ("mrf_area", 5),
                        ("prob_mean", "4*"), ("prob_max", "4*"), ("prob_p99", "4*")):
-        p = [r[name] for r in t]; n = [r[name] for r in a]
+        p = [r[name] for r in t]; n = [r[name] for r in a]   # this score for tampered (p) and authentic (n)
         v = image_auc(p + n, [1] * len(p) + [0] * len(n)); lo, hi = bootstrap_auc_ci(p, n)
-        rows.append((name, v))
+        rows.append((name, v))                          # keep it
         print(f"{name:<12}{str(rung):>6}{v:>8.4f}   [{lo:.4f}, {hi:.4f}]")
 
-    d = dict(rows)
+    d = dict(rows)                                # score name -> AUC
     print(f"\nprior contributes {d['mrf_area'] - d['unet_area']:+.4f} AUC "
           f"(rung 5 - rung 4, same tau, beta 0 vs {BETA})")
     print("* alternative summaries of the raw logit map, for transparency.")
