@@ -28,6 +28,7 @@ BATCH = int(os.environ.get("BATCH", 8))             # crops per training step
 N_FOLDS = int(os.environ.get("N_FOLDS", 5))         # number of cross-validation folds
 WORKERS = int(os.environ.get("WORKERS", 2))         # background processes that load images
 NORM = os.environ.get("NORM", "sum")                # constrained-layer normalisation ("sum" is the paper's)
+UPSAMPLE = os.environ.get("UPSAMPLE", "resize")     # decoder upsampling (unet.py): "resize" or "transpose"
 WD = float(os.environ.get("WD", 1e-4))              # weight decay (a small penalty on large weights)
 CLIP = float(os.environ.get("CLIP", 1.0))           # gradient clipping: cap the gradient's size at 1
 N_CAL = int(os.environ.get("N_CAL", 150))           # validation images used to pick thresholds
@@ -40,7 +41,7 @@ CROPS = 8                                           # SpliceCrops default
 CONFIG = dict(epochs_max=EPOCHS, patience=PATIENCE, batch=BATCH, workers=WORKERS, lr=1e-3,
               weight_decay=WD, grad_clip=CLIP, constraint_norm=NORM, amp_dtype="bfloat16",
               n_cal=N_CAL, crops_per_image=CROPS, patch=PATCH, n_train=N_TRAIN,
-              crop_rng=CROP_RNG, nonfinite_counted=1)
+              crop_rng=CROP_RNG, nonfinite_counted=1, upsample=UPSAMPLE)
 
 
 @torch.no_grad()                                      # inference only: no gradients needed
@@ -74,7 +75,7 @@ def train_one(test_fold, val_fold, rows, tag):
     vdl = DataLoader(SpliceCrops(va, train=False), batch_size=BATCH,  # validation batches (fixed crops, no shuffling)
                      shuffle=False, num_workers=WORKERS)
 
-    model = UNet(norm=NORM).to(DEV)                   # a fresh, randomly initialised network on the GPU
+    model = UNet(norm=NORM, upsample=UPSAMPLE).to(DEV)   # a fresh, randomly initialised network on the GPU
     # AdamW = the optimiser that updates the weights (learning rate 0.001, with weight decay)
     opt = (torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=WD) if WD
            else torch.optim.Adam(model.parameters(), lr=1e-3))
@@ -196,7 +197,7 @@ def cache_pair(test_fold, val_fold, rows):
     saved = f"results/models/refine_{tag}.pt"           # final model file for this pair
     if os.path.exists(saved):                      # a trained model exists: load it instead of retraining
         refine_meta.check(saved, CONFIG)
-        model = UNet(norm=NORM).to(DEV)                 # fresh model ...
+        model = UNet(norm=NORM, upsample=UPSAMPLE).to(DEV)   # fresh model ...
         model.load_state_dict(torch.load(saved, map_location=DEV))  # ... with the saved weights
         model.eval()                                    # evaluation mode
         print(f"{tag}: loaded {saved}", flush=True)

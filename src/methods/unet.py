@@ -3,6 +3,9 @@
 The constrained layer computes "pixel minus a weighted average of its neighbours",
 which suppresses scene content and keeps local residuals (like ELA's evidence).
 norm="sum" (used) divides the surround weights by their sum; "l1" by their absolute sum.
+upsample="resize" (used): nearest-neighbour x2 resize, then a 3x3 conv. Every output pixel
+uses the same kernel, so the decoder cannot learn a checkerboard pattern (Odena et al. 2016).
+upsample="transpose": the original U-Net's 2x2 transposed conv; kept only to reload old models.
 """
 import torch                           # PyTorch
 import torch.nn as nn                  # building blocks for networks (layers)
@@ -50,21 +53,36 @@ def block(i, o):
         nn.Conv2d(o, o, 3, padding=1), nn.BatchNorm2d(o), nn.ReLU(inplace=True))   # and again
 
 
+# ---- Decoder upsampling ----
+UPSAMPLE = ("resize", "transpose")              # the two allowed schemes
+
+
+def up(i, o, scheme):
+    """Double the resolution and map i channels to o. See the module docstring."""
+    if scheme == "resize":                      # used for every reported model
+        return nn.Sequential(nn.Upsample(scale_factor=2, mode="nearest"),   # copy each pixel into a 2x2 block
+                             nn.Conv2d(i, o, 3, padding=1))                  # then an ordinary 3x3 conv
+    if scheme == "transpose":                   # old decoder, only to reload old models
+        return nn.ConvTranspose2d(i, o, 2, stride=2)                         # 2x2 transposed conv, stride 2
+    raise ValueError(f"upsample must be one of {UPSAMPLE}, not {scheme!r}")  # typo in the setting
+
+
 class UNet(nn.Module):
-    def __init__(self, base=32, constrained=True, norm="sum"):
+    def __init__(self, base=32, constrained=True, norm="sum", upsample="resize"):
         super().__init__()                      # set up the PyTorch module machinery
         self.constrained = constrained          # whether to use the constrained first layer
+        self.upsample = upsample                # decoder upsampling scheme (recorded in each model's sidecar)
         self.pre = ConstrainedConv2d(3, 3, 5, norm=norm) if constrained else nn.Identity()   # 3 residual filters
 
         # Encoder: each block doubles the channels (32, 64, 128); pooling between blocks halves the size
         self.e1, self.e2, self.e3 = block(3, base), block(base, base*2), block(base*2, base*4)  # encoder
         self.bott = block(base*4, base*8)                                                       # bottleneck
         # Decoder: upsample, join with the matching encoder map (skip connection), then a block
-        self.u3 = nn.ConvTranspose2d(base*8, base*4, 2, stride=2)      # decoder: 2x2 transposed conv, stride 2 (upsample x2) ...
+        self.u3 = up(base*8, base*4, upsample)                         # decoder: upsample x2 ...
         self.d3 = block(base*8, base*4)                                # ... then convs on [upsampled | skip]
-        self.u2 = nn.ConvTranspose2d(base*4, base*2, 2, stride=2)      # upsample x2 (64 x 64 -> 128 x 128 on a crop)
+        self.u2 = up(base*4, base*2, upsample)                         # upsample x2 (64 x 64 -> 128 x 128 on a crop)
         self.d2 = block(base*4, base*2)                                # convs on [upsampled | e2]
-        self.u1 = nn.ConvTranspose2d(base*2, base, 2, stride=2)        # upsample x2 back to full size
+        self.u1 = up(base*2, base, upsample)                           # upsample x2 back to full size
         self.d1 = block(base*2, base)                                  # convs on [upsampled | e1]
         self.out = nn.Conv2d(base, 1, 1)                               # one logit per pixel
         self.pool = nn.MaxPool2d(2)                                    # halves the resolution

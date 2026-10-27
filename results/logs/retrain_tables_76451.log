@@ -1,0 +1,54 @@
+commit: 4b22355 +uncommitted
+all metric tests pass
+all MRF tests pass
+shapes ok
+no transposed convs; parameters 2.144 M (was 1.929 M)
+resize    constant in -> phase spread 0.00e+00 (flat)
+transpose constant in -> phase spread 1.72e+00 (period-2 pattern)
+constrained layer ok
+pre-switch sidecar refused
+overfits one batch: loss 1.425 -> 0.390
+test_unet: all passed
+all 8 collision types caught; clean figure passes
+building tables
+  rung 2 reproduces rung2_nested_pairs.csv on all 20 pairs (max diff 0.0e+00)
+  wrote results/tables/main.csv (6 rows)
+  wrote results/tables/sam2.csv (2 rows)
+  wrote results/tables/gains.csv (40 rows)
+  wrote results/tables/datasize.csv (5 rows)
+  wrote results/tables/training.csv (5 rows)
+  wrote results/tables/category.csv (10 rows)
+  wrote results/tables/auc.csv (68 rows)
+  fixed operating point tau=0.75, beta=8.0 (best pooled F1 on all splicing images)
+  wrote results/tables/copymove.csv (4 rows)
+  wrote results/tables/splits.csv (3 rows)
+  wrote results/tables/icm.csv (2 rows)
+  wrote results/tables/icm_energy.csv (5 rows)
+  selection: pooled selection from per-image counts reproduces rung5_mrf_refine.csv on all 20 pairs
+  wrote results/tables/selection.csv (4 rows)
+  wrote results/tables/selection_detail.csv (4 rows)
+  WARNING: holdout 1 chose E_ela q=95 w=32
+  wrote results/tables/cues.csv (14 rows)
+  stabiliser baseline: 62 epochs from wandb/offline-run-20261027_115925-kg0exbx8
+  stabiliser clip: 90 epochs from wandb/offline-run-20261027_121502-y5hoghum
+  stabiliser wd1e-3: 85 epochs from wandb/offline-run-20261027_123857-3yuvypea
+  wrote results/tables/stabiliser.csv (237 rows)
+done
+  fig0_method: ok
+  fig1_main_f1: ok
+  fig2_prior_gain: ok
+  fig3_datasize: ok
+  fig4_per_category: ok
+  fig5_image_auc: ok
+  fig6_copymove: ok
+  fig7_stabiliser: NOT SAVED
+  fig8_mechanism: ok
+  fig9_perimage_f1: ok
+  fig10_unet: ok
+  fig11_sam2: ok
+  fig12_selection: ok
+
+results/figures/fig7_stabiliser: 1 collision(s)
+  text "no stabiliser: non-finite from ep 48
+at " overlaps Line2D(_child3)
+1 figure(s) have collisions

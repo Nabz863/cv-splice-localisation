@@ -14,10 +14,14 @@ comparing five methods ("rungs") under one protocol:
 At beta = 0, rung 2 is exactly rung 1 and rung 5 is exactly rung 4 (checked by
 src/methods/test_mrf.py), so the difference between them is the prior's effect.
 
+The U-Net's decoder upsamples by nearest-neighbour resize + 3x3 conv (src/methods/unet.py).
+An earlier version used 2x2 transposed convolutions; its results are at commit 4b22355.
+
 Every number in the report is computed by src/report/build_tables.py from files in
 results/, and every figure is drawn by src/report/make_figures.py from results/tables/.
-The committed results were produced at commit 4b22355; later commits change only
-comments, documentation and default file paths, not any computation.
+The committed rung 4/5 results were produced by the code in commit 940e903 (rungs 1-3
+are unchanged since 4b22355); later commits change only comments, documentation, default
+file paths and the job-submission script, not any computation.
 
 
 ======================================================================================
@@ -92,6 +96,7 @@ one RTX 3090.
 Step A. Tests (seconds)
     python src/eval/test_metrics.py
     python src/methods/test_mrf.py
+    python src/methods/test_unet.py
     python src/report/test_overlap.py
     python src/methods/sanity_auc.py
 
@@ -117,7 +122,10 @@ Step D. Rung 3: SAM2 (GPU; we ran it on Colab)
                                                # -> results/rung3_sam2_20pairs.csv, image_auc_sam2_*.csv
 
 Step E. Rungs 4 and 5 (GPU; two jobs, run in parallel, ~20 h each)
-    On a Slurm cluster:
+    On a Slurm cluster, one command runs the tests, both GPU jobs and then
+    scripts/rerun_cpu.sh, each as its own job:
+        DATASETS=$DATASETS bash scripts/retrain_unet.sh
+    or submit the two GPU jobs by hand:
         DATASETS=$DATASETS sbatch slurm/rerun_unet.sbatch       # 20 full-data U-Nets, rung 5 sweep,
                                                                 # image-level AUC, mechanism, Fig. 5
         DATASETS=$DATASETS sbatch slurm/rerun_datasize.sbatch   # 80 U-Nets at 50/150/400/800 masks,
@@ -156,8 +164,10 @@ Step G. Tables and figures (CPU, ~1 min): section 3.
 
 Every trained model and logits file has a JSON file next to it recording its training
 configuration (src/methods/refine_meta.py); a file made under a different configuration
-is refused, never silently reused. Retraining all 100 U-Nets from scratch reproduced
-every stopping epoch, validation loss and rung 4/5 number in the report exactly.
+is refused, never silently reused; this includes the decoder type. With the earlier
+transposed-convolution decoder, two independent retrains of all 100 U-Nets reproduced
+every stopping epoch, validation loss and rung 4/5 number exactly; we have not repeated
+this for the current decoder.
 
 
 ======================================================================================
@@ -191,6 +201,6 @@ build_tables.py's main() has one labelled section per table, naming its source f
   src/methods/   the five rungs, their sweeps, and the analyses
   src/report/    build_tables.py, make_figures.py, figure overlap checker
   slurm/         cluster jobs for the GPU steps
-  scripts/       rerun_cpu.sh (CPU steps + tables + figures)
+  scripts/       retrain_unet.sh (submits every job), rerun_cpu.sh (CPU steps + tables + figures)
   results/       every intermediate result, tables and figures (models/logits not committed)
   wandb/         offline training logs (stabiliser runs)

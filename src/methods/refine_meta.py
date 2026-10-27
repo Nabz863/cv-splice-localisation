@@ -4,7 +4,9 @@ import json, os                                   # JSON files, file paths
 # config fields that must match for a saved model / logits file to be reused
 KEYS = ("epochs_max", "patience", "batch", "workers", "lr", "weight_decay", "grad_clip",
         "constraint_norm", "amp_dtype", "n_cal", "crops_per_image", "patch", "n_train",
-        "crop_rng", "nonfinite_counted")
+        "crop_rng", "nonfinite_counted", "upsample")
+# "upsample" was added with the resize-then-convolve decoder; older sidecars lack it,
+# so check() refuses every model and logits file from the old decoder.
 
 
 def sidecar(path):

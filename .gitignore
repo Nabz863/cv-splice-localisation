@@ -14,3 +14,5 @@ wandb/
 results/stale/
 results/.rerun_unet_started
 checkpoints/
+results/.retrain_resize_submitted
+results/.rerun_datasize_started

@@ -3,5 +3,5 @@ chance,,Chance (predict all tampered),0.242067,,0.1377,,,per_category.csv pooled
 rung1,1,ELA,0.264619,0.01212,0.152546,20,,"rung2_grid.npz, beta=0 only"
 rung2,2,ELA + MRF,0.284548,0.020005,0.166052,20,0,rung2_grid.npz
 rung3,3,"SAM2, zero-shot",0.396412,0.009165,0.247272,20,,rung3_sam2_20pairs.csv
-rung4,4,U-Net,0.694273,0.031,0.533711,20,,rung5_mrf_refine.csv f1_beta0
-rung5,5,U-Net + MRF,0.735572,0.03479,0.583809,20,0,rung5_mrf_refine.csv
+rung4,4,U-Net,0.728115,0.028421,0.574348,20,,rung5_mrf_refine.csv f1_beta0
+rung5,5,U-Net + MRF,0.756262,0.033024,0.610216,20,0,rung5_mrf_refine.csv

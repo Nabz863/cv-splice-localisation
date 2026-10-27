@@ -51,8 +51,13 @@ def main():
     lg_meta = refine_meta.sidecar(f"results/logits/{TAG}.npz")    # the .json config saved next to the test logits
     if not os.path.exists(lg_meta):
         raise SystemExit(f"{lg_meta} missing: run cache_logits.py first")
-    refine_meta.check(saved, json.load(open(lg_meta)))   # stop if the model was trained under a different config
-    model = UNet(norm=NORM).to(DEV)                       # build an untrained network of the right shape
+    meta = json.load(open(lg_meta))                       # the config the logits were made under
+    if "upsample" not in meta:                            # made before the decoder switch: refuse
+        raise SystemExit(f"{lg_meta} predates the resize-then-convolve decoder; rerun "
+                         f"cache_logits.py (slurm/rerun_unet.sbatch) first")
+    refine_meta.check(saved, meta)                        # stop if the model was trained under a different config
+    # Build the architecture the sidecar records, not whatever the default is now.
+    model = UNet(norm=meta["constraint_norm"], upsample=meta["upsample"]).to(DEV)   # untrained network of the right shape
     model.load_state_dict(torch.load(saved, map_location=DEV))   # fill it with the trained weights
     model.eval()                                          # evaluation mode (BatchNorm uses its stored statistics)
     print(f"loaded {saved} on {DEV}")
