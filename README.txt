@@ -74,16 +74,26 @@ Build the manifests and folds (seconds):
 
 
 ======================================================================================
-3. QUICK CHECK: REBUILD EVERY TABLE AND FIGURE FROM THE COMMITTED RESULTS (~1 minute, CPU)
+3. QUICK CHECK: REBUILD THE TABLES AND FIGURES FROM THE COMMITTED RESULTS (~1 minute, CPU)
 ======================================================================================
 
 All intermediate results are committed in results/ (except trained models and cached
 logits, which are large). With the data set up as in section 2:
 
     python src/report/build_tables.py      # -> results/tables/*.csv  (every number in the report)
-    python src/report/make_figures.py      # -> results/figures/*     (every figure)
+    python src/report/make_figures.py      # -> results/figures/*     (every figure except Fig. 5)
 
 build_tables.py cross-checks files that should agree and stops if they don't.
+Note: results/figures/ file names are not the report's figure numbers; section 6 maps them.
+
+Fig. 5 (results/fig_qualitative_splice.pdf) is the exception: fig_qualitative.py draws it
+from pair t0v1's cached U-Net logits, which are too large for GitHub (115 MB). The trained
+t0v1 model is committed (results/models/refine_t0v1.pt, 8 MB), so regenerate its logits
+without retraining (minutes; a CPU works, though its logits can differ from a GPU's in the
+last digits), then redraw Fig. 5; the SAM2 column uses the committed results/sam2_examples/:
+    ALLOW_CPU=1 BATCH=8 WORKERS=2 python -c "import sys; sys.path.insert(0, 'src/methods'); import cache_logits as c; c.cache_pair(0, 1, c.load_rows())"
+    TAG=t0v1 python src/methods/fig_qualitative.py
+Step E (slurm/rerun_unet.sbatch) also regenerates everything, Fig. 5 included.
 
 
 ======================================================================================
@@ -187,15 +197,18 @@ this for the current decoder.
 
   Table I (main results)        results/tables/main.csv
   Table II (image-level AUC)    results/tables/auc.csv
-  Fig. 1  method overview       make_figures.py fig_method
-  Fig. 2  U-Net                 make_figures.py fig_unet (sizes read from unet.py)
-  Fig. 3  training stability    results/tables/stabiliser.csv (from wandb/ runs)
-  Fig. 4  prior gain per pair   results/tables/gains.csv
-  Fig. 5  qualitative examples  src/methods/fig_qualitative.py
-  Fig. 6  mechanism             results/tables/mechanism.csv, mechanism_summary.csv
-  Fig. 7  selection criterion   results/tables/selection.csv, selection_detail.csv
-  Fig. 8  data-size curve       results/tables/datasize.csv
-  Fig. 9  SAM2                  results/tables/sam2.csv
+  Report figure                 drawn from                                 file
+  Fig. 1  method overview       make_figures.py fig_method                  results/figures/fig0_method.pdf
+  Fig. 2  U-Net                 make_figures.py fig_unet (sizes: unet.py)   results/figures/fig10_unet.pdf
+  Fig. 3  training stability    results/tables/stabiliser.csv (wandb/)      results/figures/fig7_stabiliser.pdf
+  Fig. 4  prior gain per pair   results/tables/gains.csv                    results/figures/fig2_prior_gain.pdf
+  Fig. 5  qualitative examples  src/methods/fig_qualitative.py (logits)     results/fig_qualitative_splice.pdf
+  Fig. 6  mechanism             results/tables/mechanism*.csv               results/figures/fig8_mechanism.pdf
+  Fig. 7  selection criterion   results/tables/selection*.csv               results/figures/fig12_selection.pdf
+  Fig. 8  data-size curve       results/tables/datasize.csv                 results/figures/fig3_datasize.pdf
+  Fig. 9  SAM2                  results/tables/sam2.csv                     results/figures/fig11_sam2.pdf
+  (fig1_main_f1, fig4_per_category, fig5_image_auc, fig6_copymove and fig9_perimage_f1 are
+  drawn too but not used in the report; Tables I and II carry those numbers.)
   Sec. V-F per category         results/tables/category.csv
   Sec. VI copy-move             results/tables/copymove.csv
   Rung 1 choice, ICM            results/tables/cues.csv, icm.csv, icm_energy.csv

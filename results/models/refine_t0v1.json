@@ -1,0 +1,22 @@
+{
+ "amp_dtype": "bfloat16",
+ "batch": 8,
+ "best_val": 0.5508271544189244,
+ "constraint_norm": "sum",
+ "crop_rng": "per-worker",
+ "crops_per_image": 8,
+ "epochs_max": 90,
+ "grad_clip": 1.0,
+ "lr": 0.001,
+ "n_cal": 150,
+ "n_train": 0,
+ "nonfinite_counted": 1,
+ "nonfinite_train": 0,
+ "nonfinite_val": 0,
+ "patch": 256,
+ "patience": 10,
+ "stopped_at": 73,
+ "upsample": "resize",
+ "weight_decay": 0.0001,
+ "workers": 2
+}
